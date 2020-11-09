@@ -3,7 +3,6 @@ require('dotenv').config({ path: './config/config.env' });
 const { MailSlurp } = require('mailslurp-client');
 const mail = require('../utils/mail');
 const chai = require('chai');
-const { app } = require('../index');
 const should = chai.should();
 
 describe('Email testing', function() {
