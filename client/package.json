@@ -1,5 +1,5 @@
 {
-  "name": "PULSeBS server",
+  "name": "PULSeBS-client",
   "version": "0.0.1",
   "description": "Pandemic University Lecture Seat Booking System client",
   "proxy": "http://localhost:3001/",
