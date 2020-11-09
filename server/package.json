@@ -1,5 +1,5 @@
 {
-  "name": "PULSeBS server",
+  "name": "PULSeBS-server",
   "version": "0.0.1",
   "description": "Pandemic University Lecture Seat Booking System server",
   "main": "index.js",
