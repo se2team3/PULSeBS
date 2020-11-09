@@ -24,6 +24,7 @@
     "sqlite3": "^4.1.1"
   },
   "devDependencies": {
+    "mailslurp-client": "^8.9.1",
     "nodemon": "^2.0.6"
   }
 }

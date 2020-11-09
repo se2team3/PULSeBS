@@ -12,7 +12,7 @@ const options = {
 };
 
 const defaults = {
-    from: `"Federico Bitondo 👻" <${process.env.NODEMAILER_EMAIL}>`, // sender address
+    from: `"PULSeBS" <${process.env.NODEMAILER_EMAIL}>`, // sender address
 };
 
 // TODO: check if the 'mail' parameters are set
@@ -30,4 +30,8 @@ const send = async ({to, subject, text}, callback = _=>{}) => {
     return transport.sendMail(message, callback());
 };
 
-module.exports = { send };
+const info = () => {
+    console.log(options);
+}
+
+module.exports = { send, info };
