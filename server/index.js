@@ -13,3 +13,6 @@ mail.send({
     subject: "Subject here",
     text: "Email body"
 }).then(/*console.log*/).catch(console.error);
+
+// test purposes
+module.exports = { app };
