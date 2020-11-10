@@ -9,7 +9,7 @@ const db_name = 'PULSeBS';
     if(err) {
         console.error(err);
         throw err;
-    };
+    }
     console.log(`Connected to ${db_name} database.`);
 }) 
 
