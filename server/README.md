@@ -16,9 +16,9 @@
 - GET `/lectures/{lecture_id}/bookings`
   - Param: lecture_id
   - Response: List of all bookings for a given lecture
-- PUT: `/lectures/{lecture_id}`
+- PATCH: `/lectures/{lecture_id}`
   - Param lecture_id
-  - Body: Lecture object (used to possibly cancel the lecture)
+  - Body: {virtual: true/false}
   - Response: NONE
 - POST: `/lectures`
   - Body: Lecture object (used to add a lecture)
@@ -53,6 +53,9 @@
   - Query: start_date, end_date
   - Response: List of all lectures the student is entitled to follow
   ##### NOTE: This endpoint should receive query parameters for time frame
+- DELETE `/students/{student_id}/bookings/{booking_id}`
+  - Param: student_id, booking_id
+  - Response: Response status
 - POST `/students`
   - Body: Student opject
   - Response: Response status

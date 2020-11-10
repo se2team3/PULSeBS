@@ -31,7 +31,7 @@ const router = express.Router();
 
 router.get('/lectures', (req, res) => {
   //lectureDao.getAllLectures...
-    res.status(200).json([{id:2,course_id: "01SQNOV"}]);
+  res.status(200).json([{ id: 1, course_id: "01SQNOV" }]);
 });
 
 
@@ -60,14 +60,66 @@ router.get('/lectures', (req, res) => {
  *      responses:
  *        "405":
  *          description: "Invalid input"
- *      security:
- *      - petstore_auth:
- *        - "write:pets"
+ *        '201':
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   format: int64
+ *                   description: ID of the created lecture.
+ *         # -----------------------------------------------------
+ *         # Links
+ *         # -----------------------------------------------------
+ *         links:
+ *           GetLectureById:   # <---- arbitrary name for the link
+ *             operationId: getLecture
+ *             # or
+ *             # operationRef: '#/lectures/{lecture_id}/get'
+ *             parameters:
+ *               lecture_id: '$response.body#/id'
+ *             description: >
+ *               The `id` value returned in the response can be used as
+ *               the `lecture_id` parameter in `GET /lectures/{lecture_id}`.
+ *         # -----------------------------------------------------
  *    
  */
 router.post('/lectures', (req, res) => {
   //lectureDao.getAllLectures...
-    res.status(200).json({id:1});
+  res.status(200).json({ id: 1 });
 });
 
+
+/**
+ * @swagger
+ *  /lectures/{lecture_id}:
+ *  get:
+ *    tags:
+ *      - "lectures"
+ *    summary: Gets a lecture by ID
+ *    operationId: getLecture
+ *    parameters:
+ *      - in: path
+ *        name: lecture_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *          format: int64
+ *    responses:
+ *      '200':
+ *        description: A Lecture object
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Lecture'
+ */
+
+router.get('/lectures/:lecture_id', (req, res) => {
+  //lectureDao.getAllLectures...
+  const lectureId = req.params.lecture_id;
+  res.status(200).json({ id: 1, course_id: "01SQNOV" });
+});
 module.exports = router;
