@@ -3,6 +3,8 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
 const studentsRoutes = require('./routes/student');
+const authenticateRoutes = require('./routes/authenticate');
+const errorHandler = require('./services/errorHandler');
 
 const PORT = 3001;
 
@@ -13,9 +15,7 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 app.use(`/`, studentsRoutes);
-
-app.use((req, res) => {
-    return res.status(500).end();
-});
+app.use(`/`, authenticateRoutes);
+app.use(errorHandler);
 
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));

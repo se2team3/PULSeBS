@@ -1,22 +1,18 @@
 const express = require('express');
 const app = express.Router();
+
 const studentService = require('../services/student');
-const jsonwebtoken = require('jsonwebtoken');
-const { secret } = require('../config/secret.json');
 const authorize = require('../services/authorize');
+const role = require('../utils/roles');
 
-app
-    .post(`/login`, login)
-    .get(`/restricted`, authorize("Student"), restrictedData);
+/* cannot be used like this, because the authorization rule is then applied
+ * to all the following routes (even in other modules)
+ *
+ *      app.use(authorize(role.Student));
+ *
+ */
 
-async function login(req, res) {
-    const user = await studentService.login(req.body);
-    if (!user)
-        res.status(400).json({ message: 'Username or password is incorrect' });
-    const token = jsonwebtoken.sign({ sub: user.id, role: user.role }, secret);
-    res.cookie('token', token, {httpOnly: true, sameSite: true, maxAge: 1000 * 300 /*5 min*/});
-    return res.json(user);
-}
+app.get(`/restricted`, authorize(role.Student), restrictedData);
 
 async function restrictedData(req, res) {
     return res.json(await studentService.restrictedData());

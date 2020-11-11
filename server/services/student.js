@@ -1,9 +1,3 @@
-const login = async ({username, password}) => {
-    // check credentials
-    const user = { username, id: 1997, role: "Student" };
-    return { ...user };
-};
-
 const restrictedData = async () => {
     return {
         name: "private",
@@ -11,4 +5,4 @@ const restrictedData = async () => {
     };
 };
 
-module.exports = { login, restrictedData };
+module.exports = { restrictedData };
