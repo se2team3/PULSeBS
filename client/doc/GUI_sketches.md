@@ -1,6 +1,13 @@
 # GUI sketches
 For the calendar component used in the following views see [FullCalendar.io](fullcalendar.io).
 
+## General views
+
+| Login view |
+| --- |
+| Notes: An alert for wrong user name or password should be added in the white box below the Sing in title |
+| ![Login view](./img/Login_view.png) |
+
 ## Student views
 | Lectures calendar student view |
 | --- |
