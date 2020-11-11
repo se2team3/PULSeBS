@@ -5,17 +5,17 @@ For the calendar component used in the following views see [FullCalendar.io](ful
 | Lectures calendar student view |
 | --- |
 | Notes: |
-| ![Lectures calendar student view](./img/Lectures calendar student view.png) |
+| ![Lectures calendar student view](./img/Lectures_calendar_student_view.png) |
 
 | Lectures calendar student view, booking |
 | --- |
 | Notes: |
-| ![Lectures calendar student view](./img/Lectures calendar student view, booking.png) |
+| ![Lectures calendar student view](./img/Lectures_calendar_student_view_booking.png) |
 
 | Lecture booking modals |
 | --- |
 | Notes: |
-| ![Lectures booking modals](./img/Lecture booking modals.png) |
+| ![Lectures booking modals](./img/Lecture_booking_modals.png) |
 
 ## Teacher views
 
