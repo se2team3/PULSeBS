@@ -22,4 +22,8 @@ const login = async ({username, password}) => {
     }
 };
 
-module.exports = { login };
+// test purpose
+const addUser = (user) => users.push(user);
+const clearUsers = () => users.splice(0, users.length);
+
+module.exports = { login, addUser, clearUsers };
