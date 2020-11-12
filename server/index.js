@@ -1,18 +1,28 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+
+const studentsRoutes = require('./routes/student');
+const authenticateRoutes = require('./routes/authenticate');
+const errorHandler = require('./services/errorHandler');
 
 const PORT = 3001;
 
-const morgan = require("morgan");
+const app = new express();
 
-//const booksRoute = require('./routes/books');
-app = new express();
-
-app.use(morgan('dev'));
 app.use(express.json());
-
-const swaggerOptions = require('./config/swaggerOptions');
-const lectureRoute = require('./routes/lecturesRoute');
+app.use(cookieParser());
+if (process.env.NODE_ENV !== 'test') {
+    app.use(morgan('dev'));
+}
 
 app.use('/api-docs',swaggerOptions);
 app.use('/', lectureRoute);
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}/`));
+app.use(`/`, studentsRoutes);
+app.use(`/`, authenticateRoutes);
+app.use(errorHandler);
+
+app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
+
+// test purposes
+module.exports = app;
