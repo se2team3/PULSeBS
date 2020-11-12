@@ -1,5 +1,5 @@
 # GUI sketches
-For the calendar component used in the following views see [FullCalendar.io](fullcalendar.io).
+For the calendar component used in the following views see [FullCalendar.io](https://fullcalendar.io/).
 
 ## General views
 
