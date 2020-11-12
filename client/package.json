@@ -1,6 +1,7 @@
 {
-  "name": "lab8",
-  "version": "0.1.0",
+  "name": "PULSeBS-client",
+  "version": "0.0.1",
+  "description": "Pandemic University Lecture Seat Booking System client",
   "proxy": "http://localhost:3001/",
   "private": true,
   "dependencies": {
@@ -18,7 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --ci --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

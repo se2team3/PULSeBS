@@ -1,32 +1,67 @@
 {
-  "name": "it.polito.wa1",
-  "version": "1.0.0",
-  "description": "Todo list web server",
+  "name": "PULSeBS-server",
+  "version": "0.0.1",
+  "description": "Pandemic University Lecture Seat Booking System server",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "mocha --exit --timeout=10000"
+    "test": "nyc --reporter=lcov mocha --exit --timeout 10000"
   },
-  "author": "alberto-mr",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^4.0.1",
+    "bcrypt": "^5.0.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-jwt": "^5.3.3",
+    "express-jwt": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.15",
-    "sqlite3": "^4.1.1"
+    "sqlite3": "^4.1.1",
+    "swagger-jsdoc": "^5.0.1",
+    "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mailslurp-client": "^8.9.1",
-    "mocha": "^8.2.1",
-    "nodemon": "^2.0.6"
-  }
+    "chai": "^3.5.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.2.0",
+    "nodemon": "^2.0.5",
+    "nyc": "^15.1.0"
+  },
+  "author": "",
+  "contributors": [
+    {
+      "name": "Alili Galib",
+      "email": "",
+      "url": ""
+    },
+    {
+      "name": "Antoniotti Luca",
+      "email": "",
+      "url": ""
+    },
+    {
+      "name": "Bitondo Federico",
+      "email": "",
+      "url": ""
+    },
+    {
+      "name": "Impagnatiello Giuseppina",
+      "email": "",
+      "url": ""
+    },
+    {
+      "name": "Piazza Dario",
+      "email": "",
+      "url": ""
+    },
+    {
+      "name": "Rinelli Luca",
+      "email": "",
+      "url": ""
+    }
+  ]
 }
