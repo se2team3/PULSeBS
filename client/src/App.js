@@ -12,6 +12,7 @@ import {Redirect, Route,Link} from 'react-router-dom';
 import {Switch} from 'react-router';
 import {AuthContext} from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
+import StudentPage from './components/StudentPage';
 
 class App extends React.Component {
 
@@ -80,7 +81,7 @@ class App extends React.Component {
 
         <Container fluid>
 
-          <Switch>
+          {/* <Switch>
             <Route path="/login">
               <Row className="vheight-100">
                 <Col sm={4}></Col>
@@ -94,7 +95,22 @@ class App extends React.Component {
               <Redirect to='/login' />
             </Route>
 
-          </Switch>            
+          </Switch>   */}
+
+           <Switch>
+            <Route path="/student"  >
+                   
+                  <StudentPage />
+                  
+            
+              
+            </Route>
+
+            <Route>
+              <Redirect to='/student' />
+            </Route>
+
+          </Switch>           
 
           
         </Container>

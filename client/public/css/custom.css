@@ -3,8 +3,15 @@
     min-height: 100vh;
 }
 
+.main-view{
+    padding-top: 9rem;
+   
+   
+}
+
 .below-nav {
     padding-top: 5rem;
+    height: fit-content;
 }
 
 /* Filters and projects */
