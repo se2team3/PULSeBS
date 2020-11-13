@@ -21,6 +21,20 @@ exports.createCourseTable = function() {
         });
     })
 }
+
+//clears the lecture table
+exports.clearCourseTable = function () {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DELETE FROM Courses';
+        db.run(sql,[],(err) =>{
+            if(err)
+                reject(err);
+            else
+                resolve();
+        });
+    })
+}
+
 //it allows you to insert a new course
 exports.insertCourse = function({code,name,teacher_id}) {
     return new Promise ((resolve,reject) =>{

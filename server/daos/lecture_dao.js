@@ -22,6 +22,20 @@ exports.createLectureTable = function() {
         });
     })
 }
+
+//clears the lecture table
+exports.clearLectureTable = function () {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DELETE FROM Lectures';
+        db.run(sql,[],(err) =>{
+            if(err)
+                reject(err);
+            else
+                resolve();
+        });
+    })
+}
+
 //it allows you to insert a new lecture
 exports.insertLecture = function({datetime,course_id,room_id}) {
     return new Promise ((resolve,reject) =>{

@@ -24,6 +24,21 @@ exports.createBookingTable = function() {
         });
     })
 }
+
+//clears the booking table
+exports.clearBookingTable = function () {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DELETE FROM Bookings';
+        db.run(sql,[],(err) =>{
+            if(err)
+                reject(err);
+            else
+                resolve();
+        });
+    })
+}
+
+
 //it allows you to insert a new booking
 exports.insertBooking = function({lecture_id,student_id}) {
     return new Promise ((resolve,reject) =>{

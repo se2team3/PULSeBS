@@ -63,4 +63,4 @@ const send = async ({to, subject, text}, callback = _=>{}) => {
     return transport.sendMail(message, callback());
 };
 
-module.exports = { start, job };
+module.exports = { start, job, send };

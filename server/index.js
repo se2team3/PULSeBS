@@ -29,8 +29,10 @@ app.use(errorHandler);
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
 
 mailserver.start((error) => {
-    if (error)  throw new Error(error);
-    console.log("Server is ready to send emails");
+    if (error)
+        throw new Error(error);
+    if (process.env.NODE_ENV !== "test")
+        console.log("Server is ready to send emails");
 });
 
 const sendEveryTenSeconds = '*/10 * * * * *';
