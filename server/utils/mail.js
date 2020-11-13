@@ -30,17 +30,37 @@ const job = (expression = '* * 23 * * Sun-Thu') => {
     if (!cron.validate(expression))
         throw new Error("Invalid node-cron expression");
 
-    return cron.schedule(expression, () => {
-        console.log('running a cron job');
-    }, {
-        scheduled: false,
-        timezone: "Europe/Rome"
+    return cron.schedule(expression, notifyTeachers, { scheduled: false, timezone: "Europe/Rome" });
+};
+
+const notifyTeachers = async () => {
+    const scheduledLectures = await require('../services/lectures').getNextDayLectures();
+    scheduledLectures.forEach(lecture => {
+        send({
+            to: lecture.teacher.email,
+            subject: __subject(lecture),
+            text: __text(lecture),
+        }, () => console.log(`sent email to ${lecture.teacher.email}`));
     });
 };
+
+const __subject = (lecture) => `[${lecture.course.code}] ${lecture.date} lecture recap`;
+const __text = (lecture) => `
+    Dear ${lecture.teacher.name} ${lecture.teacher.surname},
+    
+    there are ${lecture.bookings} students booked for the "${lecture.course.name} - ${lecture.course.code}" lecture scheduled in date ${lecture.date} in room "${lecture.room}".
+    
+    Regards.
+    
+    -----
+    
+    This is an automatic email, please don't answer
+    PULSeBS, 2020
+`;
 
 const send = async ({to, subject, text}, callback = _=>{}) => {
     const message = {to, subject, text};
     return transport.sendMail(message, callback());
 };
 
-module.exports = { start, send, job };
+module.exports = { start, job };

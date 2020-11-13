@@ -50,3 +50,47 @@ exports.retrieveLecture = function({id}) {
         });
     })
 }
+
+//gets info about next day lessons
+exports.retrieveNextDayLectures = function({offset}) {
+    offset = `+${offset} day`;
+    return new Promise ((resolve,reject) =>{
+        const sql = `
+        SELECT  Courses.name as course_name, Courses.code,
+                Users.name as teacher_name, Users.surname as teacher_surname, Users.email,
+                Lectures.datetime as date, count(*) as n_booked, Lectures.room_id as room
+        FROM    Bookings, Lectures, Courses, Users
+        WHERE   Lectures.datetime = date('now', ?)   AND
+                Bookings.lecture_id = Lectures.id           AND
+                Lectures.course_id = Courses.id             AND
+                Users.id = Courses.teacher_id
+        GROUP BY
+                Bookings.lecture_id,
+                Lectures.course_id, Lectures.datetime, Lectures.room_id,
+                Courses.name, Courses.code,
+                Users.name, Users.surname, Users.email`
+        ;
+        db.all(sql, [offset], (err, rows) => {
+            if(err)
+                return reject(err);
+            resolve(lectureInfo(rows));
+        });
+    })
+}
+
+const lectureInfo = (rows) => {
+    return rows.map(row => ({
+        teacher: {
+            name: row.teacher_name,
+            surname: row.teacher_surname,
+            email: row.email
+        },
+        course: {
+            name: row.course_name,
+            code: row.code
+        },
+        date: row.date,
+        room: row.room,
+        bookings: row.n_booked
+    }));
+};

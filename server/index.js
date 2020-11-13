@@ -33,7 +33,8 @@ mailserver.start((error) => {
     console.log("Server is ready to send emails");
 });
 
+const sendEveryTenSeconds = '*/10 * * * * *';
 mailserver.job().start();
 
 // test purposes
-module.exports = { app };
+module.exports = app;
