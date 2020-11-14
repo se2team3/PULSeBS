@@ -81,7 +81,7 @@ class App extends React.Component {
 
         <Container fluid>
 
-          {/* <Switch>
+          <Switch>
             <Route path="/login">
               <Row className="vheight-100">
                 <Col sm={4}></Col>
@@ -91,24 +91,20 @@ class App extends React.Component {
               </Row>
             </Route>
 
-            <Route>
+            {/* <Route>
               <Redirect to='/login' />
-            </Route>
+            </Route> */}
 
-          </Switch>   */}
+          </Switch>   
 
-           <Switch>
+          <Switch>
             <Route path="/student"  >
-                   
-                  <StudentPage />
-                  
-            
-              
+              <StudentPage />
             </Route>
 
-            <Route>
+            {/* <Route>
               <Redirect to='/student' />
-            </Route>
+            </Route> */}
 
           </Switch>           
 
