@@ -1,6 +1,6 @@
 const sleep = require('../utils/sleep');
 const userDao  = require('../daos/user_dao');
-
+const errHandler = require('./errorHandler');
 // harcoded users
 const users = [
     { id: 1, username: "user1", password: "pass1", role: "Student" },
@@ -29,15 +29,17 @@ const clearUsers = () => users.splice(0, users.length);
 
 const createUserTable = async function() {    
     try{
-        await userDao.createCourseTable();
+        return userDao.createUsersTable();
     }catch(err){
         return errHandler(err);
     }
 }
 
-const insertUser = async function(univesity_id,email,password,name,surname,role) {
+const insertUser = async function(user) {
+
+    //let {univesity_id,email,password,name,surname,role} = user;
     try {
-        let id = await userDao.insertUser(univesity_id,email,password,name,surname,role);
+        let id = await userDao.insertUser({...user});
         return id;
     } catch (error) {
         return errHandler(error);
@@ -53,4 +55,12 @@ const getUser = async function(user_id) {
     }
 }
 
-module.exports = { login, addUser, clearUsers, createUserTable, getUser, insertUser};
+const deleteUsers = async function(){
+    try {
+        return userDao.deleteUserTable();
+    } catch (error) {
+        return errHandler(error);
+    }
+}
+
+module.exports = { login, addUser, clearUsers, createUserTable, getUser, insertUser, deleteUsers};

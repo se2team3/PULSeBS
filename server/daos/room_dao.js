@@ -1,6 +1,7 @@
 // import database
 // import modules
 
+const { response } = require('express');
 const db = require('../db/db.js');
 const Room = require('../models/room.js');
 
@@ -24,7 +25,7 @@ exports.createRoomsTable = function() {
 exports.insertRoom = function({name,seats}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Rooms(name,seats) VALUES(?,?)'
-        db.run(sql,[name,seats],(err) =>{
+        db.run(sql,[name,seats], function(err){
             if(err)
                 reject(err);
             else
@@ -46,6 +47,17 @@ exports.retrieveRoom = function({id}) {
                 resolve(room);
             }
                 
+        });
+    })
+}
+
+exports.deleteRoomTable = function() {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DROP TABLE Rooms '
+        db.run(sql, (err, row) => {
+            if(err)
+                return reject(err);
+            else resolve(null); 
         });
     })
 }

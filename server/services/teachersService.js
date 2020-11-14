@@ -3,8 +3,7 @@ const errHandler = require('./errorHandler');
 
 exports.getLecturesByTeacherAndTime = async function(teacher_id,start_date, end_date) {    
     try{
-        let lectures  = await teacherDao.getLecturesByTeacherAndTime(teacher_id,start_date,end_date);
-        return lectures;
+        return teacherDao.getLecturesByTeacherAndTime(teacher_id,start_date,end_date);
     }catch(err){
         return errHandler(err);
     }  

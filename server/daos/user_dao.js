@@ -1,8 +1,10 @@
 // import database
 // import modules
 
+const e = require('express');
 const db = require('../db/db.js');
 const User = require('../models/user.js');
+const { unsubscribe } = require('../routes/student.js');
 
 const createUser = function (row){
     return new Room(row.id,row.university_id,row.email,row.password,row.name,row.surname,row.role);
@@ -25,11 +27,15 @@ exports.createUsersTable = function() {
 exports.insertUser = function({university_id,email,password,name,surname,role}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
-        db.run(sql,[university_id,email,password,name,surname,role],(err) =>{
-            if(err)
+        db.run(sql,[university_id,email,password,name,surname,role], function(err) {
+            if(err){
+                console.log("ERROR" + err);
                 reject(err);
-            else
+            }
+            else{
+                console.log(this.lastID);
                 resolve(this.lastID);   
+            }
         });
     })
 }
@@ -47,6 +53,17 @@ exports.retrieveUser = function({id}) {
                 resolve(user);
             }
                 
+        });
+    })
+}
+
+exports.deleteUserTable = function() {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DROP TABLE Users '
+        db.run(sql, (err, row) => {
+            if(err)
+                return reject(err);
+            else resolve(null);
         });
     })
 }
