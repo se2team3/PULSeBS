@@ -29,7 +29,7 @@ exports.createLectureTable = function() {
 exports.insertLecture = function({datetime,course_id,room_id}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Lectures(datetime,course_id,room_id) VALUES(?,?,?)'
-        db.run(sql,[datetime,course_id,room_id],(err) =>{
+        db.run(sql,[datetime,course_id,room_id], function(err){
             if(err)
                 reject(err);
             else
@@ -50,6 +50,17 @@ exports.retrieveLecture = function({id}) {
                 const lecture = createLecture(row);
                 resolve(lecture);
             }               
+        });
+    })
+}
+
+exports.deleteLectureTable = function() {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DROP TABLE Lectures '
+        db.run(sql, (err, row) => {
+            if(err)
+                return reject(err);
+            else resolve(null);
         });
     })
 }

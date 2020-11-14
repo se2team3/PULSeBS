@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express.Router();
-const userService = require('../services/user');
+const userService = require('../services/userService');
 const jsonwebtoken = require('jsonwebtoken');
 const { secret } = require('../config/secret.json');
 const authorize = require('../services/authorize');

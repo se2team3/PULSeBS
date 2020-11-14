@@ -5,7 +5,7 @@ const mail = require('../utils/mail');
 const chai = require('chai');
 const should = chai.should();
 
-describe('Email testing', function() {
+/* describe('Email testing', function() {
     let inbox, mailSlurp;
 
     before('', async function () {
@@ -43,3 +43,4 @@ const sendError = (err) => {
     console.error("Error in sending email", err);
     should.fail("Error in sending email with nodemailer.. asserting failure");
 };
+ */

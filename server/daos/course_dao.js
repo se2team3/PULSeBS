@@ -25,7 +25,7 @@ exports.createCourseTable = function() {
 exports.insertCourse = function({code,name,teacher_id}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Courses(code,name,teacher_id) VALUES(?,?,?)'
-        db.run(sql,[code,name,teacher_id],(err) =>{
+        db.run(sql,[code,name,teacher_id],function(err){
             if(err)
                 reject(err);
             else
@@ -47,6 +47,16 @@ exports.retrieveCourse = function({id}) {
                 resolve(course);
             }
                 
+        });
+    })
+}
+exports.deleteCourseTable = function() {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DROP TABLE Courses '
+        db.run(sql, (err, row) => {
+            if(err)
+                return reject(err);
+            else resolve(null);
         });
     })
 }
