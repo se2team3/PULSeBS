@@ -18,11 +18,11 @@ if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('dev'));
 }
 
-app.use('/api-docs',swaggerOptions);
+/* app.use('/api-docs',swaggerOptions);
 app.use('/', lectureRoute);
 app.use(`/`, studentsRoutes);
 app.use(`/`, authenticateRoutes);
-app.use(errorHandler);
+app.use(errorHandler); */
 
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
 

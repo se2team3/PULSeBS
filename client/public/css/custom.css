@@ -3,6 +3,18 @@
     min-height: 100vh;
 }
 
+.sidebar{
+    padding-top: 4rem;
+   
+}
+
+.z1 {
+    position: absolute;
+    top: 500px;
+    left:500px;
+    z-index: 1;
+}
+
 .below-nav {
     padding-top: 5rem;
 }

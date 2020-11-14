@@ -7,6 +7,8 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import LoginForm from './components/LoginForm';
+import TeacherPage from './components/TeacherPage';
+import LecturePage from './components/LecturePage';
 import API from './api/API';
 import {Redirect, Route,Link} from 'react-router-dom';
 import {Switch} from 'react-router';
@@ -18,7 +20,8 @@ class App extends React.Component {
 
   constructor(props)  {
     super(props);
-    this.state = {tasks: [], projects: [], filter: 'all', openMobileMenu: false, editedTask: null};
+    this.state = {lecture:{title:""},tasks: [], projects: [], filter: 'all', openMobileMenu: false, editedTask: null};
+    this.goToLecturePage=this.goToLecturePage.bind(this);
   }
   
   componentDidMount() {
@@ -64,6 +67,13 @@ class App extends React.Component {
   showSidebar = () => {
     this.setState((state) => ({openMobileMenu: !state.openMobileMenu}));
   }
+
+
+
+  goToLecturePage= (event) =>{ 
+    this.setState({lecture:event})
+    this.props.history.push("/lecture/");
+  }
   
   render() {
     // compose value prop as object with user object and logout method
@@ -80,7 +90,7 @@ class App extends React.Component {
 
         <Container fluid>
 
-          <Switch>
+         <Switch>
             <Route path="/login">
               <Row className="vheight-100">
                 <Col sm={4}></Col>
@@ -90,11 +100,27 @@ class App extends React.Component {
               </Row>
             </Route>
 
-            <Route>
+            {/* <Route>
               <Redirect to='/login' />
+            </Route>  */}
+          <Route path="/teacher">
+            <TeacherPage goToLecturePage={this.goToLecturePage}/>
+          </Route> 
+          
+          {/* <Route>
+              <Redirect to='/teacher' />
+            </Route> */}
+
+          <Route path="/lecture">
+               <LecturePage lecture={this.state.lecture}/>
             </Route>
 
-          </Switch>            
+          </Switch>
+            
+
+           
+
+                 
 
           
         </Container>
