@@ -4,6 +4,8 @@ const mail = require('./utils/mail');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
+const swaggerOptions = require('./config/swaggerOptions');
+const lectureRoute = require('./routes/lecturesRoute');
 const studentsRoutes = require('./routes/student');
 const authenticateRoutes = require('./routes/authenticate');
 const errorHandler = require('./services/errorHandler');
@@ -33,4 +35,4 @@ mail.send({
 }).then(/*console.log*/).catch(console.error);
 
 // test purposes
-module.exports = { app };
+module.exports = app;
