@@ -11,7 +11,7 @@ const Booking = require('../models/booking');
 
 const router = express.Router();
 
-router.post('/students/:student_id/bookings', async(req,res) =>{
+router.post('/students/:student_id/bookings',lectureValidation.checkLecture(),validator, async(req,res) =>{
     const {lecture_id} = req.body;
     const student_id= + req.params.student_id;
 
