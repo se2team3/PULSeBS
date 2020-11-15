@@ -42,78 +42,139 @@ const sample_lecture = {
     deleted_at: null
 }
 
-describe('getLectures, client API calls', () => {
+const sample_bookings = [
+    {
+        lecture_id: 42,
+        student_id: 1,
+        waiting: false,
+        present: false,
+        updated_at: "2013-10-07 04:23:19.120-04:00",
+        deleted_at: null
+    },
+    {
+        lecture_id: 42,
+        student_id: 2,
+        waiting: false,
+        present: false,
+        updated_at: "2013-10-07 04:23:19.120-04:00",
+        deleted_at: null
+    },
+    {
+        lecture_id: 42,
+        student_id: 3,
+        waiting: true,
+        present: false,
+        updated_at: "2013-10-07 04:23:19.120-04:00",
+        deleted_at: null
+    }
+]
 
-    beforeEach(() => {
-        mock.reset()
-    });
+describe('Client API calls', () => {
+    describe('getLectures', () => {
 
-    it('returns all the lectures in the db', async () => {
-        mock.onGet("/lectures").reply(200, sample_lectures);
-        const lectures = await API.getLectures();
-        expect(lectures[0].id).toEqual(sample_lectures[0].id);
-        expect(lectures[0].datetime).toEqual(sample_lectures[0].datetime); //TODO do more reasonable tests
-        expect(lectures[1].id).toEqual(sample_lectures[1].id);
-        expect(lectures[2].id).toEqual(sample_lectures[2].id);
-    });
+        beforeEach(() => {
+            mock.reset()
+        });
 
-    it('returns all the lectures in a given time frame', async () => {
-        mock.onGet("/lectures", {params: {from: moment("2013-10-07 04:23:19.120-04:00").unix(), to: moment("2013-10-07 04:23:19.120-04:00").unix()}}).reply(200, sample_lectures);
-        const lectures = await API.getLectures("2013-10-07 04:23:19.120-04:00", "2013-10-07 04:23:19.120-04:00");
-        expect(lectures[0].id).toEqual(sample_lectures[0].id);
-        expect(lectures[0].datetime).toEqual(sample_lectures[0].datetime); //TODO do more reasonable tests
-        expect(lectures[1].id).toEqual(sample_lectures[1].id);
-        expect(lectures[2].id).toEqual(sample_lectures[2].id);
-    });
+        it('returns all the lectures in the db', async () => {
+            mock.onGet("/lectures").reply(200, sample_lectures);
+            const lectures = await API.getLectures();
+            expect(lectures[0].id).toEqual(sample_lectures[0].id);
+            expect(lectures[0].datetime).toEqual(sample_lectures[0].datetime); //TODO do more reasonable tests
+            expect(lectures[1].id).toEqual(sample_lectures[1].id);
+            expect(lectures[2].id).toEqual(sample_lectures[2].id);
+        });
 
-    it('returns all the lectures in the db but there is no lecture', async () => {
-        mock.onGet("/lectures").reply(200, []);
-        const lectures = await API.getLectures();
-        expect(lectures.length).toEqual(0);
-    });
+        it('returns all the lectures in a given time frame', async () => {
+            mock.onGet("/lectures", { params: { from: moment("2013-10-07 04:23:19.120-04:00").unix(), to: moment("2013-10-07 04:23:19.120-04:00").unix() } }).reply(200, sample_lectures);
+            const lectures = await API.getLectures("2013-10-07 04:23:19.120-04:00", "2013-10-07 04:23:19.120-04:00");
+            expect(lectures[0].id).toEqual(sample_lectures[0].id);
+            expect(lectures[0].datetime).toEqual(sample_lectures[0].datetime); //TODO do more reasonable tests
+            expect(lectures[1].id).toEqual(sample_lectures[1].id);
+            expect(lectures[2].id).toEqual(sample_lectures[2].id);
+        });
 
-    it('returns all the lectures in the db but something went wrong', async () => {
-        mock.onGet("/lectures").reply(500, "internal server error");
-        try{
-            await API.getLectures();
-        }
-        catch(e){
-            expect(e.status).toBe(500);
-        }
-        
-    });
-})
+        it('returns all the lectures in the db but there is no lecture', async () => {
+            mock.onGet("/lectures").reply(200, []);
+            const lectures = await API.getLectures();
+            expect(lectures.length).toEqual(0);
+        });
 
-describe('getLecture, client API calls', () => {
+        it('returns all the lectures in the db but something went wrong', async () => {
+            mock.onGet("/lectures").reply(500, "internal server error");
+            try {
+                await API.getLectures();
+            }
+            catch (e) {
+                expect(e.status).toBe(500);
+            }
+        });
+    })
 
-    beforeEach(() => {
-        mock.reset()
-    });
+    describe('getLecture', () => {
 
-    it('returns a lecture given its id', async () => {
-        mock.onGet("/lecture/42").reply(200, sample_lecture);
-        const lecture = await API.getLecture(42);
-        expect(lecture.id).toEqual(sample_lecture.id);
-    });
+        beforeEach(() => {
+            mock.reset()
+        });
 
-    it('lecture does not exist', async () => {
-        mock.onGet("/lecture/999").reply(404, "Lecture not found");
-        try{
-            await API.getLecture(999);
-        }
-        catch(e){
-            expect(e.status).toBe(404);
-        }
-    });
+        it('returns a lecture given its id', async () => {
+            mock.onGet("/lecture/42").reply(200, sample_lecture);
+            const lecture = await API.getLecture(42);
+            expect(lecture.id).toEqual(sample_lecture.id);
+        });
 
-    it('something went wrong getting lecture', async () => {
-        mock.onGet("/lecture/12").reply(500, "internal server error");
-        try{
-            await API.getLecture(12);
-        }
-        catch(e){
-            expect(e.status).toBe(500);
-        }
-        
-    });
+        it('lecture does not exist', async () => {
+            mock.onGet("/lecture/999").reply(404, "Lecture not found");
+            try {
+                await API.getLecture(999);
+            }
+            catch (e) {
+                expect(e.status).toBe(404);
+            }
+        });
+
+        it('something went wrong getting lecture', async () => {
+            mock.onGet("/lecture/12").reply(500, "internal server error");
+            try {
+                await API.getLecture(12);
+            }
+            catch (e) {
+                expect(e.status).toBe(500);
+            }
+        });
+    })
+
+    describe('getBookings', () => {
+
+        beforeEach(() => {
+            mock.reset()
+        });
+
+        it('returns all the bookings for a lecture', async () => {
+            mock.onGet("/lectures/42/bookings").reply(200, sample_bookings);
+            const bookings = await API.getBookings(42);
+            expect(bookings[0].lecture_id).toEqual(sample_bookings[0].lecture_id);
+            expect(bookings[0].student_id).toEqual(sample_bookings[0].student_id);
+            expect(bookings[0].updated_at).toEqual(sample_bookings[0].updated_at); //TODO do more reasonable tests
+            expect(bookings[1].lecture_id).toEqual(sample_bookings[1].lecture_id);
+            expect(bookings[1].student_id).toEqual(sample_bookings[1].student_id);
+            expect(bookings[1].updated_at).toEqual(sample_bookings[1].updated_at); //TODO do more reasonable tests
+        });
+
+        it('no bookings are present for this lecture', async () => {
+            mock.onGet("/lectures/43/bookings").reply(200, []);
+            const bookings = await API.getBookings(43);
+            expect(bookings.length).toEqual(0);
+        });
+
+        it('something went wrong getting bookings', async () => {
+            mock.onGet("/lectures/44/bookings").reply(500, "internal server error");
+            try {
+                await API.getBookings(44);
+            }
+            catch (e) {
+                expect(e.status).toBe(500);
+            }
+        });
+    })
 })

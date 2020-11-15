@@ -2,6 +2,7 @@ import axios from 'axios';
 import moment from 'moment';
 
 import Lecture from './models/lecture';
+import Booking from './models/booking';
 
 const baseURL = "";
 
@@ -62,6 +63,7 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
         throw err;  // An object with the error coming from the server
     }
 }
+
 /**
  * Get a lecture given its id
  *
@@ -89,6 +91,30 @@ async function getLecture(id) {
     }
 }
 
-const API = { getLectures, getLecture }
+async function getBookings(lecture_id){
+    let url = `/lectures/${lecture_id}/bookings`;
+
+    const response = await axios.get(baseURL + url).catch(error => {
+        if (error.response) {
+            let err = { status: error.response.status, errObj: error.response.data };
+            throw err;  // An object with the error coming from the server
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+        }
+    });
+    if (response.status == 200) {
+        return response.data.map(
+            (o) => new Booking(o.lecture_id, o.student_id, o.waiting, o.present, o.updated_at, o.deleted_at));
+    } else {
+        let err = { status: response.status, errObj: response.data };
+        throw err;  // An object with the error coming from the server
+    }
+}
+
+const API = { getLectures, getLecture, getBookings }
 
 export default API
