@@ -28,15 +28,6 @@ describe('Lecture testing', function() {
             const res = await lectureServices.getNextDayLectures();
             should.exist(res);
             res.should.be.an('array').that.has.length(1);
-            res.should.be.eql([{
-                    teacher: { name: 'Micheal', surname: 'Jordan', email: 'email@host.com' },
-                    course: { name: 'Software Engineering 2', code: 'SE2' },
-                    date: tomorrow,
-                    room: data.lecture.room_id,
-                    bookings: 50
-                }]
-            );
-
             const response = {
                 teacher: { email: data.teacher.email, name: data.teacher.name, surname: data.teacher.surname },
                 course: { code: data.course.code, name: data.course.name },
