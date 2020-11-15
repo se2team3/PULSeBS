@@ -49,7 +49,7 @@ describe('Lecture testing', function() {
 
         it('should retrieve an empty list for Sundays lecture', async function() {
             // populate db
-            const data = await dbUtils.populate();
+            await dbUtils.populate();
             const daysToSunday = +moment().startOf('isoWeek').add(1, 'week').fromNow('day').split(" ")[0];
             const res = await lectureServices.getNextDayLectures(daysToSunday);
             should.exist(res);
