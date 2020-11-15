@@ -11,6 +11,35 @@ const Booking = require('../models/booking');
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * //students/{student_id}/bookings:
+ *  post:
+ *    tags:
+ *      - students
+ *    summary: "Insert a new booking"
+ *    description: "A student can book a lecture "
+ *    parameters:
+ *      - in: path
+ *        name: student_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *          format: int64
+ *    responses:
+ *       "201":
+ *         description: "Successful insertion"
+ *         schema:
+ *           type: "object"
+ *       "400":
+ *         description: "Invalid status value"
+ *    security:
+ *     - petstore_auth:
+ *       - "write:pets"
+ *       - "read:pets"
+ */
+
+
 router.post('/students/:student_id/bookings',lectureValidation.checkLecture(),validator, async(req,res) =>{
     const {lecture_id} = req.body;
     const student_id= + req.params.student_id;
