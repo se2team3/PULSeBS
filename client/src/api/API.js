@@ -43,8 +43,7 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
             req_params['to'] = moment(end_date).unix();
     }
 
-    console.log(url)
-    const response = await axios.get(baseURL + url);
+    const response = await axios.get(baseURL + url, {params: req_params});
     if (response.status==200) {
         return response.data.map(
             (o) => new Lecture(o.id, o.datetime, o.course_id, o.room_id, o.virtual, o.deleted_at));

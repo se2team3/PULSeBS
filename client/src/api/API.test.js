@@ -35,6 +35,10 @@ const sample_lectures = [
 
 describe('Client API calls', () => {
 
+    beforeEach(() => {
+        mock.reset()
+    });
+
     it('returns all the lectures in the db', async () => {
         mock.onGet("/lectures").reply(200, sample_lectures);
         const lectures = await API.getLectures();
