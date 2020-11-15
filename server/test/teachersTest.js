@@ -5,7 +5,6 @@ const courseService = require('../services/coursesService');
 const lectureService = require('../services/lectureService');
 
 const chai = require('chai');
-const server = require('../index');
 const should = chai.should();
 const chaiHttp = require("chai-http");
 
@@ -38,29 +37,35 @@ describe('Teachers routes', function () {
         res.should.equal(3);
 
         let time = moment().format("YYYY-MM-DD hh:mm:ss");
-        console.log(time);
 
         const room1 = {name: 'Room1', seats: 100};
         const room2 = {name: 'Room2', seats: 100};
         const room3 = {name: 'Room3', seats: 100};
         
         res = await roomService.addRoom(room1);
+        res.should.equal(1);
         res = await roomService.addRoom(room2);
+        res.should.equal(2);
         res = await roomService.addRoom(room3);
+        res.should.equal(3);
 
         const lecture1 = {datetime: time, course_id:1, room_id: 1};
         const lecture2 = {datetime: time, course_id:2, room_id: 2};
         const lecture3 = {datetime: time, course_id:3, room_id: 3};
 
         res = await lectureService.addLecture(lecture1);
+        res.should.equal(1);
         res = await lectureService.addLecture(lecture2);
+        res.should.equal(2);
         res = await lectureService.addLecture(lecture3);
+        res.should.equal(3);
 
         let yesterday = moment().add(1,'days').format("YYYY-MM-DD hh:mm:ss");
         let tomorrow = moment().add(-1,'days').format("YYYY-MM-DD hh:mm:ss");
         res = await teacherService.getLecturesByTeacherAndTime('1',yesterday,tomorrow)
 
         res.should.be.an('array');
+        res.should.have.length(3);
     });
 
     after('Delete db',async function() {

@@ -3,7 +3,6 @@ const db = require('../db/db');
 
 exports.getLecturesByTeacherAndTime = function(teacher_id,start_date, end_date) {
 
-    console.log (teacher_id + start_date + end_date);
     return new Promise((resolve,reject) => {
         const sql = `SELECT * 
         FROM Lectures L, Users U, Courses C 
@@ -15,7 +14,6 @@ exports.getLecturesByTeacherAndTime = function(teacher_id,start_date, end_date) 
             if(err)
                 reject(err);
             else{
-                console.log('SERVICE LECTURES: '+ rows);
                 resolve(rows);
             }               
         });

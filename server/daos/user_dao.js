@@ -33,7 +33,6 @@ exports.insertUser = function({university_id,email,password,name,surname,role}) 
                 reject(err);
             }
             else{
-                console.log(this.lastID);
                 resolve(this.lastID);   
             }
         });
