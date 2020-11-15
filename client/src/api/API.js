@@ -42,9 +42,19 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
         if (end_date !== undefined)
             req_params['to'] = moment(end_date).unix();
     }
-
-    const response = await axios.get(baseURL + url, {params: req_params});
-    if (response.status==200) {
+    const response = await axios.get(baseURL + url, { params: req_params }).catch(error => {
+        if (error.response) {
+            let err = { status: error.response.status, errObj: error.response.data };
+            throw err;  // An object with the error coming from the server
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+        }
+    });
+    if (response.status == 200) {
         return response.data.map(
             (o) => new Lecture(o.id, o.datetime, o.course_id, o.room_id, o.virtual, o.deleted_at));
     } else {
@@ -52,7 +62,33 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
         throw err;  // An object with the error coming from the server
     }
 }
+/**
+ * Get a lecture given its id
+ *
+ * @param {*} id valid lecture id
+ * @returns Lecture object
+ */
+async function getLecture(id) {
+    const url = "/lecture/" + id
+    const response = await axios.get(baseURL + url).catch(error => {
+        if (error.response) {
+            let err = { status: error.response.status, errObj: error.response.data };
+            throw err;  
+        } else if (error.request) {
+            console.log(error.request);
+        } else {
+            console.log('Error', error.message);
+        }
+    });
+    if (response.status == 200) {
+        const lecture = response.data;
+        return new Lecture(lecture.id, lecture.datetime, lecture.course_id, lecture.room_id, lecture.virtual, lecture.deleted_at);
+    } else {
+        let err = { status: response.status, errObj: response.data };
+        throw err;
+    }
+}
 
-const API = { getLectures }
+const API = { getLectures, getLecture }
 
 export default API
