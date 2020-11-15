@@ -1,10 +1,7 @@
 // import database
 // import modules
 
-const e = require('express');
 const db = require('../db/db.js');
-const User = require('../models/user.js');
-const { unsubscribe } = require('../routes/student.js');
 
 const createUser = function (row){
     return new Room(row.id,row.university_id,row.email,row.password,row.name,row.surname,row.role);
@@ -29,7 +26,6 @@ exports.insertUser = function({university_id,email,password,name,surname,role}) 
         const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
         db.run(sql,[university_id,email,password,name,surname,role], function(err) {
             if(err){
-                console.log("ERROR" + err);
                 reject(err);
             }
             else{

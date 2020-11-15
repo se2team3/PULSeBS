@@ -1,7 +1,6 @@
 // import database
 // import modules
 
-const { response } = require('express');
 const db = require('../db/db.js');
 const Room = require('../models/room.js');
 
