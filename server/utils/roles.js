@@ -1,3 +1,6 @@
+/**
+ * @module role
+ */
 module.exports = {
     Student: "Student",
     Teacher: "Teacher",

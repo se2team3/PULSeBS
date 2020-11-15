@@ -7,6 +7,10 @@ const course_studentDao = require('../daos/course_student');
 
 const moment = require('moment');
 
+/**
+ * Create database tables (if they do not exist)
+ * @returns {Promise<void>}
+ */
 const createTables = async () => {
     await Promise.allSettled([
         lectureDao.createLectureTable(),
@@ -18,6 +22,12 @@ const createTables = async () => {
     ]);
 }
 
+/**
+ * Reset database tables, bringing them to an empty initial state
+ * @param {object} options - Config options
+ * @param {boolean} [options.create=true] - is for force the tables creation
+ * @returns {Promise<void>}
+ */
 const reset = async ({ create = true } = {}) => {
     if (create)
         await createTables();
@@ -31,6 +41,11 @@ const reset = async ({ create = true } = {}) => {
     ]);
 };
 
+/**
+ * Generates a pseudo-random string
+ * @param {int} [len=10] - string length
+ * @returns {string} - pseudo-random string
+ */
 const randomString = (len = 10) => {
     const chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
     let string = '';
@@ -40,6 +55,11 @@ const randomString = (len = 10) => {
     return string;
 };
 
+/**
+ * Generates a teacher object, with a fixed email
+ * @param {int} university_id - unique ID
+ * @returns {{password: string, role: string, university_id: int, surname: string, name: string, email: string}}
+ */
 const teacherObj = (university_id) => ({
     university_id,
     email: 'email@host.com',
@@ -49,7 +69,12 @@ const teacherObj = (university_id) => ({
     role: 'teacher'
 });
 
-const studentObj = (university_id = 1) => ({
+/**
+ * Generates a student object, with a pseudo-random email
+ * @param {int} university_id - unique ID
+ * @returns {{password: string, role: string, university_id: int, surname: string, name: string, email: string}}
+ */
+const studentObj = (university_id) => ({
     university_id,
     email: `${randomString()}@host.com`,
     password: 'passw0rd',
@@ -63,6 +88,14 @@ const def_options = {
     datetime: moment().add(1,'days').format('YYYY-MM-DD'),
 };
 
+/**
+ * Populates the db by inserting a lesson and booking students to it
+ * @param {object} options - Config options
+ * @param {int} [options.n_students=50] - number of students that want to book for the created lecture
+ * @param {string} [options.datetime=today] - lecture's datetime (in `YYYY-MM-DD` format)
+ * @returns {Promise<{teacher: {password: string, role: string, university_id: int, surname: string, name: string, email: string}, booked: number, course: {code: string, name: string}, students: {password: string, role: string, university_id: int, surname: string, name: string, email: string}[], lecture: {datetime: *}, room: {name: string, seats: number}}>}
+ *          generated data object
+ */
 const populate = async ({n_students, datetime} = def_options) => {
     // creates entities
     const counter = require('../utils/counter')();
