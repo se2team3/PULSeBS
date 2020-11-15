@@ -6,7 +6,7 @@ const db = require('../db/db.js');
 // it creates the course_student table
 exports.createCourse_StudentTable = function() {
     return new Promise ((resolve,reject) => {
-        const sql = `CREATE TABLE Course_Student (course_id INTEGER NOT NULL, student_id INTEGER NOT NULL,
+        const sql = `CREATE TABLE IF NOT EXISTS Course_Student (course_id INTEGER NOT NULL, student_id INTEGER NOT NULL,
                      PRIMARY KEY(course_id,student_id),
                      FOREIGN KEY(course_id) REFERENCES Courses(id), FOREIGN KEY(student_id) REFERENCES Users(id))`
         db.run(sql,[],(err) =>{
@@ -17,6 +17,20 @@ exports.createCourse_StudentTable = function() {
         });
     })
 }
+
+//clears the lecture table
+exports.clearCourse_StudentTable = function () {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DELETE FROM Course_Student';
+        db.run(sql,[],(err) =>{
+            if(err)
+                reject(err);
+            else
+                resolve();
+        });
+    })
+}
+
 //it allows you to insert a new booking
 exports.assingCourseToStudent = function({course_id,student_id}) {
     return new Promise ((resolve,reject) =>{

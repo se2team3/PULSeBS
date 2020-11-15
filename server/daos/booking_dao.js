@@ -11,7 +11,7 @@ const createBooking = function (row){
 // it creates the booking table
 exports.createBookingTable = function() {
     return new Promise ((resolve,reject) => {
-        const sql = `CREATE TABLE Bookings (lecture_id INTEGER NOT NULL, student_id INTEGER NOT NULL,
+        const sql = `CREATE TABLE IF NOT EXISTS Bookings (lecture_id INTEGER NOT NULL, student_id INTEGER NOT NULL,
                      waiting INTEGER NOT NULL DEFAULT (0) CHECK (waiting IN (0,1)),
                      present INTEGER NOT NULL DEFAULT (0) CHECK (present IN (0,1)),
                      updated_at TEXT DEFAULT(datetime('now','localtime')),deleted_at TEXT, PRIMARY KEY(lecture_id,student_id),
@@ -24,6 +24,21 @@ exports.createBookingTable = function() {
         });
     })
 }
+
+//clears the booking table
+exports.clearBookingTable = function () {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DELETE FROM Bookings';
+        db.run(sql,[],(err) =>{
+            if(err)
+                reject(err);
+            else
+                resolve();
+        });
+    })
+}
+
+
 //it allows you to insert a new booking
 exports.insertBooking = function({lecture_id,student_id}) {
     return new Promise ((resolve,reject) =>{
