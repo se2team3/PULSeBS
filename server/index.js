@@ -3,7 +3,9 @@ const express = require('express');
 const mail = require('./utils/mail');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+
 const swaggerOptions = require('./config/swaggerOptions');
+const lectureRoute = require('./routes/lecturesRoute');
 const studentsRoutes = require('./routes/student');
 const authenticateRoutes = require('./routes/authenticateRoute');
 const errorHandler = require('./services/errorHandler');
