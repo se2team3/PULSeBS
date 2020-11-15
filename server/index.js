@@ -9,7 +9,6 @@ const lectureRoute = require('./routes/lecturesRoute');
 const studentsRoutes = require('./routes/student');
 const authenticateRoutes = require('./routes/authenticateRoute');
 const errorHandler = require('./services/errorHandler');
-const lectureRoute = require('./routes/lecturesRoute');
 const bookingRoute = require('./routes/bookingsRoute');
 
 const PORT = process.env.PORT || 3001;
