@@ -11,7 +11,7 @@ const createCourse = function (row){
 // it creates the course table
 exports.createCourseTable = function() {
     return new Promise ((resolve,reject) => {
-        const sql = `CREATE TABLE Courses (id INTEGER NOT NULL PRIMARY KEY, code TEXT NOT NULL UNIQUE,
+        const sql = `CREATE TABLE IF NOT EXISTS Courses (id INTEGER NOT NULL PRIMARY KEY, code TEXT NOT NULL UNIQUE,
                      name TEXT NOT NULL, teacher_id TEXT NOT NULL, FOREIGN KEY(teacher_id) REFERENCES Users(id))`
         db.run(sql,[],(err) =>{
             if(err)
@@ -39,7 +39,7 @@ exports.clearCourseTable = function () {
 exports.insertCourse = function({code,name,teacher_id}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Courses(code,name,teacher_id) VALUES(?,?,?)'
-        db.run(sql,[code,name,teacher_id],(err) =>{
+        db.run(sql,[code,name,teacher_id], function(err) {
             if(err)
                 reject(err);
             else
