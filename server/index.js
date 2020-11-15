@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('dev'));
 }
 
-app.use('/api-docs',swaggerOptions);
+app.use('/api-docs',...swaggerOptions);
 app.use('/', lectureRoute);
 app.use(`/`, studentsRoutes);
 app.use(`/`, authenticateRoutes);
