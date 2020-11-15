@@ -1,3 +1,6 @@
+import axios from 'axios';
+import moment from 'moment';
+
 import Lecture from './models/lecture';
 
 const baseURL = "";
@@ -13,11 +16,11 @@ const baseURL = "";
  *  - GET /teachers/{student_id}/lectures?from=<start_date>&to=<end_date>
  *  TODO: do we really need all these endpoints? The server should know already about the user and should be able to answer accordingly(?)
  *
- * @param {*} [start_date=undefined]
- * @param {*} [end_date=undefined]
- * @param {*} [role=undefined]
- * @param {*} [user_id=undefined]
- * @returns
+ * @param {*} [start_date=undefined] datetime then transformed in unix timestamp
+ * @param {*} [end_date=undefined] datetime then transformed in unix timestamp
+ * @param {*} [role=undefined] "student" or "teacher"
+ * @param {*} [user_id=undefined] valid user id
+ * @returns [] of Lecture objects or empty []
  */
 async function getLectures(start_date = undefined, end_date = undefined, role = undefined, user_id = undefined) {
     let url = "/lectures";
@@ -32,21 +35,21 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
         }
     }
 
+    const req_params = {};
     if (start_date !== undefined || end_date !== undefined) {
-        url += "?";
         if (start_date !== undefined)
-            url += `from=${start_date}&`;
+            req_params['from'] = moment(start_date).unix();
         if (end_date !== undefined)
-            url += `to=${end_date}`;
+            req_params['to'] = moment(end_date).unix();
     }
 
-    const response = await fetch(baseURL + url);
-    const lecturesJson = await response.json();
-    if (response.ok) {
-        return lecturesJson.map(
+    console.log(url)
+    const response = await axios.get(baseURL + url);
+    if (response.status==200) {
+        return response.data.map(
             (o) => new Lecture(o.id, o.datetime, o.course_id, o.room_id, o.virtual, o.deleted_at));
     } else {
-        let err = { status: response.status, errObj: lecturesJson };
+        let err = { status: response.status, errObj: response.data };
         throw err;  // An object with the error coming from the server
     }
 }
