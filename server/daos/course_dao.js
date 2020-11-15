@@ -12,7 +12,7 @@ const createCourse = function (row){
 exports.createCourseTable = function() {
     return new Promise ((resolve,reject) => {
         const sql = `CREATE TABLE Courses (id INTEGER NOT NULL PRIMARY KEY, code TEXT NOT NULL UNIQUE,
-                     name TEXT NOT NULL, teacher_id TEXT NOT NULL, FOREIGN KEY(teacher_id) REFERENCES Users(id))`
+                     name TEXT NOT NULL, teacher_id INTEGER NOT NULL, FOREIGN KEY(teacher_id) REFERENCES Users(id))`
         db.run(sql,[],(err) =>{
             if(err)
                 reject(err);

@@ -6,7 +6,7 @@ const db = require('../db/db.js');
 // it creates the course_student table
 exports.createCourse_StudentTable = function() {
     return new Promise ((resolve,reject) => {
-        const sql = `CREATE TABLE Course_Student (course_id TEXT NOT NULL, student_id TEXT NOT NULL,
+        const sql = `CREATE TABLE Course_Student (course_id INTEGER NOT NULL, student_id INTEGER NOT NULL,
                      PRIMARY KEY(course_id,student_id),
                      FOREIGN KEY(course_id) REFERENCES Courses(id), FOREIGN KEY(student_id) REFERENCES Users(id))`
         db.run(sql,[],(err) =>{
