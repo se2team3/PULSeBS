@@ -13,14 +13,17 @@ class StudentPage extends React.Component {
 
     this.state={
       modal:false,
-      selected:null,
+      selected:{extendedProps:{status:null}},
       events:[
         {
           lectureId:1,
           subjectId:1,
           subjectName: 'Physics',
           teacher:"Richard Feynman",
-          title: 'Physics'+" \n" +'ROOM4' + " \n"+"Booking Closed", 
+          status:"closed",
+          title: `Physics
+          ROOM4
+          Booking Closed`, 
           start:'2020-11-12T10:00:00',end:'2020-11-12T13:00:00',
           backgroundColor:'orange',
           display:'auto'
@@ -31,6 +34,7 @@ class StudentPage extends React.Component {
           subjectId:2,
           subjectName:'Chemistry',
           teacher:"Walter White",
+          status:"full",
           title: `Chemistry ROOM5S
           42/80 available seats`, 
           start:'2020-11-10T17:00:00',end:'2020-11-10T18:30:00',
@@ -42,6 +46,7 @@ class StudentPage extends React.Component {
           subjectId:2,
           subjectName:'Chemistry',
           teacher:"WalterWhite",
+          status:"booked",
           title: `Chemistry ROOM5S
           42/80 available seats`, 
           start:'2020-11-14T10:00:00',end:'2020-11-14T11:30:00',
@@ -53,10 +58,23 @@ class StudentPage extends React.Component {
           subjectId:3,
           subjectName:'Circuit Theory',
           teacher:"Alessandro Volta",
+          status:"free",
           title: `Circuit Theory ROOM1B
           20/80 available seats`, 
           start:'2020-11-11T13:30:00',end:'2020-11-11T15:30:00',
           backgroundColor:'red',
+          display:'auto'
+        },
+        {
+          lectureId:5,
+          subjectId:4,
+          subjectName:'Analysis II',
+          teacher:"Giuseppe Lagrange",
+          status:"free",
+          title: `Analysis II ROOM1B
+          20/80 available seats`, 
+          start:'2020-11-09T08:30:00',end:'2020-11-09T11:30:00',
+          backgroundColor:'#34baeb',
           display:'auto'
         }
         ]
@@ -89,7 +107,8 @@ prenota=function(){
 
 
 
-render() { let showArray=[];
+render() { 
+  let showArray=[];
   return (
    <>
     <Container fluid>
@@ -110,7 +129,7 @@ render() { let showArray=[];
               right: "timeGridWeek,listWeek,dayGridMonth"}}
               events= {this.state.events}
             eventClick={(info)=> {
-              console.log(info.event.title)
+              //console.log(info.event.title)
               this.setState({modal:true, selected:info.event})
             }}
             /> 
@@ -134,21 +153,68 @@ render() { let showArray=[];
                       />
                     </Badge>
                   </h2>
-                )}})}
+                )}
+                else return null
+                })}
             </Form>
           </Nav>
         </Col>
       </Row>
     </Container>
 
-    {this.state.modal===true? 
+    {(this.state.modal===true && this.state.selected.extendedProps.status==="booked")? 
     <Modal.Dialog className="z1">
       <Modal.Header >
         <Modal.Title>{this.state.selected.title}</Modal.Title>
       </Modal.Header>
+      <Modal.Body>
+          {"You have booked a seat for this lecture"}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
+      </Modal.Footer>
+    </Modal.Dialog>
+    :<div></div>}
+
+    {(this.state.modal===true && this.state.selected.extendedProps.status==="free")? 
+    <Modal.Dialog className="z1">
+      <Modal.Header >
+        <Modal.Title>{this.state.selected.title}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+          {"Open bookings"}
+      </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
         <Button variant="success" onClick={()=>{this.prenota()}}>Book a seat</Button>
+      </Modal.Footer>
+    </Modal.Dialog>
+    :<div></div>}
+
+    {(this.state.modal===true && this.state.selected.extendedProps.status==="full")? 
+    <Modal.Dialog className="z1">
+      <Modal.Header >
+        <Modal.Title>{this.state.selected.title+"\n "}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+          {"No available seats"}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
+      </Modal.Footer>
+    </Modal.Dialog>
+    :<div></div>}
+
+    {(this.state.modal===true && this.state.selected.extendedProps.status==="closed")? 
+    <Modal.Dialog className="z1">
+      <Modal.Header >
+        <Modal.Title>{this.state.selected.title+"\n "}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+          {"Booking closed"}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
       </Modal.Footer>
     </Modal.Dialog>
     :<div></div>}
