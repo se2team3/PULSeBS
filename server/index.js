@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const swaggerOptions = require('./config/swaggerOptions');
 
+const swaggerOptions = require('./config/swaggerOptions');
+const lectureRoutes = require('./routes/lecturesRoute');
 const studentsRoutes = require('./routes/student');
 const lectureRoutes = require('./routes/lecturesRoute');
 const authenticateRoutes = require('./routes/authenticate');
