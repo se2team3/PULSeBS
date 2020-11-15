@@ -9,12 +9,6 @@ const authenticateRoutes = require('./routes/authenticate');
 const lectureRoute = require('./routes/lecturesRoute');
 const teachersRoute = require('./routes/teachersRoute');
 const errorHandler = require('./services/errorHandler');
-
-const lectureDao = require('./daos/lecture_dao');
-const courses_dao = require('./daos/course_dao');
-const users_dao = require('./daos/user_dao');
-const rooms_dao = require('./daos/room_dao');
-
 const PORT = process.env.PORT || 3001;
 
 const app = new express();
@@ -46,4 +40,4 @@ rooms_dao.createRoomsTable().then(); */
 }).then().catch(console.error); */
 
 // test purposes
-module.exports = { app };
+module.exports = app;

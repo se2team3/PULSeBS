@@ -1,9 +1,7 @@
-const e = require('express');
 const express = require('express');
 const router = express.Router();
-const moment = require('moment');
 const teacherService = require('../services/teachersService');
-
+const timeValidator = require('../validators/timeValidator');
 /**
  * @swagger
  * /teachers/getLecturesByTeacherAndTime:
@@ -59,16 +57,16 @@ const teacherService = require('../services/teachersService');
  */
 
 
-router.get('/teachers/:teacher_id/lectures', async (req, res) => {
+router.get('/teachers/:teacher_id/lectures', timeValidator.checkTime, async (req, res) => {
 
     const teacher_id = req.params.teacher_id;
-    const { start_date, end_date } = req.query;
+    const { start_date, end_date } = {...req.query};
 
     try {
         let lectures = await teacherService.getLecturesByTeacherAndTime(teacher_id, start_date, end_date);
+        console.log(lectures);
         return res.status(200).json(lectures);
     } catch (error) {
-        console.log(error);
         res.json(error);
     }
 
