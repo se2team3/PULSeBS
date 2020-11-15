@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './config/config.env' });
+/*require('dotenv').config({ path: './config/config.env' });
 
 const { MailSlurp } = require('mailslurp-client');
 const mail = require('../utils/mail');
@@ -43,3 +43,4 @@ const sendError = (err) => {
     console.error("Error in sending email", err);
     should.fail("Error in sending email with nodemailer.. asserting failure");
 };
+*/

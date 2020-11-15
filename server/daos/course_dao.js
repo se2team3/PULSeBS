@@ -11,7 +11,7 @@ const createCourse = function (row){
 // it creates the course table
 exports.createCourseTable = function() {
     return new Promise ((resolve,reject) => {
-        const sql = `CREATE TABLE Courses (id INTEGER NOT NULL PRIMARY KEY, code TEXT NOT NULL UNIQUE,
+        const sql = `CREATE TABLE IF NOT EXISTS Courses (id INTEGER NOT NULL PRIMARY KEY, code TEXT NOT NULL UNIQUE,
                      name TEXT NOT NULL, teacher_id TEXT NOT NULL, FOREIGN KEY(teacher_id) REFERENCES Users(id))`
         db.run(sql,[],(err) =>{
             if(err)
@@ -22,10 +22,10 @@ exports.createCourseTable = function() {
     })
 }
 //it allows you to insert a new course
-exports.insertCourse = function({code,name,teacher_id}) {
+exports.insertCourse = function(course) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Courses(code,name,teacher_id) VALUES(?,?,?)'
-        db.run(sql,[code,name,teacher_id],(err) =>{
+        db.run(sql,[course.code,course.name,course.teacher_id],function(err){
             if(err)
                 reject(err);
             else
@@ -34,7 +34,7 @@ exports.insertCourse = function({code,name,teacher_id}) {
     })
 }
 //gets the course with the selected id
-exports.retrieveCourse = function({id}) {
+exports.retrieveCourse = function(id) {
     return new Promise ((resolve,reject) =>{
         const sql = 'SELECT * FROM Courses WHERE id = ?'
         db.get(sql, [id], (err, row) => {
@@ -47,6 +47,16 @@ exports.retrieveCourse = function({id}) {
                 resolve(course);
             }
                 
+        });
+    })
+}
+exports.deleteCourseTable = function() {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DROP TABLE Courses'
+        db.run(sql, (err, row) => {
+            if(err)
+                return reject(err);
+            else resolve(null);
         });
     })
 }

@@ -81,7 +81,7 @@
   - Param: teacher_id
   - Response: List of all lectures the teacher is giving in a certain time period
 - POST `/teachers`
-  - Body: Teacher opject
+  - Body: Teacher object
   - Response: Response status
   
   

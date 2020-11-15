@@ -6,7 +6,7 @@ const db = require('../db/db.js');
 // it creates the course_student table
 exports.createCourse_StudentTable = function() {
     return new Promise ((resolve,reject) => {
-        const sql = `CREATE TABLE Course_Student (course_id TEXT NOT NULL, student_id TEXT NOT NULL,
+        const sql = `CREATE TABLE IF NOT EXISTS Course_Student (course_id TEXT NOT NULL, student_id TEXT NOT NULL,
                      PRIMARY KEY(course_id,student_id),
                      FOREIGN KEY(course_id) REFERENCES Courses(id), FOREIGN KEY(student_id) REFERENCES Users(id))`
         db.run(sql,[],(err) =>{
@@ -21,7 +21,7 @@ exports.createCourse_StudentTable = function() {
 exports.assingCourseToStudent = function({course_id,student_id}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Course_Student(course_id,student_id) VALUES(?,?)'
-        db.run(sql,[course_id,student_id],(err) =>{
+        db.run(sql,[course_id,student_id],function(err){
             if(err)
                 reject(err);
             else
@@ -57,6 +57,16 @@ exports.retrieveEnrolledStudents = function({course_id}) {
             else{
                 resolve(rows);
             }               
+        });
+    })
+}
+exports.deleteCourse_StudentTable = function() {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DROP TABLE Course_Student '
+        db.run(sql, (err, row) => {
+            if(err)
+                return reject(err);
+            else resolve(null);
         });
     })
 }
