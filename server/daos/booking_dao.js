@@ -12,8 +12,8 @@ const createBooking = function (row){
 exports.createBookingTable = function() {
     return new Promise ((resolve,reject) => {
         const sql = `CREATE TABLE IF NOT EXISTS Bookings (lecture_id INTEGER NOT NULL, student_id INTEGER NOT NULL,
-                     waiting BOOLEAN NOT NULL DEFAULT (0) CHECK (waiting IN (0,1)),
-                     present BOOLEAN NOT NULL DEFAULT (0) CHECK (present IN (0,1)),
+                     waiting INTEGER NOT NULL DEFAULT (0) CHECK (waiting IN (0,1)),
+                     present INTEGER NOT NULL DEFAULT (0) CHECK (present IN (0,1)),
                      updated_at TEXT DEFAULT(datetime('now','localtime')),deleted_at TEXT, PRIMARY KEY(lecture_id,student_id),
                      FOREIGN KEY(lecture_id) REFERENCES Lectures(id), FOREIGN KEY(student_id) REFERENCES Users(id))`
         db.run(sql,[],(err) =>{
