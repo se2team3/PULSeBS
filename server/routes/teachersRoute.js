@@ -64,7 +64,7 @@ router.get('/teachers/:teacher_id/lectures', timeValidator.checkTime, async (req
 
     try {
         let lectures = await teacherService.getLecturesByTeacherAndTime(teacher_id, start_date, end_date);
-        console.log(lectures);
+        //console.log(lectures);
         return res.status(200).json(lectures);
     } catch (error) {
         res.json(error);
