@@ -1,9 +1,9 @@
 process.env.NODE_ENV = 'test';
 const userService = require('../services/userService');
-const teacherService = require('../services/teachersService');
 const roomService = require('../services/roomService');
 const courseService = require('../services/coursesService');
 const lectureService = require('../services/lectureService');
+const dbUtils = require('../utils/db');
 
 const server = require('../index');
 const chai = require('chai');
@@ -15,11 +15,26 @@ const moment = require('moment');
 chai.use(chaiHttp);
 
 describe('Teachers routes', function () {
-    before('Create db', async function() {
-        await userService.createUserTable();
-        await courseService.createCoursesTable();
-        await lectureService.createLecturesTable();
-        await roomService.createRoomsTable();
+    it('should retrieve all the lectures for a teacher in a given time frame', async function() {
+        const teacher_id = 1;
+        const route = `/teachers/${teacher_id}/lectures`;
+
+        let yesterday = moment().add(1,'days').format("YYYY-MM-DD");
+        let tomorrow = moment().add(-1,'days').format("YYYY-MM-DD");
+        //res = await teacherService.getLecturesByTeacherAndTime('1',yesterday,tomorrow)
+
+        let res = await chai.request(server).get(route).query({start_date: yesterday, end_date: tomorrow});
+        res.should.have.status(200);
+        res.body.should.be.an('array');
+        res.body.should.have.length(3);
+
+        res = await chai.request(server).get(route).query({start_date: '11111', end_date: tomorrow});
+        res.should.have.status(400);
+        res.body.should.have.property('errors');
+    });
+
+    before('create tables and clear db', async function() {
+        await dbUtils.reset();
 
         const newUser = { university_id:'1',email: 'tea@test.com',  password: "Secret!;;0",name:'mario', surname:'rossi', role: "teacher" };
         const course1 = { code: '1', name: 'Software Engineering 2', teacher_id: '1'};
@@ -59,31 +74,9 @@ describe('Teachers routes', function () {
         res.should.equal(2);
         res = await lectureService.addLecture(lecture3);
         res.should.equal(3);
-
     });
 
-    it('should retrieve all the lectures for a teacher in a given time frame', async function() {
-        const teacher_id = 1;
-        const route = `/teachers/${teacher_id}/lectures`;
-
-        let yesterday = moment().add(1,'days').format("YYYY-MM-DD");
-        let tomorrow = moment().add(-1,'days').format("YYYY-MM-DD");
-        //res = await teacherService.getLecturesByTeacherAndTime('1',yesterday,tomorrow)
-
-        let res = await chai.request(server).get(route).query({start_date: yesterday, end_date: tomorrow});
-        res.should.have.status(200);
-        res.body.should.be.an('array');
-        res.body.should.have.length(3);
-
-        res = await chai.request(server).get(route).query({start_date: '11111', end_date: tomorrow});
-        res.should.have.status(400);
-        res.body.should.have.property('errors');
-    });
-
-    after('Delete db',async function() {
-        await userService.deleteUsers();
-        await roomService.deleteRooms();
-        await courseService.deleteCourses();
-        await lectureService.deleteLectures();
+    after('clear db', async function() {
+        await dbUtils.reset({ create: false });
     });
 });

@@ -8,6 +8,7 @@ const swaggerOptions = require('./config/swaggerOptions');
 const studentsRoutes = require('./routes/student');
 const authenticateRoutes = require('./routes/authenticateRoute');
 const lectureRoutes = require('./routes/lecturesRoute');
+const teachersRoute = require('./routes/teachersRoute');
 
 const errorHandler = require('./services/errorHandler');
 const bookingRoute = require('./routes/bookingsRoute');
@@ -27,6 +28,7 @@ app.use('/', lectureRoutes);
 app.use(`/`, studentsRoutes);
 app.use(`/`, authenticateRoutes);
 app.use(`/`, bookingRoute);
+app.use(`/`, teachersRoute);
 
 app.use(errorHandler);
 
