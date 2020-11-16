@@ -1,5 +1,5 @@
 import API from "./API";
-import moment from 'moment'
+import moment from 'moment';
 var axios = require("axios");
 var MockAdapter = require("axios-mock-adapter");
 
@@ -104,7 +104,7 @@ const sample_booking = {
     present: false,
     updated_at: "2013-10-07 04:23:19.120-04:00",
     deleted_at: null
-},
+};
 
 
 describe('Client API calls', () => {
@@ -222,7 +222,7 @@ describe('Client API calls', () => {
         });
 
         it('returns all the bookings for a lecture', async () => {
-            mock.onPost(`/students/${sample_booking.student_id}/bookings`,{params:{lecture_id: sample_booking.lecture_id}}).reply(200, sample_booking);
+            mock.onPost(`/students/${sample_booking.student_id}/bookings`,{lecture_id: sample_booking.lecture_id}).reply(200, sample_booking);
             const booking = await API.bookLecture(sample_booking.student_id, sample_booking.lecture_id);
             expect(booking.lecture_id).toEqual(sample_booking.lecture_id);
             expect(booking.student_id).toEqual(sample_booking.student_id);
