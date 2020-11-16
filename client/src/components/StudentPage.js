@@ -96,7 +96,7 @@ class StudentPage extends React.Component {
       events:[]
     } 
     this.transformIntoEvents=this.transformIntoEvents.bind(this);
-    this.colorize= this.colorize.bind(this);
+    //this.colorize= this.colorize.bind(this);
     this.changeDisplayEvent=this.changeDisplayEvent.bind(this);
     this.prenota=this.prenota.bind(this)
  }
@@ -107,8 +107,17 @@ class StudentPage extends React.Component {
     let ret=this.transformIntoEvents();
   } 
 
+  getColor= (course_id) => {
+    let colorArray=["plum","tomato","green","dodgerBlue","darkOrange","pink",
+                  ,"mediumOrchid","coral","lightBlue","sandyBrown","lightSeaGreen",
+                  "khaki",,"deepSkyBlue","chocolate","orange","rebeccaPurple","salmon"]
+    let ids = this.state.lectures.map((l)=> l.course_id).filter(this.onlyUnique);
+    let index = ids.indexOf(course_id);
 
-  colorize= function(subjectArray,course_id){
+    return colorArray[index];
+  }
+
+  /* colorize= function(subjectArray,course_id){
   
     let colorArray=["plum","tomato","green","dodgerBlue","darkOrange","pink",
                   ,"mediumOrchid","coral","lightBlue","sandyBrown","lightSeaGreen",
@@ -122,13 +131,17 @@ class StudentPage extends React.Component {
       subjectArray[course_id]=colorArray[colorIndex]
       return subjectArray;
     }
+  } */
+
+  onlyUnique = function(value, index, self) {
+    return self.indexOf(value) === index;
   }
 
 transformIntoEvents=()=>{
   let subjectArray={} 
   this.setState(state =>{
    const list=state.lectures.map((l)=>{
-    subjectArray=this.colorize(subjectArray,l.course_id)
+    // subjectArray=this.colorize(subjectArray,l.course_id)
     return({lectureId:l.id,
       subjectId:l.course_id,
       subjectName:l.course_name,
@@ -137,7 +150,7 @@ transformIntoEvents=()=>{
       seats:l.available_seats,
       title: l.course_name+l.room_name+"\n"+l.bookable,
       start:l.datetime,end:l.datetime_end,
-      backgroundColor:subjectArray[l.course_id],
+      backgroundColor: this.getColor(l.course_id),
       display:'auto'});
   });
   return{events:[...list]}
@@ -165,6 +178,28 @@ prenota=function(){
 }
   
 
+renderModal = () =>{
+  let text = {
+    'booked' : "You have booked a seat for this lecture",
+    'free' : `${this.state.selected.extendedProps.seats} available seats`,
+    'full' : "No available seats",
+    'closed': "Booking closed"
+  }
+
+  return (
+  <Modal.Dialog className="z1">
+    <Modal.Header >
+      <Modal.Title>{this.state.selected.title}</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+        {text[this.state.selected.extendedProps.status]}
+    </Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
+    </Modal.Footer>
+  </Modal.Dialog> )
+
+}
 
 
 
@@ -223,62 +258,7 @@ render() {
       </Row>
     </Container>
 
-    {(this.state.modal===true && this.state.selected.extendedProps.status==="booked")? 
-    <Modal.Dialog className="z1">
-      <Modal.Header >
-        <Modal.Title>{this.state.selected.title}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-          {"You have booked a seat for this lecture"}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
-      </Modal.Footer>
-    </Modal.Dialog>
-    :<div></div>}
-
-    {(this.state.modal===true && this.state.selected.extendedProps.status==="free")? 
-    <Modal.Dialog className="z1">
-      <Modal.Header >
-        <Modal.Title>{this.state.selected.title}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-          {this.state.selected.extendedProps.seats+" available seats"}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
-        <Button variant="success" onClick={()=>{this.prenota()}}>Book a seat</Button>
-      </Modal.Footer>
-    </Modal.Dialog>
-    :<div></div>}
-
-    {(this.state.modal===true && this.state.selected.extendedProps.status==="full")? 
-    <Modal.Dialog className="z1">
-      <Modal.Header >
-        <Modal.Title>{this.state.selected.title+"\n "}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-          {"No available seats"}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
-      </Modal.Footer>
-    </Modal.Dialog>
-    :<div></div>}
-
-    {(this.state.modal===true && this.state.selected.extendedProps.status==="closed")? 
-    <Modal.Dialog className="z1">
-      <Modal.Header >
-        <Modal.Title>{this.state.selected.title+"\n "}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-          {"Booking closed"}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
-      </Modal.Footer>
-    </Modal.Dialog>
-    :<div></div>}
+    {this.state.modal ? this.renderModal() : <></>}
 
   </>)
 }
