@@ -1,9 +1,7 @@
-<<<<<<< HEAD
 /*require('dotenv').config({ path: './config/config.env' });
-=======
+
 process.env.NODE_ENV = 'test';
 require('dotenv').config({ path: './config/config.env' });
->>>>>>> 11a223158f5eb607c42637543f14b020de0f9abb
 
 const { MailSlurp } = require('mailslurp-client');
 const mailserver = require('../utils/mail');

@@ -3,7 +3,7 @@ const userDao = require('../daos/user_dao');
 const roomDao = require('../daos/room_dao');
 const courseDao = require('../daos/course_dao');
 const bookingDao = require('../daos/booking_dao');
-const course_studentDao = require('../daos/course_student');
+const course_studentDao = require('../daos/course_student_dao');
 
 const moment = require('moment');
 

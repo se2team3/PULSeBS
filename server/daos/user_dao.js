@@ -39,11 +39,7 @@ exports.clearUserTable = function () {
 exports.insertUser = function({university_id,email,password,name,surname,role}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
-<<<<<<< HEAD
-        db.run(sql,[university_id,email,password,name,surname,role],function(err){
-=======
         db.run(sql,[university_id,email,password,name,surname,role],function(err) {
->>>>>>> 11a223158f5eb607c42637543f14b020de0f9abb
             if(err)
                 reject(err);
             else

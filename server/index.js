@@ -6,12 +6,9 @@ const morgan = require('morgan');
 
 const swaggerOptions = require('./config/swaggerOptions');
 const studentsRoutes = require('./routes/student');
-<<<<<<< HEAD
 const authenticateRoutes = require('./routes/authenticateRoute');
-=======
 const lectureRoutes = require('./routes/lecturesRoute');
-const authenticateRoutes = require('./routes/authenticate');
->>>>>>> 11a223158f5eb607c42637543f14b020de0f9abb
+
 const errorHandler = require('./services/errorHandler');
 const bookingRoute = require('./routes/bookingsRoute');
 

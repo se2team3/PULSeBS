@@ -43,7 +43,6 @@ const router = express.Router();
 router.post('/students/:student_id/bookings',lectureValidation.checkLecture(),validator, async(req,res) =>{
     const {lecture_id} = req.body;
     const student_id= + req.params.student_id;
-
     try{
         let booking = await bookingService.insertBooking({lecture_id,student_id});
         return res.status(201).json(booking);
