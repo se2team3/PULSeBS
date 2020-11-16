@@ -57,8 +57,8 @@ const randomString = (len = 10) => {
 
 /**
  * Generates a teacher object, with a fixed email
- * @param {int} university_id - unique ID
- * @returns {{password: string, role: string, university_id: int, surname: string, name: string, email: string}}
+ * @param {string} university_id - unique ID
+ * @returns {{password: string, role: string, university_id: string, surname: string, name: string, email: string}}
  */
 const teacherObj = (university_id) => ({
     university_id,
@@ -71,8 +71,8 @@ const teacherObj = (university_id) => ({
 
 /**
  * Generates a student object, with a pseudo-random email
- * @param {int} university_id - unique ID
- * @returns {{password: string, role: string, university_id: int, surname: string, name: string, email: string}}
+ * @param {string} university_id - unique ID
+ * @returns {{password: string, role: string, university_id: string, surname: string, name: string, email: string}}
  */
 const studentObj = (university_id) => ({
     university_id,

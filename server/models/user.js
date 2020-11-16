@@ -15,7 +15,7 @@
  *       - id
  *       - university_id
  *       - email
- *       - password
+ *       - hash
  *       - name
  *       - surname
  *       - role
@@ -28,7 +28,7 @@
  *       email:
  *         type: string
  *         format: email 
- *       password:
+ *       hash:
  *         type: string
  *         format: byte
  *       name:
@@ -43,11 +43,11 @@
  */
 
 class User{
-    constructor(id,university_id,email,password,name,surname,role){
+    constructor(id,university_id,email,hash,name,surname,role){
             this.id = id;
             this.university_id = university_id;
             this.email = email;
-            this.password = password;
+            this.hash = hash;
             this.name = name;
             this.surname = surname;
             this.role = role;
