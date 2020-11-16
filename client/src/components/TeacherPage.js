@@ -13,49 +13,75 @@ class TeacherPage extends React.Component {
 
     this.state={
       openLecture:false,
-      events:[
-        {
-          lectureId:1,
-          subjectId:1,
-          subjectName: 'Physics I',
-          title: 'Physics I'+" \n" +'ROOM4' + " \n"+"Booking Closed", 
-          start:'2020-11-12T10:00:00',end:'2020-11-12T13:00:00',
-          backgroundColor:'orange',
-          display:'auto'
-        //daysOfWeek: [4], startTime:'10:30',endTime:'11:30', if we want to repeat every week
-        },
-        {
-          lectureId:2,
-          subjectId:2,
-          subjectName:'Physics II',
-          title: `Physics II ROOM5S
-          42/80 available seats`, 
-          start:'2020-11-10T17:00:00',end:'2020-11-10T18:30:00',
-          backgroundColor:'green',
-          display:'auto'
-        },
-        {
-          lectureId:3,
-          subjectId:2,
-          subjectName:'Physics II',
-          title: `Physics II ROOM5S
-          20/80 available seats`, 
-          start:'2020-11-14T10:00:00',end:'2020-11-14T11:30:00',
-          backgroundColor:'green',
-          display:'auto'
-        },
-        {
-          lectureId:4,
-          subjectId:3,
-          subjectName:'Psysics III',
-          title: `Physics III ROOM1B
-          20/50 available seats`, 
-          start:'2020-11-11T13:30:00',end:'2020-11-11T15:30:00',
-          backgroundColor:'red',
-          display:'auto'
-        }
-        ]
+      lectures:[{
+        id: 1,
+        datetime: "2020-11-19T10:00:00",
+        course_id: 1,
+        room_id: 5,
+        virtual: false,
+        deleted_at: null,
+        datetime_end: "2020-11-19T13:00:00",
+        course_name:"Physics I",
+        teacher_name:"Richard",
+        teacher_surname: "Feynman",
+        room_name:"ROOM4",
+        available_seats:35,
+        bookable:"closed"
+      },
+      {
+        id: 2,
+        datetime: "2020-11-17T17:00:00",
+        course_id: 2,
+        room_id: 5,
+        virtual: false,
+        deleted_at: null,
+        datetime_end: "2020-11-17T18:30:00'",
+        course_name:"Physics II",
+        teacher_name:"Walter",
+        teacher_surname: "White",
+        room_name:"ROOM4",
+        available_seats:35,
+        bookable:"full"
+      },
+      {
+        id: 3,
+        datetime: "2020-11-21T10:00:00",
+        course_id: 2,
+        room_id: 5,
+        virtual: false,
+        deleted_at: null,
+        datetime_end: "2020-11-21T10:00:00",
+        course_name:"Physics II",
+        teacher_name:"Walter",
+        teacher_surname: "White",
+        room_name:"ROOM4",
+        available_seats:42,
+        bookable:"booked"
+      },
+      {
+        id: 4,
+        datetime: "2020-11-18T13:30:00",
+        course_id: 3,
+        room_id: 5,
+        virtual: false,
+        deleted_at: null,
+        datetime_end: "2020-11-18T11:30:00",
+        course_name:"Physics III",
+        teacher_name:"Alessandro",
+        teacher_surname: "Volta",
+        room_name:"ROOM4",
+        available_seats:42,
+        bookable:"free"
+      },
+
+      
+      
+    ],
+
+      events:[]
     }
+    this.transformIntoEvents=this.transformIntoEvents.bind(this);
+    this.colorize= this.colorize.bind(this);
     this.changeDisplayEvent=this.changeDisplayEvent.bind(this);
  }
 
@@ -72,6 +98,47 @@ changeDisplayEvent=(subjectId,event)=>{
     });
    return {events:[...list]}
   });  
+}
+
+async componentDidMount(){
+  console.log("HERE")
+  let ret=this.transformIntoEvents();
+} 
+
+colorize= function(subjectArray,course_id){
+  
+  let colorArray=["plum","tomato","green","dodgerBlue","darkOrange","pink",
+                ,"mediumOrchid","coral","lightBlue","sandyBrown","lightSeaGreen",
+                "khaki",,"deepSkyBlue","chocolate","orange","rebeccaPurple","salmon"]
+
+  let c=subjectArray[course_id];
+  if(c!=undefined)
+    return subjectArray;
+  else {
+    let colorIndex= Math.floor(Math.random()*colorArray.length);
+    subjectArray[course_id]=colorArray[colorIndex]
+    return subjectArray;
+  }
+}
+
+transformIntoEvents=()=>{
+let subjectArray={} 
+this.setState(state =>{
+ const list=state.lectures.map((l)=>{
+  subjectArray=this.colorize(subjectArray,l.course_id)
+  return({lectureId:l.id,
+    subjectId:l.course_id,
+    subjectName:l.course_name,
+    teacher:l.teacher_name+l.teacher_surname,
+    status:l.bookable,
+    seats:l.available_seats,
+    title: l.course_name+l.room_name+"\n"+l.bookable,
+    start:l.datetime,end:l.datetime_end,
+    backgroundColor:subjectArray[l.course_id],
+    display:'auto'});
+});
+return{events:[...list]}
+});
 }
     
   
