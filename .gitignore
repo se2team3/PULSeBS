@@ -7,3 +7,4 @@
 /client/.nyc_output
 /server/.nyc_output
 /server/coverage
+/client/coverage
