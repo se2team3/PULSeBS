@@ -1,7 +1,10 @@
+/*require('dotenv').config({ path: './config/config.env' });
+
+process.env.NODE_ENV = 'test';
 require('dotenv').config({ path: './config/config.env' });
 
 const { MailSlurp } = require('mailslurp-client');
-const mail = require('../utils/mail');
+const mailserver = require('../utils/mail');
 const chai = require('chai');
 const should = chai.should();
 
@@ -15,7 +18,8 @@ describe('Email testing', function() {
 
     describe('Validate email address', function () {
         it('should have the proper email addresses', async function () {
-            mail.send({
+            this.timeout(30000);
+            mailserver.send({
                 to: inbox.emailAddress,
                 subject: "Confirmation message",
                 text: "text",
@@ -28,7 +32,8 @@ describe('Email testing', function() {
         });
 
         it('should have the proper email subject', async function () {
-            mail.send({
+            this.timeout(30000);
+            mailserver.send({
                 to: inbox.emailAddress,
                 subject: "Confirmation message",
                 text: "text",
@@ -43,3 +48,4 @@ const sendError = (err) => {
     console.error("Error in sending email", err);
     should.fail("Error in sending email with nodemailer.. asserting failure");
 };
+*/

@@ -2,6 +2,13 @@ const jwt = require('express-jwt');
 const { secret } = require('../config/secret.json');
 
 // TODO: we may want to use a set of roles (e.g. both Student and Teacher can access a resource)
+/**
+ * Middleware function that filters request based on the given role
+ * @param {string} [role] - specifies the role that has access to the resource.
+ *                          If empty lets all the logged users access the resource
+ * @see utils/roles.js
+ * @returns {[function(*=, *=, *): (*|undefined), function(*, *, *): (*|undefined)]}
+ */
 const authorize = (role= "") => {
     return [
         // authenticate JWT token and attach user to request object (req.user)

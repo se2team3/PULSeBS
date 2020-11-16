@@ -5,3 +5,5 @@
 #/server/config/config.env
 /client/coverage
 /client/.nyc_output
+/server/.nyc_output
+/server/coverage
