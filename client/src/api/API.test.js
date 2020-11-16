@@ -13,7 +13,14 @@ const sample_lectures = [
         course_id: 42,
         room_id: null,
         virtual: true,
-        deleted_at: null
+        deleted_at: null,
+        datetime_end: "2013-10-07 04:23:19.120-04:00",
+        course_name:"Physics",
+        teacher_name:"Mario",
+        teacher_surname: "Rossi",
+        room_name:"1B",
+        available_seats:35,
+        bookable:"free"
     },
     {
         id: 1,
@@ -21,7 +28,14 @@ const sample_lectures = [
         course_id: 42,
         room_id: 5,
         virtual: false,
-        deleted_at: null
+        deleted_at: null,
+        datetime_end: "2013-10-07 04:23:19.120-04:00",
+        course_name:"Physics",
+        teacher_name:"Mario",
+        teacher_surname: "Rossi",
+        room_name:"1B",
+        available_seats:35,
+        bookable:"free"
     },
     {
         id: 2,
@@ -29,7 +43,14 @@ const sample_lectures = [
         course_id: 42,
         room_id: 5,
         virtual: false,
-        deleted_at: null
+        deleted_at: null,
+        datetime_end: "2013-10-07 04:23:19.120-04:00",
+        course_name:"Physics",
+        teacher_name:"Mario",
+        teacher_surname: "Rossi",
+        room_name:"1B",
+        available_seats:35,
+        bookable:"free"
     }
 ]
 
@@ -39,7 +60,14 @@ const sample_lecture = {
     course_id: 4,
     room_id: 5,
     virtual: false,
-    deleted_at: null
+    deleted_at: null,
+    datetime_end: "2013-10-07 04:23:19.120-04:00",
+    course_name:"Physics",
+    teacher_name:"Mario",
+    teacher_surname: "Rossi",
+    room_name:"1B",
+    available_seats:35,
+    bookable:"free"
 }
 
 const sample_bookings = [
