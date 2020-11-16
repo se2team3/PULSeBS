@@ -17,6 +17,20 @@ exports.createCourse_StudentTable = function() {
         });
     })
 }
+
+//clears the lecture table
+exports.clearCourse_StudentTable = function () {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DELETE FROM Course_Student';
+        db.run(sql,[],(err) =>{
+            if(err)
+                reject(err);
+            else
+                resolve();
+        });
+    })
+}
+
 //it allows you to insert a new booking
 exports.assingCourseToStudent = function({course_id,student_id}) {
     return new Promise ((resolve,reject) =>{

@@ -20,11 +20,29 @@ exports.createRoomsTable = function() {
         });
     })
 }
+
+//clears the room table
+exports.clearRoomTable = function () {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DELETE FROM Rooms';
+        db.run(sql,[],(err) =>{
+            if(err)
+                reject(err);
+            else
+                resolve();
+        });
+    })
+}
+
 //it allows you to insert a new room
 exports.insertRoom = function({name,seats}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Rooms(name,seats) VALUES(?,?)'
+<<<<<<< HEAD
         db.run(sql,[name,seats],function(err){
+=======
+        db.run(sql,[name,seats], function(err) {
+>>>>>>> 11a223158f5eb607c42637543f14b020de0f9abb
             if(err)
                 reject(err);
             else

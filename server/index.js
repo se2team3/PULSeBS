@@ -1,13 +1,17 @@
 require('dotenv').config({ path: './config/config.env' });
 const express = require('express');
-const mail = require('./utils/mail');
+const mailserver = require('./utils/mail');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
 const swaggerOptions = require('./config/swaggerOptions');
-const lectureRoute = require('./routes/lecturesRoute');
 const studentsRoutes = require('./routes/student');
+<<<<<<< HEAD
 const authenticateRoutes = require('./routes/authenticateRoute');
+=======
+const lectureRoutes = require('./routes/lecturesRoute');
+const authenticateRoutes = require('./routes/authenticate');
+>>>>>>> 11a223158f5eb607c42637543f14b020de0f9abb
 const errorHandler = require('./services/errorHandler');
 const bookingRoute = require('./routes/bookingsRoute');
 
@@ -21,8 +25,8 @@ if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('dev'));
 }
 
-app.use('/api-docs',...swaggerOptions);
-app.use('/', lectureRoute);
+app.use('/api-docs', ...swaggerOptions);
+app.use('/', lectureRoutes);
 app.use(`/`, studentsRoutes);
 app.use(`/`, authenticateRoutes);
 app.use(`/`, bookingRoute);
@@ -31,11 +35,15 @@ app.use(errorHandler);
 
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
 
-mail.send({
-    to: "email@address.com",
-    subject: "Subject here",
-    text: "Email body"
-}).then(/*console.log*/).catch(console.error);
+mailserver.start((error) => {
+    if (error)
+        throw new Error(error);
+    if (process.env.NODE_ENV !== "test")
+        console.log("Server is ready to send emails");
+});
+
+const sendEveryTenSeconds = '*/10 * * * * *';
+mailserver.job().start();
 
 // test purposes
 module.exports = app;

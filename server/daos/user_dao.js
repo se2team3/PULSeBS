@@ -21,15 +21,33 @@ exports.createUsersTable = function() {
         });
     })
 }
+
+//clears the lecture table
+exports.clearUserTable = function () {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DELETE FROM Users';
+        db.run(sql,[],(err) =>{
+            if(err)
+                reject(err);
+            else
+                resolve();
+        });
+    })
+}
+
 //it allows you to insert a new user
 exports.insertUser = function({university_id,email,password,name,surname,role}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
+<<<<<<< HEAD
         db.run(sql,[university_id,email,password,name,surname,role],function(err){
+=======
+        db.run(sql,[university_id,email,password,name,surname,role],function(err) {
+>>>>>>> 11a223158f5eb607c42637543f14b020de0f9abb
             if(err)
                 reject(err);
             else
-                resolve(this.lastID);   
+                resolve(this.lastID);
         });
     })
 }
