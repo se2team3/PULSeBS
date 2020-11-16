@@ -1,7 +1,6 @@
 import axios from 'axios';
 import moment from 'moment';
 import ExtendedLecture from './models/extended_lecture';
-import Lecture from './models/lecture';
 import Booking from './models/booking';
 
 const baseURL = "";

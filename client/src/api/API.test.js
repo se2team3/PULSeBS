@@ -97,6 +97,16 @@ const sample_bookings = [
     }
 ]
 
+const sample_booking = {
+    lecture_id: 42,
+    student_id: 2,
+    waiting: false,
+    present: false,
+    updated_at: "2013-10-07 04:23:19.120-04:00",
+    deleted_at: null
+},
+
+
 describe('Client API calls', () => {
     describe('getLectures', () => {
 
@@ -199,6 +209,30 @@ describe('Client API calls', () => {
             mock.onGet("/lectures/44/bookings").reply(500, "internal server error");
             try {
                 await API.getBookings(44);
+            }
+            catch (e) {
+                expect(e.status).toBe(500);
+            }
+        });
+    })
+
+    describe('bookLecture', () => {
+        beforeEach(() => {
+            mock.reset()
+        });
+
+        it('returns all the bookings for a lecture', async () => {
+            mock.onPost(`/students/${sample_booking.student_id}/bookings`,{params:{lecture_id: sample_booking.lecture_id}}).reply(200, sample_booking);
+            const booking = await API.bookLecture(sample_booking.student_id, sample_booking.lecture_id);
+            expect(booking.lecture_id).toEqual(sample_booking.lecture_id);
+            expect(booking.student_id).toEqual(sample_booking.student_id);
+            expect(booking.updated_at).toEqual(sample_booking.updated_at); //TODO do more reasonable tests
+        });
+
+        it('something went wrong getting bookings', async () => {
+            mock.onPost(`/students/${sample_booking.student_id}/bookings`).reply(500, "internal server error");
+            try {
+                await API.bookLecture(sample_booking.student_id, sample_booking.lecture_id);
             }
             catch (e) {
                 expect(e.status).toBe(500);
