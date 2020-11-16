@@ -33,4 +33,4 @@ exports.deleteCourses = async function(){
     } catch (error) {
         return errHandler(error);
     }
-}
+} 

@@ -33,4 +33,4 @@ exports.deleteRooms = async function(){
     } catch (error) {
         return errHandler(error);
     }
-}
+} 

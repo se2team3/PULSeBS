@@ -1,15 +1,15 @@
-process.env.NODE_ENV = 'test';
+/*process.env.NODE_ENV = 'test';
 
 const chai = require('chai');
 const server = require('../index');
 const should = chai.should();
-const { addUser, clearUsers } = require('../services/userService');
+const { addUser, clearUsers } = require('../services/user');
 
 const chaiHttp = require("chai-http");
 
 chai.use(chaiHttp);
 
-/* describe('Authentication routes', function () {
+describe('Authentication routes', function () {
     beforeEach('Clear user db', async function() {
         clearUsers()
     });
@@ -111,4 +111,4 @@ const wrongCredentials = (res) => {
     res.body.should.be.an('object');
     const response = { message: 'Username or password is incorrect' };
     res.body.should.be.eql(response);
-}; */
+};*/
