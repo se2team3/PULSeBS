@@ -1,6 +1,8 @@
 // import database
 // import modules
 
+const bcrypt = require('bcrypt');
+const { saltRounds } = require('../config/bcrypt.json');
 const db = require('../db/db.js');
 const User = require('../models/user.js');
 
@@ -36,10 +38,12 @@ exports.clearUserTable = function () {
 }
 
 //it allows you to insert a new user
-exports.insertUser = function({university_id,email,password,name,surname,role}) {
+exports.insertUser = async function({university_id,email,password,name,surname,role}) {
+    const hash = await bcrypt.hash(password, saltRounds);
+
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
-        db.run(sql,[university_id,email,password,name,surname,role],function(err) {
+        db.run(sql,[university_id,email,hash,name,surname,role],function(err) {
             if(err)
                 reject(err);
             else
@@ -64,6 +68,23 @@ exports.retrieveUser = function(id) {
         });
     })
 }
+//gets the user with the selected id
+exports.retrieveUserByEmail = function(email) {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT * FROM Users WHERE email = ?'
+        db.get(sql, [email], (err, row) => {
+            if(err)
+                return reject(err);
+            if (!row)
+                resolve(null);
+            else{
+                const user = createUser(row);
+                resolve(user);
+            }
+        });
+    })
+}
+
 exports.deleteUsersTable = function() {
     return new Promise ((resolve,reject) =>{
         const sql = 'DROP TABLE Users '
