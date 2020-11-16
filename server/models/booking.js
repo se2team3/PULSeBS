@@ -31,7 +31,6 @@
  *         format: date-time
  */
 
-
 class Booking{
     constructor(lecture_id,student_id,waiting,present,updated_at,deleted_at){
             this.lecture_id = lecture_id;

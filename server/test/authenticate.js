@@ -1,4 +1,4 @@
-process.env.NODE_ENV = 'test';
+/*process.env.NODE_ENV = 'test';
 
 const chai = require('chai');
 const server = require('../index');
@@ -111,4 +111,4 @@ const wrongCredentials = (res) => {
     res.body.should.be.an('object');
     const response = { message: 'Username or password is incorrect' };
     res.body.should.be.eql(response);
-};
+};*/

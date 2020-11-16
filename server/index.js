@@ -7,8 +7,9 @@ const morgan = require('morgan');
 const swaggerOptions = require('./config/swaggerOptions');
 const lectureRoute = require('./routes/lecturesRoute');
 const studentsRoutes = require('./routes/student');
-const authenticateRoutes = require('./routes/authenticate');
+const authenticateRoutes = require('./routes/authenticateRoute');
 const errorHandler = require('./services/errorHandler');
+const bookingRoute = require('./routes/bookingsRoute');
 
 const PORT = process.env.PORT || 3001;
 
@@ -24,6 +25,8 @@ app.use('/api-docs',...swaggerOptions);
 app.use('/', lectureRoute);
 app.use(`/`, studentsRoutes);
 app.use(`/`, authenticateRoutes);
+app.use(`/`, bookingRoute);
+
 app.use(errorHandler);
 
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));

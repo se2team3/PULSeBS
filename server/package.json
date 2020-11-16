@@ -1,5 +1,5 @@
 {
-  "name": "PULSeBS-server",
+  "name": "pulsebs-server",
   "version": "0.0.1",
   "description": "Pandemic University Lecture Seat Booking System server",
   "main": "index.js",
@@ -16,6 +16,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
+    "express-validator": "^6.6.1",
     "jsonwebtoken": "^8.5.1",
     "mailslurp-client": "^9.0.1",
     "moment": "^2.24.0",
@@ -34,35 +35,14 @@
   },
   "author": "",
   "contributors": [
-    {
-      "name": "Alili Galib",
-      "email": "",
-      "url": ""
-    },
-    {
-      "name": "Antoniotti Luca",
-      "email": "",
-      "url": ""
-    },
-    {
-      "name": "Bitondo Federico",
-      "email": "",
-      "url": ""
-    },
-    {
-      "name": "Impagnatiello Giuseppina",
-      "email": "",
-      "url": ""
-    },
-    {
-      "name": "Piazza Dario",
-      "email": "",
-      "url": ""
-    },
-    {
-      "name": "Rinelli Luca",
-      "email": "",
-      "url": ""
-    }
-  ]
+    "Alili Galib",
+    "Antoniotti Luca",
+    "Bitondo Federico",
+    "Impagnatiello Giuseppina",
+    "Piazza Dario",
+    "Rinelli Luca"
+  ],
+  "directories": {
+    "test": "test"
+  }
 }
