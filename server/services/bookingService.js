@@ -9,10 +9,10 @@ exports.createBookingTable = async function() {
     }
 }
 
-exports.insertBooking = async function({lecture_id,student_id}) {
+exports.insertBooking = async function(booking) {
     try {
-        let booking = await bookingDao.insertBooking({lecture_id,student_id});
-        return booking;
+        let book = await bookingDao.insertBooking({...booking});
+        return book;
     } catch (error) {
         return errHandler(error);
     }

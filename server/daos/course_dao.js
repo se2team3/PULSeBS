@@ -23,10 +23,10 @@ exports.createCourseTable = function() {
     })
 }
 //it allows you to insert a new course
-exports.insertCourse = function(course) {
+exports.insertCourse = function({code,name,teacher_id}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Courses(code,name,teacher_id) VALUES(?,?,?)'
-        db.run(sql,[course.code,course.name,course.teacher_id],function(err){
+        db.run(sql,[code,name,teacher_id],function(err){
             if(err)
                 reject(err);
             else

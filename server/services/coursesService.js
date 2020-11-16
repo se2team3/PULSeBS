@@ -11,7 +11,7 @@ exports.createCoursesTable = async function() {
 
 exports.addCourse = async function(course) {
     try {
-        let id = await coursesDao.insertCourse(course);
+        let id = await coursesDao.insertCourse({...course});
         return id;
     } catch (error) {
         return errHandler(error);
