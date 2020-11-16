@@ -1,3 +1,11 @@
+/**
+ * Middleware functions that is called either as the last function in the express chain or when explicitly invoked
+ * @param {string|object} err - is the type of error
+ * @param req
+ * @param res
+ * @param next
+ * @returns {*}
+ */
 function errorHandler(err, req, res, next) {
     if (typeof (err) === 'string') {
         // custom application error

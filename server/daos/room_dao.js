@@ -11,7 +11,7 @@ const createRoom = function (row){
 // it creates the room table
 exports.createRoomsTable = function() {
     return new Promise ((resolve,reject) => {
-        const sql = 'CREATE TABLE Rooms (id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL, seats INTEGER NOT NULL)'
+        const sql = 'CREATE TABLE IF NOT EXISTS Rooms (id INTEGER NOT NULL PRIMARY KEY, name TEXT NOT NULL, seats INTEGER NOT NULL)'
         db.run(sql,[],(err) =>{
             if(err)
                 reject(err);
@@ -20,11 +20,25 @@ exports.createRoomsTable = function() {
         });
     })
 }
+
+//clears the room table
+exports.clearRoomTable = function () {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DELETE FROM Rooms';
+        db.run(sql,[],(err) =>{
+            if(err)
+                reject(err);
+            else
+                resolve();
+        });
+    })
+}
+
 //it allows you to insert a new room
 exports.insertRoom = function({name,seats}) {
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Rooms(name,seats) VALUES(?,?)'
-        db.run(sql,[name,seats],(err) =>{
+        db.run(sql,[name,seats],function(err){
             if(err)
                 reject(err);
             else
@@ -33,7 +47,7 @@ exports.insertRoom = function({name,seats}) {
     })
 }
 //gets the room with the selected id
-exports.retrieveRoom = function({id}) {
+exports.retrieveRoom = function(id) {
     return new Promise ((resolve,reject) =>{
         const sql = 'SELECT * FROM Rooms WHERE id = ?'
         db.get(sql, [id], (err, row) => {
@@ -46,6 +60,16 @@ exports.retrieveRoom = function({id}) {
                 resolve(room);
             }
                 
+        });
+    })
+}
+exports.deleteRoomTable = function() {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'DROP TABLE Rooms '
+        db.run(sql, (err, row) => {
+            if(err)
+                return reject(err);
+            else resolve(null);
         });
     })
 }
