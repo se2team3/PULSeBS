@@ -3,4 +3,5 @@
 .vscode
 /server/.nyc_output
 /server/coverage
+/client/coverage
 #/server/config/config.env
