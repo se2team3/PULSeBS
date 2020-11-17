@@ -6,6 +6,8 @@ var MockAdapter = require("axios-mock-adapter");
 // This sets the mock adapter on the default instance
 var mock = new MockAdapter(axios);
 
+const base_url = '/api'
+
 const sample_lectures = [
     {
         id: 0,
@@ -115,7 +117,7 @@ describe('Client API calls', () => {
         });
 
         it('returns all the lectures in the db', async () => {
-            mock.onGet("/lectures").reply(200, sample_lectures);
+            mock.onGet(base_url+"/lectures").reply(200, sample_lectures);
             const lectures = await API.getLectures();
             expect(lectures[0].id).toEqual(sample_lectures[0].id);
             expect(lectures[0].datetime).toEqual(sample_lectures[0].datetime); //TODO do more reasonable tests
@@ -124,7 +126,7 @@ describe('Client API calls', () => {
         });
 
         it('returns all the lectures in a given time frame', async () => {
-            mock.onGet("/lectures", { params: { from: "2013-10-07", to: "2013-10-07" } }).reply(200, sample_lectures);
+            mock.onGet(base_url+"/lectures", { params: { from: "2013-10-07", to: "2013-10-07" } }).reply(200, sample_lectures);
             const lectures = await API.getLectures("2013-10-07", "2013-10-07");
             expect(lectures[0].id).toEqual(sample_lectures[0].id);
             expect(lectures[0].datetime).toEqual(sample_lectures[0].datetime); //TODO do more reasonable tests
@@ -133,13 +135,13 @@ describe('Client API calls', () => {
         });
 
         it('returns all the lectures in the db but there is no lecture', async () => {
-            mock.onGet("/lectures").reply(200, []);
+            mock.onGet(base_url+"/lectures").reply(200, []);
             const lectures = await API.getLectures();
             expect(lectures.length).toEqual(0);
         });
 
         it('returns all the lectures in the db but something went wrong', async () => {
-            mock.onGet("/lectures").reply(500, "internal server error");
+            mock.onGet(base_url+"/lectures").reply(500, "internal server error");
             try {
                 await API.getLectures();
             }
@@ -156,13 +158,13 @@ describe('Client API calls', () => {
         });
 
         it('returns a lecture given its id', async () => {
-            mock.onGet("/lecture/42").reply(200, sample_lecture);
+            mock.onGet(base_url+"/lectures/42").reply(200, sample_lecture);
             const lecture = await API.getLecture(42);
             expect(lecture.id).toEqual(sample_lecture.id);
         });
 
         it('lecture does not exist', async () => {
-            mock.onGet("/lecture/999").reply(404, "Lecture not found");
+            mock.onGet(base_url+"/lectures/999").reply(404, "Lecture not found");
             try {
                 await API.getLecture(999);
             }
@@ -172,7 +174,7 @@ describe('Client API calls', () => {
         });
 
         it('something went wrong getting lecture', async () => {
-            mock.onGet("/lecture/12").reply(500, "internal server error");
+            mock.onGet(base_url+"/lectures/12").reply(500, "internal server error");
             try {
                 await API.getLecture(12);
             }
@@ -189,7 +191,7 @@ describe('Client API calls', () => {
         });
 
         it('returns all the bookings for a lecture', async () => {
-            mock.onGet("/lectures/42/bookings").reply(200, sample_bookings);
+            mock.onGet(base_url+"/lectures/42/bookings").reply(200, sample_bookings);
             const bookings = await API.getBookings(42);
             expect(bookings[0].lecture_id).toEqual(sample_bookings[0].lecture_id);
             expect(bookings[0].student_id).toEqual(sample_bookings[0].student_id);
@@ -200,13 +202,13 @@ describe('Client API calls', () => {
         });
 
         it('no bookings are present for this lecture', async () => {
-            mock.onGet("/lectures/43/bookings").reply(200, []);
+            mock.onGet(base_url+"/lectures/43/bookings").reply(200, []);
             const bookings = await API.getBookings(43);
             expect(bookings.length).toEqual(0);
         });
 
         it('something went wrong getting bookings', async () => {
-            mock.onGet("/lectures/44/bookings").reply(500, "internal server error");
+            mock.onGet(base_url+"/lectures/44/bookings").reply(500, "internal server error");
             try {
                 await API.getBookings(44);
             }
@@ -222,7 +224,7 @@ describe('Client API calls', () => {
         });
 
         it('returns all the bookings for a lecture', async () => {
-            mock.onPost(`/students/${sample_booking.student_id}/bookings`,{lecture_id: sample_booking.lecture_id}).reply(200, sample_booking);
+            mock.onPost(base_url+`/students/${sample_booking.student_id}/bookings`,{lecture_id: sample_booking.lecture_id}).reply(200, sample_booking);
             const booking = await API.bookLecture(sample_booking.student_id, sample_booking.lecture_id);
             expect(booking.lecture_id).toEqual(sample_booking.lecture_id);
             expect(booking.student_id).toEqual(sample_booking.student_id);
@@ -230,7 +232,7 @@ describe('Client API calls', () => {
         });
 
         it('something went wrong getting bookings', async () => {
-            mock.onPost(`/students/${sample_booking.student_id}/bookings`).reply(500, "internal server error");
+            mock.onPost(base_url+`/students/${sample_booking.student_id}/bookings`).reply(500, "internal server error");
             try {
                 await API.bookLecture(sample_booking.student_id, sample_booking.lecture_id);
             }
