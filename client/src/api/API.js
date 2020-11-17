@@ -35,13 +35,13 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
         }
     }
 
-    const req_params = {};
-    if (start_date !== undefined || end_date !== undefined) {
+    const req_params = {from: start_date, to: end_date};
+    /* if (start_date !== undefined || end_date !== undefined) {
         if (start_date !== undefined)
             req_params['from'] = moment(start_date).unix();
         if (end_date !== undefined)
             req_params['to'] = moment(end_date).unix();
-    }
+    } */
     const response = await axios.get(baseURL + url, { params: req_params }).catch(error => {
         if (error.response) {
             let err = { status: error.response.status, errObj: error.response.data };

@@ -1,9 +1,11 @@
 import React from 'react';
-import {Row,Container,Col, Nav,Badge,Form,Modal,Button} from 'react-bootstrap';
-import FullCalendar from '@fullcalendar/react'
+import { Row, Container, Col, Nav, Badge, Form, Modal, Button } from 'react-bootstrap';
+import FullCalendar, { CalendarApi, getDateMeta } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list';
+import API from '../api/API';
+import moment from 'moment';
 
 
 
@@ -11,10 +13,10 @@ class StudentPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state={
-      modal:false,
-      selected:{extendedProps:{status:null}},
-      lectures:[{
+    this.state = {
+      modal: false,
+      selected: { extendedProps: { status: null } },
+      lectures: [{
         id: 1,
         datetime: "2020-11-19T10:00:00",
         course_id: 1,
@@ -22,12 +24,12 @@ class StudentPage extends React.Component {
         virtual: false,
         deleted_at: null,
         datetime_end: "2020-11-19T13:00:00",
-        course_name:"Physics",
-        teacher_name:"Richard",
+        course_name: "Physics",
+        teacher_name: "Richard",
         teacher_surname: "Feynman",
-        room_name:"ROOM4",
-        available_seats:35,
-        bookable:"closed"
+        room_name: "ROOM4",
+        available_seats: 35,
+        bookable: "closed"
       },
       {
         id: 2,
@@ -37,12 +39,12 @@ class StudentPage extends React.Component {
         virtual: false,
         deleted_at: null,
         datetime_end: "2020-11-17T18:30:00'",
-        course_name:"Chemistry",
-        teacher_name:"Walter",
+        course_name: "Chemistry",
+        teacher_name: "Walter",
         teacher_surname: "White",
-        room_name:"ROOM4",
-        available_seats:35,
-        bookable:"full"
+        room_name: "ROOM4",
+        available_seats: 35,
+        bookable: "full"
       },
       {
         id: 3,
@@ -52,12 +54,12 @@ class StudentPage extends React.Component {
         virtual: false,
         deleted_at: null,
         datetime_end: "2020-11-21T10:00:00",
-        course_name:"Chemistry",
-        teacher_name:"Walter",
+        course_name: "Chemistry",
+        teacher_name: "Walter",
         teacher_surname: "White",
-        room_name:"ROOM4",
-        available_seats:42,
-        bookable:"booked"
+        room_name: "ROOM4",
+        available_seats: 42,
+        bookable: "booked"
       },
       {
         id: 4,
@@ -67,12 +69,12 @@ class StudentPage extends React.Component {
         virtual: false,
         deleted_at: null,
         datetime_end: "2020-11-18T11:30:00",
-        course_name:"Circuit Theory",
-        teacher_name:"Alessandro",
+        course_name: "Circuit Theory",
+        teacher_name: "Alessandro",
         teacher_surname: "Volta",
-        room_name:"ROOM4",
-        available_seats:42,
-        bookable:"free"
+        room_name: "ROOM4",
+        available_seats: 42,
+        bookable: "free"
       },
 
       {
@@ -83,185 +85,190 @@ class StudentPage extends React.Component {
         virtual: false,
         deleted_at: null,
         datetime_end: "2020-11-16TT11:30:00",
-        course_name:"Analysis II",
-        teacher_name:"Giuseppe",
+        course_name: "Analysis II",
+        teacher_name: "Giuseppe",
         teacher_surname: "Lagrange",
-        room_name:"ROOM4",
-        available_seats:20,
-        bookable:"free"
+        room_name: "ROOM4",
+        available_seats: 20,
+        bookable: "free"
       },
-      
-    ],
 
-      events:[]
-    } 
-    this.transformIntoEvents=this.transformIntoEvents.bind(this);
-    //this.colorize= this.colorize.bind(this);
-    this.changeDisplayEvent=this.changeDisplayEvent.bind(this);
-    this.prenota=this.prenota.bind(this)
- }
+      ],
+
+      events: []
+    }
+  }
 
 
-  async componentDidMount(){
-    console.log("HERE")
-    let ret=this.transformIntoEvents();
-  } 
+  componentDidMount() {
+    /* let today = moment().format("YYYY-MM-DD");
+    let nextWeek = moment().add(7,'days').format("YYYY-MM-DD");
+    let role = 'student';
+    let uid = 1 ;
+    API.getLectures(today,nextWeek,role,uid)
+    .then((res)=>{
+      this.setState({lectures: res})
+      this.transformIntoEvents();
+    })
+    .catch((err)=>console.log(err)); */
+    this.transformIntoEvents();
+  }
 
-  getColor= (course_id) => {
-    let colorArray=["plum","tomato","green","dodgerBlue","darkOrange","pink",
-                  ,"mediumOrchid","coral","lightBlue","sandyBrown","lightSeaGreen",
-                  "khaki",,"deepSkyBlue","chocolate","orange","rebeccaPurple","salmon"]
-    let ids = this.state.lectures.map((l)=> l.course_id).filter(this.onlyUnique);
+  getColor = (course_id) => {
+    let colorArray = ["plum", "tomato", "green", "dodgerBlue", "darkOrange", "pink",
+      , "mediumOrchid", "coral", "lightBlue", "sandyBrown", "lightSeaGreen",
+      "khaki", , "deepSkyBlue", "chocolate", "orange", "rebeccaPurple", "salmon"]
+    let ids = this.state.lectures.map((l) => l.course_id).filter(this.onlyUnique);
     let index = ids.indexOf(course_id);
 
     return colorArray[index];
   }
 
-  /* colorize= function(subjectArray,course_id){
-  
-    let colorArray=["plum","tomato","green","dodgerBlue","darkOrange","pink",
-                  ,"mediumOrchid","coral","lightBlue","sandyBrown","lightSeaGreen",
-                  "khaki",,"deepSkyBlue","chocolate","orange","rebeccaPurple","salmon"]
-  
-    let c=subjectArray[course_id];
-    if(c!=undefined)
-      return subjectArray;
-    else {
-      let colorIndex= Math.floor(Math.random()*colorArray.length);
-      subjectArray[course_id]=colorArray[colorIndex]
-      return subjectArray;
-    }
-  } */
-
-  onlyUnique = function(value, index, self) {
+  onlyUnique = function (value, index, self) {
     return self.indexOf(value) === index;
   }
 
-transformIntoEvents=()=>{
-  let subjectArray={} 
-  this.setState(state =>{
-   const list=state.lectures.map((l)=>{
-    // subjectArray=this.colorize(subjectArray,l.course_id)
-    return({lectureId:l.id,
-      subjectId:l.course_id,
-      subjectName:l.course_name,
-      teacher:l.teacher_name+l.teacher_surname,
-      status:l.bookable,
-      seats:l.available_seats,
-      title: l.course_name+l.room_name+"\n"+l.bookable,
-      start:l.datetime,end:l.datetime_end,
-      backgroundColor: this.getColor(l.course_id),
-      display:'auto'});
-  });
-  return{events:[...list]}
-});
-}
-
-
-changeDisplayEvent=(subjectId,event)=>{
-  let value;
-  event.target.checked===true ? value='auto' :value="none"
-  this.setState(state => {
-    const list = state.events.map((e) => {
-      if (e.subjectId===subjectId) {
-        e.display=value;
-      }
-      return e;
+  transformIntoEvents = () => {
+    this.setState(state => {
+      const list = state.lectures.map((l) => {
+        return ({
+          lectureId: l.id,
+          subjectId: l.course_id,
+          subjectName: l.course_name,
+          teacher: l.teacher_name + l.teacher_surname,
+          status: l.bookable,
+          seats: l.available_seats,
+          title: l.course_name + l.room_name + "\n" + l.bookable,
+          start: l.datetime, end: l.datetime_end,
+          backgroundColor: this.getColor(l.course_id),
+          display: 'auto'
+        });
+      });
+      return { events: [...list] }
     });
-   return {events:[...list]}
-  });  
-}
-    
-
-prenota=function(){
-  this.setState({modal:false})
-}
-  
-
-renderModal = () =>{
-  let text = {
-    'booked' : "You have booked a seat for this lecture",
-    'free' : `${this.state.selected.extendedProps.seats} available seats`,
-    'full' : "No available seats",
-    'closed': "Booking closed"
   }
 
-  return (
-  <Modal.Dialog className="z1">
-    <Modal.Header >
-      <Modal.Title>{this.state.selected.title}</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-        {text[this.state.selected.extendedProps.status]}
-    </Modal.Body>
-    <Modal.Footer>
-      <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
-    </Modal.Footer>
-  </Modal.Dialog> )
 
-}
+  changeDisplayEvent = (subjectId, event) => {
+    let value;
+    event.target.checked === true ? value = 'auto' : value = "none"
+    this.setState(state => {
+      const list = state.events.map((e) => {
+        if (e.subjectId === subjectId) {
+          e.display = value;
+        }
+        return e;
+      });
+      return { events: [...list] }
+    });
+  }
+
+
+  bookLecture = () => {
+    this.setState({ modal: false })
+  }
+
+
+  renderModal = () => {
+    let text = {
+      'booked': "You have booked a seat for this lecture",
+      'free': `${this.state.selected.extendedProps.seats} available seats`,
+      'full': "No available seats",
+      'closed': "Booking closed"
+    }
+
+    return (
+      <Modal.Dialog className="z1">
+        <Modal.Header >
+          <Modal.Title>{this.state.selected.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {text[this.state.selected.extendedProps.status]}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => { this.setState({ modal: false }) }}>Close</Button>
+        </Modal.Footer>
+      </Modal.Dialog>)
+
+  }
 
 
 
-render() { 
-  let showArray=[];
-  return (
-   <>
-    <Container fluid>
-      <Row >
-        <Col sm={8} className="below-nav" >
-          <FullCalendar 
-            plugins={[ timeGridPlugin,dayGridPlugin,listPlugin ]}
-            initialView="timeGridWeek"
-            expandRows={true}
-            firstDay="1"
-            slotMinTime= "08:00:00"
-            slotMaxTime="20:00:00"
-            nowIndicator={true}
-            allDaySlot={false}
-            headerToolbar={{
-              left: "prev,next today",
-              center: "title",
-              right: "timeGridWeek,listWeek,dayGridMonth"}}
-              events= {this.state.events}
-            eventClick={(info)=> {
-              //console.log(info.event.title)
-              this.setState({modal:true, selected:info.event})
-            }}
-            /> 
-        </Col>
+  renderCalendar = () => {
+    return (
+      <FullCalendar
+        plugins={[timeGridPlugin, dayGridPlugin, listPlugin]}
+        initialView="timeGridWeek"
+        expandRows={true}
+        firstDay="1"
+        slotMinTime="08:00:00"
+        slotMaxTime="20:00:00"
+        nowIndicator={true}
+        allDaySlot={false}
+        headerToolbar={{
 
-        <Col sm={4} className="sidebar">
-        <Nav className="col-md-12 d-none d-md-block bg-light sidebar">
-            <h2>Courses</h2>
-            <Form>
-            { this.state.events.map((e)=>{
-              if(showArray.indexOf(e.subjectId)===-1){
-                showArray.push(e.subjectId)
-              return(
-                <h2 key={e.lectureId}>
-                  <Badge style={{'backgroundColor': e.backgroundColor}}>
-                      <Form.Check 
-                        type="checkbox"
-                        defaultChecked="true"
-                        label={e.subjectName+'-Prof.'+ e.teacher}
-                        onClick={(ev)=>this.changeDisplayEvent(e.subjectId,ev)}
-                      />
-                    </Badge>
-                  </h2>
-                )}
-                else return null
-                })}
-            </Form>
-          </Nav>
-        </Col>
-      </Row>
-    </Container>
+          left: "prev,next today",
+          center: "title",
+          right: "timeGridWeek,listWeek,dayGridMonth"
+        }}
+        events={this.state.events}
+        eventClick={(info) => {
+          //console.log(info.event.title)
+          this.setState({ modal: true, selected: info.event })
+        }}
+        datesSet={(date)=> {
+          let startDate = moment(date.startStr).format('YYYY-MM-DD');
+          let endDate = moment(date.endStr).format('YYYY-MM-DD');
+          console.log('START: '+startDate)
+          console.log('END: '+endDate)
+        }}
 
-    {this.state.modal ? this.renderModal() : <></>}
+      />
+    );
+  }
 
-  </>)
-}
+  render() {
+    let showArray = [];
+    return (
+      <>
+        <Container fluid>
+          <Row >
+            <Col sm={8} className="below-nav" >
+              {this.renderCalendar()}
+            </Col>
+
+            <Col sm={4} className="sidebar">
+              <Nav className="col-md-12 d-none d-md-block bg-light sidebar">
+                <h2>Courses</h2>
+                <Form>
+                  {this.state.events.map((e) => {
+                    if (showArray.indexOf(e.subjectId) === -1) {
+                      showArray.push(e.subjectId)
+                      return (
+                        <h2 key={e.lectureId}>
+                          <Badge style={{ 'backgroundColor': e.backgroundColor }}>
+                            <Form.Check
+                              type="checkbox"
+                              defaultChecked="true"
+                              label={e.subjectName + '-Prof.' + e.teacher}
+                              onClick={(ev) => this.changeDisplayEvent(e.subjectId, ev)}
+                            />
+                          </Badge>
+                        </h2>
+                      )
+                    }
+                    else return null
+                  })}
+                </Form>
+              </Nav>
+            </Col>
+          </Row>
+        </Container>
+
+        {this.state.modal ? this.renderModal() : <></>}
+
+      </>)
+  }
 }
 
 export default StudentPage
