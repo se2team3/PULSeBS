@@ -16,7 +16,10 @@
  *       - room_id
  *       - datetime
  *     properties:
- *       date_time:
+ *       datetime:
+ *         type: string
+ *         format: date-time
+ *       datetime_end:
  *         type: string
  *         format: date-time
  *       course_id:
@@ -30,30 +33,18 @@
  *       deleted_at:
  *         type: string
  *         format: date-time
- *   ExtendedLecture:
- *     allOf:    
- *       - $ref: '#/components/schemas/Lecture'
- *       - type: object
- *         properties:
- *           room_name:
- *             type: string
- *             format: byte 
- *           bookings:
- *              type: integer
- *              format: int64
- *          
- *              
  */
 
-class Lecture {
-    constructor(id, datetime, course_id, room_id, virtual, deleted_at) {
-        this.id = id;
-        this.datetime = datetime;
-        this.course_id = course_id;
-        this.room_id = room_id;
-        this.virtual = virtual;
-        if (deleted_at)
-            this.deleted_at = deleted_at;
+class Lecture{
+    constructor(id,datetime,datetime_end,course_id,room_id,virtual,deleted_at){
+            this.id = id;
+            this.datetime = datetime;
+            this.datetime_end = datetime_end
+            this.course_id = course_id;
+            this.room_id = room_id;
+            this.virtual = virtual;
+            if(deleted_at)
+                this.deleted_at = deleted_at;
     }
 }
 module.exports = Lecture;

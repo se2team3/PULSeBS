@@ -16,7 +16,10 @@
  *       - room_id
  *       - datetime
  *     properties:
- *       date_time:
+ *       datetime:
+ *         type: string
+ *         format: date-time
+ *       datetime_end:
  *         type: string
  *         format: date-time
  *       course_id:
@@ -33,9 +36,10 @@
  */
 
 class Lecture{
-    constructor(id,datetime,course_id,room_id,virtual,deleted_at){
+    constructor(id,datetime,datetime_end,course_id,room_id,virtual,deleted_at){
             this.id = id;
             this.datetime = datetime;
+            this.datetime_end = datetime_end
             this.course_id = course_id;
             this.room_id = room_id;
             this.virtual = virtual;

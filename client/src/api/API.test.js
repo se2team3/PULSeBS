@@ -124,8 +124,8 @@ describe('Client API calls', () => {
         });
 
         it('returns all the lectures in a given time frame', async () => {
-            mock.onGet("/lectures", { params: { from: moment("2013-10-07 04:23:19.120-04:00").unix(), to: moment("2013-10-07 04:23:19.120-04:00").unix() } }).reply(200, sample_lectures);
-            const lectures = await API.getLectures("2013-10-07 04:23:19.120-04:00", "2013-10-07 04:23:19.120-04:00");
+            mock.onGet("/lectures", { params: { from: "2013-10-07", to: "2013-10-07" } }).reply(200, sample_lectures);
+            const lectures = await API.getLectures("2013-10-07", "2013-10-07");
             expect(lectures[0].id).toEqual(sample_lectures[0].id);
             expect(lectures[0].datetime).toEqual(sample_lectures[0].datetime); //TODO do more reasonable tests
             expect(lectures[1].id).toEqual(sample_lectures[1].id);
