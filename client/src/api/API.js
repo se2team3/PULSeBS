@@ -57,7 +57,7 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
     if (response.status == 200) {
         return response.data.map(
             (o) => new ExtendedLecture(o.id, o.datetime, o.course_id, o.room_id, o.virtual, o.deleted_at,
-                o.course_name,o.teacher_name,o.teacher_surname,o.room_name,o.available_seats,o.bookable));
+                o.course_name,o.teacher_name,o.teacher_surname,o.room_name,o.max_seats,o.booking_counter));
     } else {
         let err = { status: response.status, errObj: response.data };
         throw err;  // An object with the error coming from the server
@@ -85,7 +85,7 @@ async function getLecture(id) {
     if (response.status == 200) {
         const lecture = response.data;
         return new ExtendedLecture(lecture.id, lecture.datetime, lecture.course_id, lecture.room_id, lecture.virtual, lecture.deleted_at,
-            lecture.course_name,lecture.teacher_name,lecture.teacher_surname,lecture.room_name,lecture.available_seats,lecture.bookable);
+            lecture.course_name,lecture.teacher_name,lecture.teacher_surname,lecture.room_name,lecture.max_seats,lecture.booking_counter);
     } else {
         let err = { status: response.status, errObj: response.data };
         throw err;
