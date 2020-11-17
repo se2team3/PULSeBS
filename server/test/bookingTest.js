@@ -7,8 +7,6 @@ const server = require('../index');
 const should = chai.should();
 const chaiHttp = require("chai-http");
 
-const moment = require('moment');
-
 chai.use(chaiHttp);
 
 describe('Booking routes', function () {
