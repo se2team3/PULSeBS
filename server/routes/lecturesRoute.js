@@ -1,5 +1,84 @@
+const bookingService = require('../services/bookingService');
+const lectureService = require('../services/lectureService');
 const express = require('express');
+
 const router = express.Router();
+
+/**
+ * @swagger
+ * /lectures:
+ *  get:
+ *    tags:
+ *      - lectures
+ *    summary: "Get the list of all bookings for a lesson"
+ *    description: "Use to request all the bookings for a specific lesson"
+ *    consumes:
+ *       - "application/json"
+ *    produces:
+ *       - "application/json"
+ *    responses:
+ *       "201":
+ *         description: "Successful response"
+ *         schema:
+ *           type: "array"
+ *           items:
+ *             $ref: "#/components/schemas/Lecture"
+ *       "400":
+ *         description: "Invalid status value"
+ *    security:
+ *     - petstore_auth:
+ *       - "write:pets"
+ *       - "read:pets"
+ */
+
+router.get('/lectures/:lecture_id/bookings', async(req,res) =>{
+  const lecture_id= + req.params.lecture_id;
+  try{
+      let bookings = await bookingService.retrieveBookingsbyLectureId(lecture_id);
+      return res.status(201).json(bookings);
+  } catch(error){
+      res.json(error);
+  }
+})
+
+/**
+ * @swagger
+ * /lectures:
+ *  get:
+ *    tags:
+ *      - lectures
+ *    summary: "Get the list of all bookings for a lesson"
+ *    description: "Use to request all the bookings for a specific lesson"
+ *    consumes:
+ *       - "application/json"
+ *    produces:
+ *       - "application/json"
+ *    responses:
+ *       "201":
+ *         description: "Successful response"
+ *         schema:
+ *           type: "array"
+ *           items:
+ *             $ref: "#/components/schemas/Lecture"
+ *       "400":
+ *         description: "Invalid status value"
+ *    security:
+ *     - petstore_auth:
+ *       - "write:pets"
+ *       - "read:pets"
+ */
+
+router.get('/lectures/:lecture_id', async(req,res) =>{
+  const lecture_id= + req.params.lecture_id;
+  try{
+      let lecture = await lectureService.getLecture(lecture_id);
+      return res.status(201).json(lecture);
+  } catch(error){
+      res.json(error);
+  }
+})
+
+
 
 /**
  * @swagger
@@ -28,7 +107,7 @@ const router = express.Router();
  *       - "read:pets"
  */
 
-
+/*
 router.get('/lectures', (req, res) => {
   //lectureDao.getAllLectures...
   res.status(200).json([{ id: 1, course_id: "01SQNOV" }]);
@@ -87,6 +166,8 @@ router.get('/lectures', (req, res) => {
  *         # -----------------------------------------------------
  *    
  */
+
+ /*
 router.post('/lectures', (req, res) => {
   //lectureDao.getAllLectures...
   res.status(200).json({ id: 1 });
@@ -117,9 +198,12 @@ router.post('/lectures', (req, res) => {
  *              $ref: '#/components/schemas/Lecture'
  */
 
+ /*
+
 router.get('/lectures/:lecture_id', (req, res) => {
   //lectureDao.getAllLectures...
   const lectureId = req.params.lecture_id;
   res.status(200).json({ id: 1, course_id: "01SQNOV" });
-});
+});*/
+
 module.exports = router;

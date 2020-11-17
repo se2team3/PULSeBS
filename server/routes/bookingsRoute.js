@@ -5,9 +5,6 @@ const {validator,lectureValidation }= require('../validators/validator');
 
 //import models
 const bookingService = require('../services/bookingService');
-const Booking = require('../models/booking');
-
-
 
 const router = express.Router();
 

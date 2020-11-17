@@ -26,3 +26,18 @@ exports.deleteBookings = async function(){
     }
 } 
 
+exports.retrieveBookingsbyLectureId = async function(lecture_id){
+    try {
+        return bookingDao.retrieveLectureBookings(lecture_id);
+    } catch (error) {
+        return errHandler(error);
+    }
+} 
+
+exports.assertBooking = async function(student_id,lecture_id){
+    try {
+        return bookingDao.isBookable(student_id,lecture_id);
+    } catch (error) {
+        return errHandler(error);
+    }
+} 

@@ -95,3 +95,4 @@ exports.deleteUsersTable = function() {
         });
     })
 }
+

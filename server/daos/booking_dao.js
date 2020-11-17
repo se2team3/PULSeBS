@@ -71,7 +71,7 @@ exports.retrieveStudentBookings = function(student_id) {
     })
 }
 //gets the bookings given the lecture_id
-exports.retrieveLectureBookings = function({lecture_id}) {
+exports.retrieveLectureBookings = function(lecture_id) {
     return new Promise ((resolve,reject) =>{
         const sql = 'SELECT * FROM Bookings WHERE lecture_id = ?'
         db.all(sql, [lecture_id], (err, rows) => {
@@ -86,6 +86,23 @@ exports.retrieveLectureBookings = function({lecture_id}) {
         });
     })
 }
+
+//assert if a student can book a lecture
+exports.isBookable = function(student_id,lecture_id) {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT * FROM Bookings B WHERE student_id = ? AND lecture_id=?' 
+        db.all(sql, [student_id,lecture_id], (err, rows) => {
+            if(err)
+                return reject(err);
+            if (!rows)
+                resolve({bookable:true});
+            else{
+                resolve({bookable:false});
+            }               
+        });
+    })
+}
+
 
 exports.deleteBookingTable = function() {
     return new Promise ((resolve,reject) =>{

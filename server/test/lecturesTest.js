@@ -7,6 +7,10 @@ const lectureServices = require('../services/lectures');
 
 const chai = require('chai');
 const should = chai.should();
+const server = require('../index');
+const chaiHttp = require("chai-http");
+chai.use(chaiHttp);
+
 
 describe('Lecture testing', function() {
     before('create tables and clear db', async function() {
@@ -47,4 +51,33 @@ describe('Lecture testing', function() {
             res.should.be.an('array').that.has.length(0);
         });
     });
+
+    describe('Lecture Routes', async function(){
+
+        it('should get the list of booking given a lecture', async function() {
+            const lectureObj = { lecture_id: 1};
+            
+            const tmp = `/lectures/${lectureObj.lecture_id}/bookings`;
+            await dbUtils.populate();
+
+            let res = await chai.request(server).get(tmp).send();
+            should.exist(res);
+            res.should.have.status(201);
+            res.body.should.be.an('array');
+        });
+
+        it('should get the extended lecture given the id', async function() {
+            const lectureObj = { lecture_id: 1};
+            
+            const tmp = `/lectures/${lectureObj.lecture_id}`;
+            await dbUtils.populate();
+
+            let res = await chai.request(server).get(tmp).send();
+            should.exist(res);
+            res.should.have.status(201);
+            res.body.should.be.an('object');
+        });
+
+    })
+
 });
