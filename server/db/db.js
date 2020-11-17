@@ -3,7 +3,17 @@
 const sqlite = require('sqlite3').verbose();
 const path = require('path');
 
-const filename = process.env.NODE_ENV === 'test' ? 'PULSeBS.test' : 'PULSeBS';
+let filename;
+switch (process.env.NODE_ENV) {
+    case 'test':
+        filename = 'PULSeBS.test';
+        break;
+    case 'populate':
+        filename = 'PULSeBS.populate';
+        break;
+    default:
+        filename = 'PULSeBS';
+}
 const db_name = path.join(__dirname, "database", filename);
 
  const db = new sqlite.Database(db_name, (err) => {
