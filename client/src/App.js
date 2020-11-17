@@ -104,10 +104,10 @@ class App extends React.Component {
             <Route path="/teacher">
               <TeacherPage goToLecturePage={this.goToLecturePage} />
             </Route>
-            <Route path="/lecture">
-              <LecturePage lecture={this.state.lecture} />
-            </Route>
-            <Route path="/student"  >
+            <Route path="/lectures/:lecture_id" render={(props)=>
+              <LecturePage lecture_id={props.match.params.lecture_id}/>
+            }/>
+            <Route path="/student">
               <StudentPage />
             </Route>
 

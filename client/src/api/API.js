@@ -4,7 +4,7 @@ import LectureExtended from './models/lecture_extended';
 import Booking from './models/booking';
 import BookingExtended from './models/booking_extended';
 
-const baseURL = "";
+const baseURL = "/api";
 
 /**
  * Get all lectures, optionally filter by time frame or use specific role and user
@@ -72,7 +72,7 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
  * @returns Lecture object
  */
 async function getLecture(id) {
-    const url = "/lecture/" + id
+    const url = "/lectures/" + id
     const response = await axios.get(baseURL + url).catch(error => {
         if (error.response) {
             let err = { status: error.response.status, errObj: error.response.data };
@@ -116,7 +116,7 @@ async function getBookings(lecture_id){
     });
     if (response.status == 200) {
         return response.data.map(
-            (o) => new BookingExtended(o.lecture_id, o.student_id, o.waiting, o.present, o.updated_at, o.deleted_at));
+            (o) => new BookingExtended(o.lecture_id, o.student_id, o.waiting, o.present, o.updated_at, o.deleted_at, o.student_university_id, o.student_name, o.student_surname));
     } else {
         let err = { status: response.status, errObj: response.data };
         throw err;  // An object with the error coming from the server

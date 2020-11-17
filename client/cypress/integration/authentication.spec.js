@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe('Header tests', () => {
     before('visit the page', () => {
         cy.visit('/');
