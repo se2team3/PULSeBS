@@ -102,7 +102,10 @@ const populate = async ({n_students, datetime} = def_options) => {
     const data = {
         teacher: teacherObj(counter.get()),
         room: {name: 'Aula 1', seats: 200},
-        course: {code: 'SE2', name: 'Software Engineering 2' },
+        course: {code: 'SE2', name: 'Software Engineering 2', teacher_id: 1 },
+        course2: {code: 'SE1', name:'Software Engineering 1', teacher_id: 1},
+        assign1:{},
+        assign2:{},
         lecture: { datetime },
         students: [...new Array(n_students)].map(() => studentObj(counter.get())),
         booked: 0
@@ -111,8 +114,12 @@ const populate = async ({n_students, datetime} = def_options) => {
     // insert data
     data.teacher_id = await userDao.insertUser(data.teacher);
     data.room_id = await roomDao.insertRoom(data.room);
-    data.course.teacher_id = data.teacher_id;
+    //data.course.teacher_id = data.teacher_id;
+    //data.course2.teacher_id=data.teacher_id;
     data.course_id = await courseDao.insertCourse(data.course);
+    data.course2_id=await courseDao.insertCourse(data.course2);
+    data.assign1.course_id = data.course_id
+    data.assign2.course_id = data.course2_id
     // TODO check date format
     data.lecture.course_id = data.course_id;
     data.lecture.room_id = data.room_id;
@@ -124,6 +131,10 @@ const populate = async ({n_students, datetime} = def_options) => {
         data.booked++;
         await bookingDao.insertBooking({ lecture_id: data.lecture_id, student_id });
     }
+        data.assign1.student_id = data.students_id[0]
+        data.assign2.student_id = data.students_id[0]
+        await course_studentDao.assingCourseToStudent(data.assign1);
+        await course_studentDao.assingCourseToStudent(data.assign2);
     return data;
 };
 

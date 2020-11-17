@@ -58,6 +58,9 @@
   - Param: student_id
   - Query: from (start_date), to (end_date)
   - Response: List of all lectures the student is entitled to follow
+- GET `/students/:lecture_id/`
+  - Param: lecture_id
+  - Response: true if the lecture is bookable, false otherwise
   ##### NOTE: This endpoint should receive query parameters for time frame
 - DELETE `/students/{student_id}/lectures/{lecture_id}`
   - Param: student_id, lecture_id

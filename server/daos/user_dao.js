@@ -74,3 +74,4 @@ exports.deleteUsersTable = function() {
         });
     })
 }
+
