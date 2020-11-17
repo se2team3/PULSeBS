@@ -5,10 +5,12 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list';
 import moment from 'moment';
+import { AuthContext } from '../auth/AuthContext';
+import CalendarModal from './CalendarModal';
+import API from '../api/API';
 
 
-
-class StudentPage extends React.Component {
+class CalendarPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -179,18 +181,34 @@ class StudentPage extends React.Component {
   }
 
 
-  bookLecture = function () {
+  bookLecture = (student_id,lecture_id)=> {
+    // console.log('hello');
+    // console.log(student_id+ ' '+ lecture_id);
+    API.bookLecture(student_id,lecture_id)
+    .then((res)=>{
+      // GIVE FEEDBACK TO USER + change status of selected lecture
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+    
     this.setState({ modal: false })
   }
 
 
-  renderModal = () => {
+  closeModal = () =>{
+    this.setState({modal: false})
+  }
+
+  /* renderModal = () => {
     let text = {
       'booked': "You have booked a seat for this lecture",
       'free': `${this.state.selected.extendedProps.seats} available seats`,
       'full': "No available seats",
       'closed': "Booking closed"
     }
+
+    
 
     return (
       <Modal.Dialog className="z1">
@@ -201,88 +219,102 @@ class StudentPage extends React.Component {
           {text[this.state.selected.extendedProps.status]}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => { this.setState({ modal: false }) }}>Close</Button>
+          <Button variant="secondary" onClick={this.closeModal}>Close</Button>
           {this.state.selected.extendedProps.status === "free" ?
-            <Button variant="success" onClick={() => { this.setState({ modal: false }) }}>Book a seat</Button> : <div></div>}
+            <Button variant="success" onClick={this.bookLecture}>Book a seat</Button> : <div></div>}
         </Modal.Footer>
       </Modal.Dialog>)
 
-  }
+  } */
 
-  renderCalendar = ()=>{
-    return(
+  //this.props.goToLecturePage(info.event);
+
+
+  renderCalendar = (role) => {
+    return (
       <FullCalendar
-                plugins={[timeGridPlugin, dayGridPlugin, listPlugin]}
-                initialView="timeGridWeek"
-                expandRows={true}
-                firstDay="1"
-                slotMinTime="08:00:00"
-                slotMaxTime="20:00:00"
-                nowIndicator={true}
-                allDaySlot={false}
-                headerToolbar={{
-                  left: "prev,next today",
-                  center: "title",
-                  right: "timeGridWeek,listWeek,dayGridMonth"
-                }}
-                events={this.state.events}
-                eventClick={(info) => {
-                  this.setState({ modal: true, selected: info.event })
-                }}
-                datesSet={(date)=> {
-                  let startDate = moment(date.startStr).format('YYYY-MM-DD');
-                  let endDate = moment(date.endStr).add(-1,'days').format('YYYY-MM-DD'); // -1 because it counts up to the next week
-                  console.log('START: '+startDate)
-                  console.log('END: '+endDate)
-                }}
-              />
+        plugins={[timeGridPlugin, dayGridPlugin, listPlugin]}
+        initialView="timeGridWeek"
+        expandRows={true}
+        firstDay="1"
+        slotMinTime="08:00:00"
+        slotMaxTime="20:00:00"
+        nowIndicator={true}
+        allDaySlot={false}
+        headerToolbar={{
+          left: "prev,next today",
+          center: "title",
+          right: "timeGridWeek,listWeek,dayGridMonth"
+        }}
+        events={this.state.events}
+        eventClick={(info) => {
+          if(role ==='student') this.setState({ modal: true, selected: info.event })
+          else if (role ==='teacher') this.props.goToLecturePage(info.event);
+        }}
+        datesSet={(date) => {
+          let startDate = moment(date.startStr).format('YYYY-MM-DD');
+          let endDate = moment(date.endStr).add(-1, 'days').format('YYYY-MM-DD'); // -1 because it counts up to the next week
+          console.log('START: ' + startDate)
+          console.log('END: ' + endDate)
+        }}
+      />
     );
 
   }
 
 
   render() {
+    let role = 'student'; // change until login and auth user is implemented
     let showArray = [];
     return (
       <>
-        <Container fluid>
-          <Row >
-            <Col sm={8} className="below-nav" >
-              {this.renderCalendar()}
-            </Col>
+        <AuthContext.Consumer>
+          {(context) => (
+            <Container fluid>
+              <Row >
+                <Col sm={8} className="below-nav" >
+                  {this.renderCalendar(context.authUser?.role ?? role)}
+                </Col>
 
-            <Col sm={4} className="sidebar">
-              <Nav className="col-md-12 d-none d-md-block bg-light sidebar">
-                <h2>Courses</h2>
-                <Form>
-                  {this.state.events.map((e) => {
-                    if (showArray.indexOf(e.subjectId) === -1) {
-                      showArray.push(e.subjectId)
-                      return (
-                        <h2 key={e.lectureId}>
-                          <Badge style={{ 'backgroundColor': e.backgroundColor }}>
-                            <Form.Check
-                              type="checkbox"
-                              defaultChecked="true"
-                              label={e.subjectName + '-Prof.' + e.teacher}
-                              onClick={(ev) => this.changeDisplayEvent(e.subjectId, ev)}
-                            />
-                          </Badge>
-                        </h2>
-                      )
-                    }
-                    else return null
-                  })}
-                </Form>
-              </Nav>
-            </Col>
-          </Row>
-        </Container>
+                <Col sm={4} className="sidebar">
+                  <Nav className="col-md-12 d-none d-md-block bg-light sidebar">
+                    <h2>Courses</h2>
+                    <Form>
+                      {this.state.events.map((e) => {
+                        if (showArray.indexOf(e.subjectId) === -1) {
+                          showArray.push(e.subjectId)
+                          return (
+                            <h2 key={e.lectureId}>
+                              <Badge style={{ 'backgroundColor': e.backgroundColor }}>
+                                <Form.Check
+                                  type="checkbox"
+                                  defaultChecked="true"
+                                  label={e.subjectName + '-Prof.' + e.teacher}
+                                  onClick={(ev) => this.changeDisplayEvent(e.subjectId, ev)}
+                                />
+                              </Badge>
+                            </h2>
+                          )
+                        }
+                        else return null
+                      })}
+                    </Form>
+                  </Nav>
+                </Col>
+              </Row>
+              {this.state.modal ? 
+              <CalendarModal closeModal={this.closeModal} 
+                bookLecture={()=>this.bookLecture(context.authUser?.university_id ?? 1,this.state.selected.extendedProps.lectureId)} 
+                lecture={this.state.selected}/> : <></>}
 
-        {this.state.modal ? this.renderModal() : <></>}
+            </Container>
 
+          )}
+
+
+        </AuthContext.Consumer>
       </>)
   }
 }
 
-export default StudentPage
+export default CalendarPage
