@@ -7,14 +7,13 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import LoginForm from './components/LoginForm';
-import TeacherPage from './components/TeacherPage';
 import LecturePage from './components/LecturePage';
 import API from './api/API';
 import { Redirect, Route, Link } from 'react-router-dom';
 import { Switch } from 'react-router';
 import { AuthContext } from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
-import StudentPage from './components/StudentPage';
+import CalendarPage from './components/CalendarPage';
 
 class App extends React.Component {
 
@@ -101,15 +100,12 @@ class App extends React.Component {
               </Row>
             </Route>
 
-            <Route path="/teacher">
-              <TeacherPage goToLecturePage={this.goToLecturePage} />
+            <Route path="/calendar">
+              <CalendarPage goToLecturePage={this.goToLecturePage} />
             </Route>
             <Route path="/lectures/:lecture_id" render={(props)=>
               <LecturePage lecture_id={props.match.params.lecture_id}/>
             }/>
-            <Route path="/student">
-              <StudentPage />
-            </Route>
 
           </Switch>
 
