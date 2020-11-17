@@ -107,6 +107,9 @@ class App extends React.Component {
             <Route path="/lecture">
               <LecturePage lecture={this.state.lecture} />
             </Route>
+            <Route path="/student"  >
+              <StudentPage />
+            </Route>
 
           </Switch>
 

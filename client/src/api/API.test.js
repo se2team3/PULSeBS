@@ -19,8 +19,8 @@ const sample_lectures = [
         teacher_name:"Mario",
         teacher_surname: "Rossi",
         room_name:"1B",
-        available_seats:35,
-        bookable:"free"
+        max_seats:35,
+        booking_counter:30
     },
     {
         id: 1,
@@ -34,8 +34,8 @@ const sample_lectures = [
         teacher_name:"Mario",
         teacher_surname: "Rossi",
         room_name:"1B",
-        available_seats:35,
-        bookable:"free"
+        max_seats:35,
+        booking_counter:30
     },
     {
         id: 2,
@@ -49,8 +49,8 @@ const sample_lectures = [
         teacher_name:"Mario",
         teacher_surname: "Rossi",
         room_name:"1B",
-        available_seats:35,
-        bookable:"free"
+        max_seats:35,
+        booking_counter:30
     }
 ]
 
@@ -66,8 +66,8 @@ const sample_lecture = {
     teacher_name:"Mario",
     teacher_surname: "Rossi",
     room_name:"1B",
-    available_seats:35,
-    bookable:"free"
+    max_seats:35,
+    booking_counter:30
 }
 
 const sample_bookings = [

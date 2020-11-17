@@ -25,8 +25,8 @@ class TeacherPage extends React.Component {
         teacher_name:"Richard",
         teacher_surname: "Feynman",
         room_name:"ROOM4",
-        available_seats:35,
-        bookable:"closed"
+        max_seats:35,
+        booking_counter:23
       },
       {
         id: 2,
@@ -40,8 +40,8 @@ class TeacherPage extends React.Component {
         teacher_name:"Walter",
         teacher_surname: "White",
         room_name:"ROOM4",
-        available_seats:35,
-        bookable:"full"
+        max_seats:35,
+        booking_couter:35
       },
       {
         id: 3,
@@ -55,8 +55,8 @@ class TeacherPage extends React.Component {
         teacher_name:"Walter",
         teacher_surname: "White",
         room_name:"ROOM4",
-        available_seats:42,
-        bookable:"booked"
+        max_seats:42,
+        booking_counter:29
       },
       {
         id: 4,
@@ -70,8 +70,8 @@ class TeacherPage extends React.Component {
         teacher_name:"Alessandro",
         teacher_surname: "Volta",
         room_name:"ROOM4",
-        available_seats:42,
-        bookable:"free"
+        max_seats:42,
+        booking_counter:38
       },
 
       
@@ -81,7 +81,6 @@ class TeacherPage extends React.Component {
       events:[]
     }
     this.transformIntoEvents=this.transformIntoEvents.bind(this);
-    this.colorize= this.colorize.bind(this);
     this.changeDisplayEvent=this.changeDisplayEvent.bind(this);
  }
 
@@ -105,36 +104,34 @@ async componentDidMount(){
   let ret=this.transformIntoEvents();
 } 
 
-colorize= function(subjectArray,course_id){
-  
+getColor= (course_id) => {
   let colorArray=["plum","tomato","green","dodgerBlue","darkOrange","pink",
                 ,"mediumOrchid","coral","lightBlue","sandyBrown","lightSeaGreen",
                 "khaki",,"deepSkyBlue","chocolate","orange","rebeccaPurple","salmon"]
+  let ids = this.state.lectures.map((l)=> l.course_id).filter(this.onlyUnique);
+  let index = ids.indexOf(course_id);
 
-  let c=subjectArray[course_id];
-  if(c!=undefined)
-    return subjectArray;
-  else {
-    let colorIndex= Math.floor(Math.random()*colorArray.length);
-    subjectArray[course_id]=colorArray[colorIndex]
-    return subjectArray;
-  }
+  return colorArray[index];
+}
+
+
+onlyUnique = function(value, index, self) {
+  return self.indexOf(value) === index;
 }
 
 transformIntoEvents=()=>{
-let subjectArray={} 
 this.setState(state =>{
  const list=state.lectures.map((l)=>{
-  subjectArray=this.colorize(subjectArray,l.course_id)
+  let diff=l.max_seats-l.booking_counter
   return({lectureId:l.id,
     subjectId:l.course_id,
     subjectName:l.course_name,
     teacher:l.teacher_name+l.teacher_surname,
-    status:l.bookable,
-    seats:l.available_seats,
-    title: l.course_name+l.room_name+"\n"+l.bookable,
+    //status:l.bookable,
+    seats:diff,
+    title: l.course_name+l.room_name+"\n",
     start:l.datetime,end:l.datetime_end,
-    backgroundColor:subjectArray[l.course_id],
+    backgroundColor: this.getColor(l.course_id),
     display:'auto'});
 });
 return{events:[...list]}

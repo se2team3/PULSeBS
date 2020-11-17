@@ -1,9 +1,10 @@
 import React from 'react';
 import {Row,Container,Col, Nav,Badge,Form,Modal,Button} from 'react-bootstrap';
-import FullCalendar from '@fullcalendar/react'
+import FullCalendar, { diffDates } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list';
+import moment from 'moment';
 
 
 
@@ -14,7 +15,7 @@ class StudentPage extends React.Component {
     this.state={
       modal:false,
       selected:{extendedProps:{status:null}},
-      lectures:[{
+      lectures:[{  //booked
         id: 1,
         datetime: "2020-11-19T10:00:00",
         course_id: 1,
@@ -26,11 +27,11 @@ class StudentPage extends React.Component {
         teacher_name:"Richard",
         teacher_surname: "Feynman",
         room_name:"ROOM4",
-        available_seats:35,
-        bookable:"closed"
+        max_seats:35,
+        booking_counter:30
       },
       {
-        id: 2,
+        id: 2, //full
         datetime: "2020-11-17T17:00:00",
         course_id: 2,
         room_id: 5,
@@ -41,11 +42,11 @@ class StudentPage extends React.Component {
         teacher_name:"Walter",
         teacher_surname: "White",
         room_name:"ROOM4",
-        available_seats:35,
-        bookable:"full"
+        max_seats:35,
+        booking_counter:35
       },
       {
-        id: 3,
+        id: 3, //free
         datetime: "2020-11-21T10:00:00",
         course_id: 2,
         room_id: 5,
@@ -56,11 +57,11 @@ class StudentPage extends React.Component {
         teacher_name:"Walter",
         teacher_surname: "White",
         room_name:"ROOM4",
-        available_seats:42,
-        bookable:"booked"
+        max_seats:42,
+        booking_counter:37
       },
       {
-        id: 4,
+        id: 4,  //free
         datetime: "2020-11-18T13:30:00",
         course_id: 3,
         room_id: 5,
@@ -71,12 +72,12 @@ class StudentPage extends React.Component {
         teacher_name:"Alessandro",
         teacher_surname: "Volta",
         room_name:"ROOM4",
-        available_seats:42,
-        bookable:"free"
+        max_seats:42,
+        booking_counter:20
       },
 
       {
-        id: 5,
+        id: 5,  //closed
         datetime: "2020-11-16T08:30:00",
         course_id: 4,
         room_id: 5,
@@ -87,8 +88,8 @@ class StudentPage extends React.Component {
         teacher_name:"Giuseppe",
         teacher_surname: "Lagrange",
         room_name:"ROOM4",
-        available_seats:20,
-        bookable:"free"
+        max_seats:20,
+        booking_counter:14
       },
       
     ],
@@ -96,7 +97,6 @@ class StudentPage extends React.Component {
       events:[]
     } 
     this.transformIntoEvents=this.transformIntoEvents.bind(this);
-    //this.colorize= this.colorize.bind(this);
     this.changeDisplayEvent=this.changeDisplayEvent.bind(this);
     this.prenota=this.prenota.bind(this)
  }
@@ -106,6 +106,18 @@ class StudentPage extends React.Component {
     console.log("HERE")
     let ret=this.transformIntoEvents();
   } 
+
+
+  getStatus= (l)=>{
+    let bookingArray=[true,false,false,false,true];
+    if ((moment(l.datetime).isBefore(moment().format("YYYY-MM-DD"))))
+      return "closed"
+    if(bookingArray[l.id-1]===true)
+      return "booked";
+    if (l.max_seats-l.booking_counter <=0)
+      return "full";
+    return "free";
+  }
 
   getColor= (course_id) => {
     let colorArray=["plum","tomato","green","dodgerBlue","darkOrange","pink",
@@ -117,38 +129,23 @@ class StudentPage extends React.Component {
     return colorArray[index];
   }
 
-  /* colorize= function(subjectArray,course_id){
-  
-    let colorArray=["plum","tomato","green","dodgerBlue","darkOrange","pink",
-                  ,"mediumOrchid","coral","lightBlue","sandyBrown","lightSeaGreen",
-                  "khaki",,"deepSkyBlue","chocolate","orange","rebeccaPurple","salmon"]
-  
-    let c=subjectArray[course_id];
-    if(c!=undefined)
-      return subjectArray;
-    else {
-      let colorIndex= Math.floor(Math.random()*colorArray.length);
-      subjectArray[course_id]=colorArray[colorIndex]
-      return subjectArray;
-    }
-  } */
 
   onlyUnique = function(value, index, self) {
     return self.indexOf(value) === index;
   }
 
 transformIntoEvents=()=>{
-  let subjectArray={} 
   this.setState(state =>{
    const list=state.lectures.map((l)=>{
-    // subjectArray=this.colorize(subjectArray,l.course_id)
+    let diff=l.max_seats-l.booking_counter
+    let stat=this.getStatus(l)
     return({lectureId:l.id,
       subjectId:l.course_id,
       subjectName:l.course_name,
       teacher:l.teacher_name+l.teacher_surname,
-      status:l.bookable,
-      seats:l.available_seats,
-      title: l.course_name+l.room_name+"\n"+l.bookable,
+      status: stat,
+      seats:diff,
+      title: l.course_name+l.room_name+"\n"+stat,
       start:l.datetime,end:l.datetime_end,
       backgroundColor: this.getColor(l.course_id),
       display:'auto'});
@@ -179,6 +176,7 @@ prenota=function(){
   
 
 renderModal = () =>{
+  //let diff=this.state.selected.extendedProps.max_seats-this.state.selected.extendedProps.booking_counter;
   let text = {
     'booked' : "You have booked a seat for this lecture",
     'free' : `${this.state.selected.extendedProps.seats} available seats`,
@@ -196,6 +194,8 @@ renderModal = () =>{
     </Modal.Body>
     <Modal.Footer>
       <Button variant="secondary" onClick={()=>{this.setState({modal:false})}}>Close</Button> 
+      {this.state.selected.extendedProps.status==="free" ? 
+      <Button variant="success" onClick={()=>{this.setState({modal:false})}}>Book a seat</Button>  : <div></div>}
     </Modal.Footer>
   </Modal.Dialog> )
 
@@ -225,7 +225,6 @@ render() {
               right: "timeGridWeek,listWeek,dayGridMonth"}}
               events= {this.state.events}
             eventClick={(info)=> {
-              //console.log(info.event.title)
               this.setState({modal:true, selected:info.event})
             }}
             /> 

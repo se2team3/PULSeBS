@@ -46,24 +46,24 @@ const Lecture=require('./lecture')
  *       room_name:
  *          type: string
  *          format:byte
- *       available_seats:
+ *       max_seats:
  *          type: number
  *          format:integer
- *       bookable:
- *          type: string
- *          format:byte
+ *       booking_counter:
+ *          type: number
+ *          format:integer
  */
 
 class ExtendedLecture extends Lecture{
-    constructor(id,datetime,course_id,room_id,virtual,deleted_at,datetime_end,course_name,teacher_name,teacher_surname,room_name,available_seats,bookable){
+    constructor(id,datetime,course_id,room_id,virtual,deleted_at,datetime_end,course_name,teacher_name,teacher_surname,room_name,max_seats,booking_counter){
         super (id,datetime,course_id,room_id,virtual,deleted_at)
         this.datetime_end=datetime_end
         this.course_name=course_name;
         this.teacher_name=teacher_name;
         this.teacher_surname=teacher_surname;
         this.room_name=room_name;
-        this.available_seats=available_seats;  
-        this.bookable=bookable; 
+        this.max_seats=max_seats;  
+        this.booking_counter=booking_counter; 
     }
 }
 module.exports = ExtendedLecture;
