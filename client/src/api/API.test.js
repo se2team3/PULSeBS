@@ -1,5 +1,4 @@
 import API from "./API";
-import moment from 'moment';
 var axios = require("axios");
 var MockAdapter = require("axios-mock-adapter");
 

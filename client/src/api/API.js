@@ -1,5 +1,4 @@
 import axios from 'axios';
-import moment from 'moment';
 import LectureExtended from './models/lecture_extended';
 import Booking from './models/booking';
 import BookingExtended from './models/booking_extended';

@@ -1,4 +1,4 @@
-process.env.NODE_ENV = "populate";
+/* process.env.NODE_ENV = "populate";
 
 const faker = require('faker/locale/it');
 const moment = require('moment');
@@ -79,15 +79,6 @@ const assignCourse = async ({course_id,student_id})=>{
     return (await courseStudentDao.assingCourseToStudent({course_id,student_id}));
 }
 
-/*
-	- Course_Student   const sql = `CREATE TABLE IF NOT EXISTS Course_Student (course_id INTEGER NOT NULL, student_id INTEGER NOT NULL,
-                     PRIMARY KEY(course_id,student_id),
-                     FOREIGN KEY(course_id) REFERENCES Courses(id), FOREIGN KEY(student_id) REFERENCES Users(id))`
-
-        const sql = 'INSERT INTO Course_Student(course_id,student_id) VALUES(?,?)'
-
-        assingCourseToStudent
-*/
 
 const bookLecture = async ({ lecture_id, student_id }) => {
     const resp = await bookingDao.isBookable(student_id,lecture_id);
@@ -98,7 +89,7 @@ const bookLecture = async ({ lecture_id, student_id }) => {
     return null;
 }
 
-/* function calls */
+
 (async () => {
     const [students, students_id] = await generateUsers({ n: 200, role: "student" });
     const [teachers, teachers_id] = await generateUsers({ n: 5, role: "teacher" });
@@ -129,3 +120,4 @@ const bookLecture = async ({ lecture_id, student_id }) => {
 
 
 
+ */

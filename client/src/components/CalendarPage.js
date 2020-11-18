@@ -1,6 +1,6 @@
 import React from 'react';
-import { Row, Container, Col, Nav, Badge, Form, Modal, Button } from 'react-bootstrap';
-import FullCalendar, { diffDates } from '@fullcalendar/react'
+import { Row, Container, Col, Nav, Badge, Form} from 'react-bootstrap';
+import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list';
@@ -137,7 +137,7 @@ class CalendarPage extends React.Component {
   getColor = (course_id) => {
     let colorArray = ["plum", "tomato", "green", "dodgerBlue", "darkOrange", "pink",
       "mediumOrchid", "coral", "lightBlue", "sandyBrown", "lightSeaGreen",
-      "khaki", , "deepSkyBlue", "chocolate", "orange", "rebeccaPurple", "salmon"]
+      "khaki", "deepSkyBlue", "chocolate", "orange", "rebeccaPurple", "salmon"]
     let ids = this.state.lectures.map((l) => l.course_id).filter(this.onlyUnique);
     let index = ids.indexOf(course_id);
 
@@ -208,7 +208,7 @@ class CalendarPage extends React.Component {
   }
 
 
-  renderCalendar = (role) => {
+  renderCalendar = () => {
     return (
       <FullCalendar
         plugins={[timeGridPlugin, dayGridPlugin, listPlugin]}
