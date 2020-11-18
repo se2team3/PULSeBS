@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import LoginForm from './components/LoginForm';
 import LecturePage from './components/LecturePage';
 import API from './api/API';
-import { Redirect, Route, Link } from 'react-router-dom';
+import { Redirect, Route} from 'react-router-dom';
 import { Switch } from 'react-router';
 import { AuthContext } from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
@@ -128,6 +128,10 @@ class App extends React.Component {
               <Redirect to='/login'></Redirect>
             </Route>
 
+            <Route>
+              <Redirect to='/login' />
+            </Route>
+            
           </Switch>
 
         </Container>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Row, Container, Col, Nav, Badge, Form, Modal, Button } from 'react-bootstrap';
-import FullCalendar, { diffDates } from '@fullcalendar/react'
+import { Row, Container, Col, Nav, Badge, Form} from 'react-bootstrap';
+import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import listPlugin from '@fullcalendar/list';
@@ -10,7 +10,7 @@ import CalendarModal from './CalendarModal';
 import API from '../api/API';
 
 /* JUST FOR DEBUGGING PURPOSES */
-const role = 'student'// change until login and auth user is implemented
+let role = 'student'// change until login and auth user is implemented
 
 class CalendarPage extends React.Component {
   constructor(props) {
@@ -129,7 +129,7 @@ class CalendarPage extends React.Component {
   }
 
 
-  renderCalendar = (role) => {
+  renderCalendar = () => {
     return (
       <FullCalendar
         plugins={[timeGridPlugin, dayGridPlugin, listPlugin]}
