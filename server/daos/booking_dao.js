@@ -94,7 +94,7 @@ exports.isBookable = function(student_id,lecture_id) {
         db.all(sql, [student_id,lecture_id], (err, rows) => {
             if(err)
                 return reject(err);
-            if (!rows)
+            if (!rows.length)
                 resolve({bookable:true});
             else{
                 resolve({bookable:false});
