@@ -22,10 +22,10 @@ const Lecture=require('./lecture')
  *         format: date-time
  *       course_id:
  *         type: string
- *         format: byte 
+ *         format: byte
  *       room_id:
  *         type: string
- *         format: byte 
+ *         format: byte
  *       virtual:
  *         type: boolean
  *       deleted_at:
@@ -36,22 +36,22 @@ const Lecture=require('./lecture')
  *         format: date-time
  *       course_name:
  *          type: string
- *          format:byte
+ *          format: byte
  *       teacher_name:
  *          type: string
- *          format:byte
+ *          format: byte
  *       teacher_surname:
  *          type: string
- *          format:byte
+ *          format: byte
  *       room_name:
  *          type: string
- *          format:byte
+ *          format: byte
  *       max_seats:
  *          type: number
- *          format:integer
+ *          format: integer
  *       booking_counter:
  *          type: number
- *          format:integer
+ *          format: integer
  */
 
 class LectureExtended extends Lecture{

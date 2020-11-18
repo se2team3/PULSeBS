@@ -19,84 +19,6 @@ class CalendarPage extends React.Component {
     this.state = {
       modal: false,
       selected: { extendedProps: { status: null } },
-      /* lectures: [{  //booked
-        id: 1,
-        datetime: "2020-11-19T10:00:00",
-        course_id: 1,
-        room_id: 5,
-        virtual: false,
-        deleted_at: null,
-        datetime_end: "2020-11-19T13:00:00",
-        course_name: "Physics",
-        teacher_name: "Richard",
-        teacher_surname: "Feynman",
-        room_name: "ROOM4",
-        max_seats: 35,
-        booking_counter: 30
-      },
-      {
-        id: 2, //full
-        datetime: "2020-11-17T17:00:00",
-        course_id: 2,
-        room_id: 5,
-        virtual: false,
-        deleted_at: null,
-        datetime_end: "2020-11-17T18:30:00'",
-        course_name: "Chemistry",
-        teacher_name: "Walter",
-        teacher_surname: "White",
-        room_name: "ROOM4",
-        max_seats: 35,
-        booking_counter: 35
-      },
-      {
-        id: 3, //free
-        datetime: "2020-11-21T10:00:00",
-        course_id: 2,
-        room_id: 5,
-        virtual: false,
-        deleted_at: null,
-        datetime_end: "2020-11-21T10:00:00",
-        course_name: "Chemistry",
-        teacher_name: "Walter",
-        teacher_surname: "White",
-        room_name: "ROOM4",
-        max_seats: 42,
-        booking_counter: 37
-      },
-      {
-        id: 4,  //free
-        datetime: "2020-11-18T13:30:00",
-        course_id: 3,
-        room_id: 5,
-        virtual: false,
-        deleted_at: null,
-        datetime_end: "2020-11-18T11:30:00",
-        course_name: "Circuit Theory",
-        teacher_name: "Alessandro",
-        teacher_surname: "Volta",
-        room_name: "ROOM4",
-        max_seats: 42,
-        booking_counter: 20
-      },
-
-      {
-        id: 5,  //closed
-        datetime: "2020-11-16T08:30:00",
-        course_id: 4,
-        room_id: 5,
-        virtual: false,
-        deleted_at: null,
-        datetime_end: "2020-11-16TT11:30:00",
-        course_name: "Analysis II",
-        teacher_name: "Giuseppe",
-        teacher_surname: "Lagrange",
-        room_name: "ROOM4",
-        max_seats: 20,
-        booking_counter: 14
-      },
-
-      ], */
       lectures:null,
       events: []
     }
@@ -124,7 +46,6 @@ class CalendarPage extends React.Component {
 
 
   getStatus = (l) => {
-    let bookingArray = [true, false, false, false, true];
     if ((moment(l.datetime).isBefore(moment().format("YYYY-MM-DD"))))
       return "closed"
     if (bookingArray[l.id - 1] === true)
