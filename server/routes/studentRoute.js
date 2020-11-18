@@ -41,15 +41,13 @@ const role = require('../utils/roles');
 
 app.get('/students/:student_id/lectures', authorize(role.Student), async(req,res) =>{
     const student_id= + req.params.student_id;
-    console.log(`entering route`);
     try{
         let lectures = await studentService.getStudentLecture(student_id);
-        console.log(`lectures`, lectures);
         return res.status(200).json(lectures);
     } catch(error){
         res.json(error);
     }
-  })
+})
 
 /**
  * @swagger
