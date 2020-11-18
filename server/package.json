@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "express-validator": "^6.6.1",
+    "faker": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
     "mailslurp-client": "^9.0.1",
     "moment": "^2.29.1",
