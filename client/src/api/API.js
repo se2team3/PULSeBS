@@ -34,10 +34,11 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
                 url = `/teachers/${user_id}/lectures`
                 break;
         }
-    }
+    } 
 
+ 
     const req_params = {from: start_date, to: end_date};
-    /* if (start_date !== undefined || end_date !== undefined) {
+     /*if (start_date !== undefined || end_date !== undefined) {
         if (start_date !== undefined)
             req_params['from'] = moment(start_date).unix();
         if (end_date !== undefined)
@@ -57,7 +58,7 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
     });
     if (response.status == 200) {
         return response.data.map(
-            (o) => new LectureExtended(o.id, o.datetime, o.course_id, o.room_id, o.virtual, o.deleted_at,
+            (o) => new LectureExtended(o.id, o.datetime, o.datetime_end, o.course_id, o.room_id, o.virtual, o.deleted_at,
                 o.course_name,o.teacher_name,o.teacher_surname,o.room_name,o.max_seats,o.booking_counter));
     } else {
         let err = { status: response.status, errObj: response.data };

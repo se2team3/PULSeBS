@@ -10,7 +10,7 @@ import CalendarModal from './CalendarModal';
 import API from '../api/API';
 
 /* JUST FOR DEBUGGING PURPOSES */
-const role = 'student'; // change until login and auth user is implemented
+const role = 'student'// change until login and auth user is implemented
 
 class CalendarPage extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ class CalendarPage extends React.Component {
     this.state = {
       modal: false,
       selected: { extendedProps: { status: null } },
-      lectures: [{  //booked
+      /* lectures: [{  //booked
         id: 1,
         datetime: "2020-11-19T10:00:00",
         course_id: 1,
@@ -96,8 +96,8 @@ class CalendarPage extends React.Component {
         booking_counter: 14
       },
 
-      ],
-
+      ], */
+      lectures:null,
       events: []
     }
 
@@ -110,15 +110,16 @@ class CalendarPage extends React.Component {
     let endOfWeek = moment().day(7).format("YYYY-MM-DD");
 
     console.log(startOfWeek + ' '+ endOfWeek);
-    /* let role = 'student';
     let uid = 1 ;
-    API.getLectures(today,nextWeek,role,uid)
+    API.getLectures(startOfWeek,endOfWeek,role,uid)
     .then((res)=>{
-      this.setState({lectures: res})
+      console.log("RES"+res[0].course_id)
+      //this.setState(state=>{return  state.lectures: [...res] });
+      this.setState({lectures:res})
       this.transformIntoEvents();
     })
-    .catch((err)=>console.log(err)); */
-    this.transformIntoEvents();
+    .catch((err)=>console.log(err)); 
+    //this.transformIntoEvents();
   }
 
 
@@ -135,7 +136,7 @@ class CalendarPage extends React.Component {
 
   getColor = (course_id) => {
     let colorArray = ["plum", "tomato", "green", "dodgerBlue", "darkOrange", "pink",
-      , "mediumOrchid", "coral", "lightBlue", "sandyBrown", "lightSeaGreen",
+      "mediumOrchid", "coral", "lightBlue", "sandyBrown", "lightSeaGreen",
       "khaki", , "deepSkyBlue", "chocolate", "orange", "rebeccaPurple", "salmon"]
     let ids = this.state.lectures.map((l) => l.course_id).filter(this.onlyUnique);
     let index = ids.indexOf(course_id);
@@ -150,6 +151,7 @@ class CalendarPage extends React.Component {
 
   transformIntoEvents = () => {
     this.setState(state => {
+      console.log("ev"+state.lectures)
       const list = state.lectures.map((l) => {
         let diff = l.max_seats - l.booking_counter
         let stat = this.getStatus(l)
@@ -264,6 +266,7 @@ class CalendarPage extends React.Component {
                                 <Form.Check
                                   type="checkbox"
                                   defaultChecked="true"
+                                  value={e.subjectId}
                                   label={e.subjectName + '-Prof.' + e.teacher}
                                   onClick={(ev) => this.changeDisplayEvent(e.subjectId, ev)}
                                 />
