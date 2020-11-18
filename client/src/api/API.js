@@ -207,6 +207,6 @@ async function bookLecture(student_id, lecture_id){
     }
 }
 
-const API = { getLectures, getLecture, getBookings, bookLecture }
+const API = { isAuthenticated, userLogin, userLogout, getLectures, getLecture, getBookings, bookLecture }
 
 export default API
