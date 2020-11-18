@@ -57,10 +57,11 @@ const timeValidator = require('../validators/timeValidator');
  */
 
 
-router.get('/teachers/:teacher_id/lectures', timeValidator.checkTime, async (req, res) => {
+router.get('/teachers/:teacher_id/lectures', async (req, res) => {
 
     const teacher_id = req.params.teacher_id;
-    const { start_date, end_date } = {...req.query};
+    const start_date = req.query.from;
+    const end_date = req.query.to;
 
     try {
         let lectures = await teacherService.getLecturesByTeacherAndTime(teacher_id, start_date, end_date);
