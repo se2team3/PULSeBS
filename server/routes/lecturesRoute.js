@@ -1,6 +1,7 @@
 const bookingService = require('../services/bookingService');
 const extendedLectureService = require('../services/extendedLectureService');
 const express = require('express');
+const authorize = require('../services/authorizeService');
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ const router = express.Router();
  *       - "read:pets"
  */
 
-router.get('/lectures/:lecture_id/bookings', async(req,res) =>{
+router.get('/lectures/:lecture_id/bookings', authorize(), async(req,res) =>{
   const lecture_id= + req.params.lecture_id;
   try{
       let bookings = await bookingService.retrieveBookingsbyLectureId(lecture_id);
@@ -67,7 +68,6 @@ router.get('/lectures/:lecture_id/bookings', async(req,res) =>{
  *       - "write:pets"
  *       - "read:pets"
  */
-
 router.get('/lectures/:lecture_id', async(req,res) =>{
   const lecture_id= + req.params.lecture_id;
   try{

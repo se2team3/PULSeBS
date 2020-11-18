@@ -107,7 +107,7 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
             console.log('Error', error.message);
         }
     });
-    if (response.status == 201) {
+    if (response.status == 200) {
         return response.data.map(
             (o) => new LectureExtended(o.id, o.datetime, o.datetime_end, o.course_id, o.room_id, o.virtual, o.deleted_at,
                 o.course_name,o.teacher_name,o.teacher_surname,o.room_name,o.max_seats,o.booking_counter));

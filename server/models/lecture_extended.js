@@ -55,8 +55,8 @@ const Lecture=require('./lecture')
  */
 
 class LectureExtended extends Lecture{
-    constructor(id, datetime,datetime_end,course_id,room_id,virtual,deleted_at,course_name,teacher_name,teacher_surname,room_name,max_seats,booking_counter){
-        super (id,datetime,datetime_end,course_id,room_id,virtual,deleted_at)
+    constructor({id, datetime,datetime_end,course_id,room_id,virtual,deleted_at,course_name,teacher_name,teacher_surname,room_name,max_seats,booking_counter}){
+        super (id,datetime,datetime_end,course_id,room_id,virtual,deleted_at);
         this.course_name=course_name;
         this.teacher_name=teacher_name;
         this.teacher_surname=teacher_surname;

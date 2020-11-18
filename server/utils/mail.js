@@ -30,7 +30,7 @@ const start = (callback = _ => {}) => {
 };
 
 const notifyTeachers = async () => {
-    const scheduledLectures = await require('../services/lectures').getNextDayLectures();
+    const scheduledLectures = await require('../services/lectureService').getNextDayLectures();
     scheduledLectures.forEach(lecture => {
         send({
             to: lecture.teacher.email,

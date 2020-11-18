@@ -33,4 +33,6 @@ exports.deleteLectures = async function(){
     } catch (error) {
         return errHandler(error);
     }
-} 
+}
+
+exports.getNextDayLectures = async (offset = 1) => await lectureDao.retrieveNextDayLectures({offset});

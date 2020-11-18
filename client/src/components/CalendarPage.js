@@ -110,7 +110,7 @@ class CalendarPage extends React.Component {
     let endOfWeek = moment().day(7).format("YYYY-MM-DD");
 
     console.log(startOfWeek + ' '+ endOfWeek);
-    let uid = 1 ;
+    let uid = 10;
     API.getLectures(startOfWeek,endOfWeek,role,uid)
     .then((res)=>{
       console.log("RES"+res[0].course_id)
@@ -118,7 +118,7 @@ class CalendarPage extends React.Component {
       this.setState({lectures:res})
       this.transformIntoEvents();
     })
-    .catch((err)=>console.log(err)); 
+    .catch((err)=>console.log(`error`, err));
     //this.transformIntoEvents();
   }
 

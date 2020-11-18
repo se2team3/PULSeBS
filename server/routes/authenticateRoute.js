@@ -3,7 +3,7 @@ const app = express.Router();
 const userService = require('../services/userService');
 const jsonwebtoken = require('jsonwebtoken');
 const { secret } = require('../config/secret.json');
-const authorize = require('../services/authorize');
+const authorize = require('../services/authorizeService');
 
 /**
  * @swagger
@@ -87,7 +87,7 @@ async function login(req, res) {
     if (!user)
         return res.status(400).json({ message: 'Username or password is incorrect' });
     const token = jsonwebtoken.sign({ sub: user.id, role: user.role }, secret);
-    res.cookie('token', token, {httpOnly: true, sameSite: true, maxAge: 1000 * 300 /*5 min*/});
+    res.cookie('token', token, {httpOnly: true, sameSite: true, maxAge: 1000 * 3000 /*5 min*/});
     return res.json(user);
 }
 
