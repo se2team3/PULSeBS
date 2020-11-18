@@ -10,7 +10,7 @@ import CalendarModal from './CalendarModal';
 import API from '../api/API';
 
 /* JUST FOR DEBUGGING PURPOSES */
-const role = 'student'// change until login and auth user is implemented
+let role = 'student'// change until login and auth user is implemented
 
 class CalendarPage extends React.Component {
   constructor(props) {

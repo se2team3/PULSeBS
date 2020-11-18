@@ -2,6 +2,51 @@
 import React from 'react';
 
 describe('Calendar page', () => {
+    let sharedTest =  function(){
+        it('has header presence', () => {
+            cy.contains("Nov 16 – 22, 2020");
+        })
+
+        it('has backward button working', () => {
+            cy.get ("button").eq(1).click();
+            cy.contains("Nov 16 – 22, 2020").should('not.exist');
+            cy.contains("ROOM4").should('not.exist');
+            cy.get ("button").eq(2).click();
+        })
+
+        it('has forward button working', () => {
+            
+            cy.get ("button").eq(2).click();
+            cy.contains("Nov 16 – 22, 2020").should('not.exist');
+            cy.contains("ROOM4").should('not.exist');
+            cy.get ("button").eq(1).click();
+        })
+
+        it('has today button working', () => {
+            
+            cy.get ("button").eq(2).click();
+            cy.get(<a class="fc-col-header-cell-cushion ">Wed 11/18</a>).should('not.be.visible')
+            cy.get ("button").eq(3).click();
+            cy.get(<a class="fc-col-header-cell-cushion ">Wed 11/18</a>)
+        })
+
+        it('has list button working', () => {
+            
+            cy.get ("button").eq(5).click();
+            cy.contains("November 17, 2020").should('exist');
+            cy.get ("button").eq(4).click();
+            
+        })
+
+        it('has month button working', () => {
+            
+            cy.get ("button").eq(6).click();
+            cy.get(<div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"></div>)
+            cy.get ("button").eq(4).click();
+            
+        })
+    }
+
   describe('calendar student basic interface, mock API',()=>{
         before('visit page', () => {
             cy.route2('/api/students/1/lectures', { fixture: 'list_of_lectures.json' })
@@ -67,48 +112,7 @@ describe('Calendar page', () => {
             cy.get(<div class="fc-header-toolbar fc-toolbar fc-toolbar-ltr"></div>)
             
         });
-        it('has header presence', () => {
-            cy.contains("Nov 16 – 22, 2020");
-        })
-
-        it('has backward button working', () => {
-            cy.get ("button").eq(1).click();
-            cy.contains("Nov 16 – 22, 2020").should('not.exist');
-            cy.contains("ROOM4").should('not.exist');
-            cy.get ("button").eq(2).click();
-        })
-
-        it('has forward button working', () => {
-            
-            cy.get ("button").eq(2).click();
-            cy.contains("Nov 16 – 22, 2020").should('not.exist');
-            cy.contains("ROOM4").should('not.exist');
-            cy.get ("button").eq(1).click();
-        })
-
-        it('has today button working', () => {
-            
-            cy.get ("button").eq(2).click();
-            cy.get(<a class="fc-col-header-cell-cushion ">Wed 11/18</a>).should('not.be.visible')
-            cy.get ("button").eq(3).click();
-            cy.get(<a class="fc-col-header-cell-cushion ">Wed 11/18</a>)
-        })
-
-        it('has list button working', () => {
-            
-            cy.get ("button").eq(5).click();
-            cy.contains("November 17, 2020").should('exist');
-            cy.get ("button").eq(4).click();
-            
-        })
-
-        it('has month button working', () => {
-            
-            cy.get ("button").eq(6).click();
-            cy.get(<div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"></div>)
-            cy.get ("button").eq(4).click();
-            
-        })
+        sharedTest();
 
         
 
@@ -175,48 +179,7 @@ describe('Calendar page', () => {
                // cy.route2('/api/teachers/1/lectures', { fixture: 'list_of_lectures.json' })
                 cy.visit('/calendar');
             });
-            it('has header presence', () => {
-                cy.contains("Nov 16 – 22, 2020");
-            })
-
-            it('has backward button working', () => {
-            cy.get ("button").eq(1).click();
-            cy.contains("Nov 16 – 22, 2020").should('not.exist');
-            cy.contains("ROOM4").should('not.exist');
-            cy.get ("button").eq(2).click();
-        })
-
-        it('has forward button working', () => {
-            
-            cy.get ("button").eq(2).click();
-            cy.contains("Nov 16 – 22, 2020").should('not.exist');
-            cy.contains("ROOM4").should('not.exist');
-            cy.get ("button").eq(1).click();
-        })
-
-        it('has today button working', () => {
-            
-            cy.get ("button").eq(2).click();
-            cy.get(<a class="fc-col-header-cell-cushion ">Wed 11/18</a>).should('not.be.visible')
-            cy.get ("button").eq(3).click();
-            cy.get(<a class="fc-col-header-cell-cushion ">Wed 11/18</a>)
-        })
-
-        it('has list button working', () => {
-            
-            cy.get ("button").eq(5).click();
-            cy.contains("November 17, 2020").should('exist');
-            cy.get ("button").eq(4).click();
-            
-        })
-
-        it('has month button working', () => {
-            
-            cy.get ("button").eq(6).click();
-            cy.get(<div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"></div>)
-            cy.get ("button").eq(4).click();
-            
-        })
+            sharedTest();
             
 
        } );

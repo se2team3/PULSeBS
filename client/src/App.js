@@ -4,12 +4,10 @@ import Header from './components/Header';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import Collapse from 'react-bootstrap/Collapse';
 import LoginForm from './components/LoginForm';
 import LecturePage from './components/LecturePage';
 import API from './api/API';
-import { Redirect, Route, Link } from 'react-router-dom';
+import { Redirect, Route} from 'react-router-dom';
 import { Switch } from 'react-router';
 import { AuthContext } from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
@@ -108,6 +106,10 @@ class App extends React.Component {
               <LecturePage lecture_id={props.match.params.lecture_id}/>
             }/>
 
+            <Route>
+              <Redirect to='/login' />
+            </Route>
+            
           </Switch>
 
         </Container>
