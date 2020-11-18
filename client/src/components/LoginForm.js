@@ -63,7 +63,7 @@ class LoginForm extends React.Component {
 
                             {context.authErr && 
                             <Alert variant= "danger">
-                                {context.authErr.msg}
+                                {context.authErr}
                             </Alert>
                             }
                         </Col>

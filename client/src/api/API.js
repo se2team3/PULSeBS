@@ -34,7 +34,7 @@ async function userLogin(username, password) {
                 // analyze the cause of error
                 response.json()
                     .then((obj) => { reject(obj); }) // error msg in the response body
-                    .catch((err) => { reject({ errors: [{ param: "Application", msg: "Cannot parse server response" }] }) }); // something else
+                    .catch((err) => { reject({messsage: "Cannot parse server response" })}); // something else
             }
         }).catch((err) => { reject({ errors: [{ param: "Server", msg: "Cannot communicate" }] }) }); // connection errors
     });

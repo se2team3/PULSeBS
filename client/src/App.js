@@ -45,8 +45,7 @@ class App extends React.Component {
   // Add a logout method
   logout = () => {
     API.userLogout().then(() => {
-      this.setState({ authUser: null, authErr: null, tasks: null });
-      API.getTasks().catch((errorObj) => { this.handleErrors(errorObj) });
+      this.setState({ authUser: null, authErr: null});
     });
   }
 
@@ -58,8 +57,8 @@ class App extends React.Component {
       this.props.history.push("/calendar");
     }).catch(
       (errorObj) => {
-        const err0 = errorObj.errors[0];
-        this.setState({ authErr: err0 });
+        const err = errorObj.message;
+        this.setState({ authErr: err });
       }
     );
   }
