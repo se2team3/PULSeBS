@@ -102,6 +102,10 @@ const bookLecture = async ({ lecture_id, student_id }) => {
 (async () => {
     const [students, students_id] = await generateUsers({ n: 200, role: "student" });
     const [teachers, teachers_id] = await generateUsers({ n: 5, role: "teacher" });
+    console.log(`Students: `);
+    students.forEach(s => console.log(`  email: ${s.email}, password: ${s.password}`));
+    console.log(`Teacher: `);
+    teachers.forEach(t => console.log(`  email: ${t.email}, password: ${t.password}`));
     const [rooms, rooms_id] = await generateRoom({n:10});
     let count = 0;
     for (let teacher_id of teachers_id) {
