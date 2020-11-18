@@ -48,7 +48,7 @@ class CalendarPage extends React.Component {
   getStatus = (l) => {
     if ((moment(l.datetime).isBefore(moment().format("YYYY-MM-DD"))))
       return "closed"
-    if (bookingArray[l.id - 1] === true)
+    if (l.updated_at)
       return "booked";
     if (l.max_seats - l.booking_counter <= 0)
       return "full";
@@ -58,7 +58,7 @@ class CalendarPage extends React.Component {
   getColor = (course_id) => {
     let colorArray = ["plum", "tomato", "green", "dodgerBlue", "darkOrange", "pink",
       "mediumOrchid", "coral", "lightBlue", "sandyBrown", "lightSeaGreen",
-      "khaki", , "deepSkyBlue", "chocolate", "orange", "rebeccaPurple", "salmon"]
+      "khaki", "deepSkyBlue", "chocolate", "orange", "rebeccaPurple", "salmon"]
     let ids = this.state.lectures.map((l) => l.course_id).filter(this.onlyUnique);
     let index = ids.indexOf(course_id);
 
