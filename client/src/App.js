@@ -20,8 +20,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { lecture: { title: "" }, tasks: [], projects: [], filter: 'all', openMobileMenu: false, editedTask: null };
-    this.goToLecturePage = this.goToLecturePage.bind(this);
+    this.state = { lecture: { title: "" }, filter: 'all',  };
   }
 
   componentDidMount() {
@@ -55,8 +54,10 @@ class App extends React.Component {
 
   // Add a login method
   login = (username, password) => {
-    API.userLogin(username, password).then(
-    ).catch(
+    API.userLogin(username, password)
+    .then((user)=>{
+      this.setState({ carsauthUser: user, authErr: null });
+    }).catch(
       (errorObj) => {
         const err0 = errorObj.errors[0];
         this.setState({ authErr: err0 });

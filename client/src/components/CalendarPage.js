@@ -9,6 +9,8 @@ import { AuthContext } from '../auth/AuthContext';
 import CalendarModal from './CalendarModal';
 import API from '../api/API';
 
+/* JUST FOR DEBUGGING PURPOSES */
+const role = 'student'; // change until login and auth user is implemented
 
 class CalendarPage extends React.Component {
   constructor(props) {
@@ -103,9 +105,12 @@ class CalendarPage extends React.Component {
 
 
   async componentDidMount() {
-    /* let today = moment().format("YYYY-MM-DD");
-    let nextWeek = moment().add(7,'days').format("YYYY-MM-DD");
-    let role = 'student';
+    // When created for the first time, it gets the lectures for the current week
+    let startOfWeek = moment().day(1).format("YYYY-MM-DD");
+    let endOfWeek = moment().day(7).format("YYYY-MM-DD");
+
+    console.log(startOfWeek + ' '+ endOfWeek);
+    /* let role = 'student';
     let uid = 1 ;
     API.getLectures(today,nextWeek,role,uid)
     .then((res)=>{
@@ -155,7 +160,7 @@ class CalendarPage extends React.Component {
           teacher: l.teacher_name + l.teacher_surname,
           status: stat,
           seats: diff,
-          title: l.course_name + l.room_name + "\n" + stat,
+          title: l.course_name +'\n'+ l.room_name + "\n" + stat,
           start: l.datetime, end: l.datetime_end,
           backgroundColor: this.getColor(l.course_id),
           display: 'auto'
@@ -200,35 +205,6 @@ class CalendarPage extends React.Component {
     this.setState({modal: false})
   }
 
-  /* renderModal = () => {
-    let text = {
-      'booked': "You have booked a seat for this lecture",
-      'free': `${this.state.selected.extendedProps.seats} available seats`,
-      'full': "No available seats",
-      'closed': "Booking closed"
-    }
-
-    
-
-    return (
-      <Modal.Dialog className="z1">
-        <Modal.Header >
-          <Modal.Title>{this.state.selected.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {text[this.state.selected.extendedProps.status]}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={this.closeModal}>Close</Button>
-          {this.state.selected.extendedProps.status === "free" ?
-            <Button variant="success" onClick={this.bookLecture}>Book a seat</Button> : <div></div>}
-        </Modal.Footer>
-      </Modal.Dialog>)
-
-  } */
-
-  //this.props.goToLecturePage(info.event);
-
 
   renderCalendar = (role) => {
     return (
@@ -264,7 +240,6 @@ class CalendarPage extends React.Component {
 
 
   render() {
-    let role = 'student'; // change until login and auth user is implemented
     let showArray = [];
     return (
       <>
