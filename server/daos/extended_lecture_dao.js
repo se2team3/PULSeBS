@@ -26,7 +26,6 @@ exports.getLectureById = function(id) {
             if (!row)
                 resolve(null);
             else{
-                console.log(row)
                 const lecture = createExtendedLecture(row);
                 resolve(lecture);
             }

@@ -57,24 +57,24 @@ describe('Lecture testing', function() {
         it('should get the list of booking given a lecture', async function() {
             const lectureObj = { lecture_id: 1};
             
-            const tmp = `/lectures/${lectureObj.lecture_id}/bookings`;
+            const tmp = `/api/lectures/${lectureObj.lecture_id}/bookings`;
             await dbUtils.populate();
 
             let res = await chai.request(server).get(tmp).send();
             should.exist(res);
-            res.should.have.status(201);
+            res.should.have.status(200);
             res.body.should.be.an('array');
         });
 
         it('should get the extended lecture given the id', async function() {
             const lectureObj = { lecture_id: 1};
             
-            const tmp = `/lectures/${lectureObj.lecture_id}`;
+            const tmp = `/api/lectures/${lectureObj.lecture_id}`;
             await dbUtils.populate();
 
             let res = await chai.request(server).get(tmp).send();
             should.exist(res);
-            res.should.have.status(201);
+            res.should.have.status(200);
             res.body.should.be.an('object');
         });
 
