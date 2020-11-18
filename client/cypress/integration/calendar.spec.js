@@ -47,6 +47,21 @@ describe('Calendar page', () => {
         })
     }
 
+    let checkboxesTest = function(){
+        it('has checkboxes ',() =>{
+            cy.get (<div class="form-check"></div>)
+        })
+
+        it('has working checkboxes ',() =>{
+            cy.get ("input").eq(1).click();
+            cy.contains("ROOM3").should('not.exist');
+            cy.contains("ROOM5").should('not.exist');
+            cy.get ("input").eq(1).click();
+            cy.contains("ROOM3").should('exist');
+            cy.contains("ROOM5").should('exist');
+        })
+    }
+
   describe('calendar student basic interface, mock API',()=>{
         before('visit page', () => {
             cy.route2('/api/students/1/lectures', { fixture: 'list_of_lectures.json' })
@@ -84,20 +99,7 @@ describe('Calendar page', () => {
             //cy.contains("Book").should('not.exist');
         });
 
-        it('has checkboxes ',() =>{
-            cy.get (<div class="form-check"></div>)
-        })
-
-        it('has working checkboxes ',() =>{
-            cy.get ("input").eq(1).click();
-            cy.contains("ROOM3").should('not.exist');
-            cy.contains("ROOM5").should('not.exist');
-            cy.get ("input").eq(1).click();
-            cy.contains("ROOM3").should('exist');
-            cy.contains("ROOM5").should('exist');
-        })
-
-        
+        checkboxesTest();
 
     });
 
@@ -154,18 +156,7 @@ describe('Calendar page', () => {
             cy.get(<div class="fc-event-main"></div>)
             
         });
-         it('has checkboxes ',() =>{
-            cy.get (<div class="form-check"></div>)
-        })
-
-        it('has working checkboxes ',() =>{
-            cy.get ("input").eq(1).click();
-            cy.contains("ROOM3").should('not.exist');
-            cy.contains("ROOM5").should('not.exist');
-            cy.get ("input").eq(1).click();
-            cy.contains("ROOM3").should('exist');
-            cy.contains("ROOM5").should('exist');
-        })
+        checkboxesTest();
         it('has lecture page', () => {
             cy.contains("Analysis II").click()
             cy.url().should('contain', '/lecture');
