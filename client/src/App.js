@@ -119,7 +119,7 @@ class App extends React.Component {
             </Route>
 
             <Route path="/calendar">
-              <CalendarPage goToLecturePage={this.goToLecturePage} />
+              <CalendarPage goToLecturePage={this.goToLecturePage} authUser={value.authUser}/>
             </Route>
             <Route path="/lectures/:lecture_id" render={(props) =>
               <LecturePage lecture_id={props.match.params.lecture_id} />

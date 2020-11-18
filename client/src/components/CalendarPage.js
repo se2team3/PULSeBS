@@ -9,9 +9,6 @@ import { AuthContext } from '../auth/AuthContext';
 import CalendarModal from './CalendarModal';
 import API from '../api/API';
 
-/* JUST FOR DEBUGGING PURPOSES */
-let role = 'teacher'// change until login and auth user is implemented
-
 class CalendarPage extends React.Component {
   constructor(props) {
     super(props);
@@ -32,8 +29,7 @@ class CalendarPage extends React.Component {
     let endOfWeek = moment().day(7).format("YYYY-MM-DD");
 
     console.log(startOfWeek + ' '+ endOfWeek);
-    let uid = 198;
-    API.getLectures(startOfWeek,endOfWeek,role,uid)
+    API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
     .then((res)=>{
       console.log("RES"+res[0].course_id)
       //this.setState(state=>{return  state.lectures: [...res] });
@@ -129,7 +125,7 @@ class CalendarPage extends React.Component {
   }
 
 
-  renderCalendar = () => {
+  renderCalendar = (role) => {
     return (
       <FullCalendar
         plugins={[timeGridPlugin, dayGridPlugin, listPlugin]}
@@ -171,7 +167,7 @@ class CalendarPage extends React.Component {
             <Container fluid>
               <Row >
                 <Col sm={8} className="below-nav" >
-                  {this.renderCalendar(context.authUser?.role ?? role)}
+                  {this.renderCalendar(context.authUser.role)}
                 </Col>
 
                 <Col sm={4} className="sidebar">
