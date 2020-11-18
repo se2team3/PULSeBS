@@ -6,6 +6,7 @@ import BookingExtended from './models/booking_extended';
 
 
 const baseURL = "/api";
+
 async function isAuthenticated() {
     let url = "/user";
     const response = await fetch(baseURL + url);
@@ -17,6 +18,7 @@ async function isAuthenticated() {
         throw err;  // An object with the error coming from the server
     }
 }
+
 async function userLogin(username, password) {
     return new Promise((resolve, reject) => {
         fetch(baseURL + '/login', {

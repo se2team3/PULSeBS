@@ -5,6 +5,7 @@ import API from '../api/API';
 
 function LecturePage(props) {
 
+    const [/* state */, setState] = useState();
     const [lecture, setLecture] = useState(null);
     const [bookings, setBookings] = useState(null);
 
@@ -12,19 +13,19 @@ function LecturePage(props) {
         API.getLecture(props.lecture_id)
             .then((l) => {
                 setLecture(l);
-            })
+            }).catch((e) => { setState(() => { throw e; }) })
         API.getBookings(props.lecture_id)
             .then((b) => {
                 setBookings(b);
-            })
+            }).catch((e) => { setState(() => { throw e; }) })
     }, []);
 
     let number_of_bookings = 0;
 
-    if (bookings!=null) number_of_bookings = bookings.length;
+    if (bookings != null) number_of_bookings = bookings.length;
 
     return (<>
-        {lecture!=null&&<Container>
+        {lecture != null && <Container>
             <Row>
                 <Col><h1>Lecture of {lecture.course_name}</h1></Col>
             </Row>
@@ -85,7 +86,7 @@ function LecturePage(props) {
                 </Col>
             </Row>
         </Container>}
-        </>
+    </>
 
     )
 
