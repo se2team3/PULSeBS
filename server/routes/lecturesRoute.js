@@ -1,5 +1,5 @@
 const bookingService = require('../services/bookingService');
-const lectureService = require('../services/lectureService');
+const extendedLectureService = require('../services/extendedLectureService');
 const express = require('express');
 
 const router = express.Router();
@@ -35,7 +35,6 @@ router.get('/lectures/:lecture_id/bookings', async(req,res) =>{
   const lecture_id= + req.params.lecture_id;
   try{
       let bookings = await bookingService.retrieveBookingsbyLectureId(lecture_id);
-      console.log(bookings);
       return res.status(200).json(bookings);
   } catch(error){
       res.json(error);
@@ -72,7 +71,7 @@ router.get('/lectures/:lecture_id/bookings', async(req,res) =>{
 router.get('/lectures/:lecture_id', async(req,res) =>{
   const lecture_id= + req.params.lecture_id;
   try{
-      let lecture = await lectureService.getLecture(lecture_id);
+      let lecture = await extendedLectureService.getLectureById(lecture_id);
       return res.status(200).json(lecture);
   } catch(error){
       res.json(error);
