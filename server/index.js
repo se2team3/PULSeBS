@@ -24,11 +24,11 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.use('/api-docs', ...swaggerOptions);
-app.use('/', lectureRoutes);
-app.use(`/`, studentsRoutes);
-app.use(`/`, authenticateRoutes);
-app.use(`/`, bookingRoute);
-app.use(`/`, teachersRoute);
+app.use('/api/', lectureRoutes);
+app.use(`/api/`, studentsRoutes);
+app.use(`/api/`, authenticateRoutes);
+app.use(`/api/`, bookingRoute);
+app.use(`/api/`, teachersRoute);
 
 app.use(errorHandler);
 

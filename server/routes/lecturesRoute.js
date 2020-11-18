@@ -35,7 +35,8 @@ router.get('/lectures/:lecture_id/bookings', async(req,res) =>{
   const lecture_id= + req.params.lecture_id;
   try{
       let bookings = await bookingService.retrieveBookingsbyLectureId(lecture_id);
-      return res.status(201).json(bookings);
+      console.log(bookings);
+      return res.status(200).json(bookings);
   } catch(error){
       res.json(error);
   }
@@ -54,7 +55,7 @@ router.get('/lectures/:lecture_id/bookings', async(req,res) =>{
  *    produces:
  *       - "application/json"
  *    responses:
- *       "201":
+ *       "200":
  *         description: "Successful response"
  *         schema:
  *           type: "array"
@@ -72,7 +73,7 @@ router.get('/lectures/:lecture_id', async(req,res) =>{
   const lecture_id= + req.params.lecture_id;
   try{
       let lecture = await lectureService.getLecture(lecture_id);
-      return res.status(201).json(lecture);
+      return res.status(200).json(lecture);
   } catch(error){
       res.json(error);
   }
