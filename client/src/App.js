@@ -4,8 +4,6 @@ import Header from './components/Header';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import Collapse from 'react-bootstrap/Collapse';
 import LoginForm from './components/LoginForm';
 import LecturePage from './components/LecturePage';
 import API from './api/API';
@@ -56,7 +54,8 @@ class App extends React.Component {
   login = (username, password) => {
     API.userLogin(username, password)
     .then((user)=>{
-      this.setState({ carsauthUser: user, authErr: null });
+      this.setState({ authUser: user, authErr: null });
+      this.props.history.push("/calendar");
     }).catch(
       (errorObj) => {
         const err0 = errorObj.errors[0];
@@ -107,6 +106,10 @@ class App extends React.Component {
             <Route path="/lectures/:lecture_id" render={(props)=>
               <LecturePage lecture_id={props.match.params.lecture_id}/>
             }/>
+
+            <Route>
+              <Redirect to='/login'></Redirect>
+            </Route>
 
           </Switch>
 

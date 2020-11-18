@@ -4,7 +4,58 @@ import LectureExtended from './models/lecture_extended';
 import Booking from './models/booking';
 import BookingExtended from './models/booking_extended';
 
+
 const baseURL = "/api";
+async function isAuthenticated() {
+    let url = "/user";
+    const response = await fetch(baseURL + url);
+    const userJson = await response.json();
+    if (response.ok) {
+        return userJson;
+    } else {
+        let err = { status: response.status, errObj: userJson };
+        throw err;  // An object with the error coming from the server
+    }
+}
+async function userLogin(username, password) {
+    return new Promise((resolve, reject) => {
+        fetch(baseURL + '/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: username, password: password }),
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((user) => {
+                    resolve(user);
+                });
+            } else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error msg in the response body
+                    .catch((err) => { reject({ errors: [{ param: "Application", msg: "Cannot parse server response" }] }) }); // something else
+            }
+        }).catch((err) => { reject({ errors: [{ param: "Server", msg: "Cannot communicate" }] }) }); // connection errors
+    });
+}
+async function userLogout(username, password) {
+    return new Promise((resolve, reject) => {
+        fetch(baseURL + '/logout', {
+            method: 'POST',
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error msg in the response body
+                    .catch((err) => { reject({ errors: [{ param: "Application", msg: "Cannot parse server response" }] }) }); // something else
+            }
+        });
+    });
+}
+
 
 /**
  * Get all lectures, optionally filter by time frame or use specific role and user
@@ -56,7 +107,7 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
             console.log('Error', error.message);
         }
     });
-    if (response.status == 200) {
+    if (response.status == 201) {
         return response.data.map(
             (o) => new LectureExtended(o.id, o.datetime, o.datetime_end, o.course_id, o.room_id, o.virtual, o.deleted_at,
                 o.course_name,o.teacher_name,o.teacher_surname,o.room_name,o.max_seats,o.booking_counter));
@@ -157,6 +208,6 @@ async function bookLecture(student_id, lecture_id){
     }
 }
 
-const API = { getLectures, getLecture, getBookings, bookLecture }
+const API = { getLectures, getLecture, getBookings, bookLecture, userLogin, userLogout, isAuthenticated }
 
 export default API
