@@ -24,23 +24,23 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.use('/api-docs', ...swaggerOptions);
-app.use('/', lectureRoutes);
-app.use(`/`, studentsRoutes);
-app.use(`/`, authenticateRoutes);
-app.use(`/`, bookingRoute);
-app.use(`/`, teachersRoute);
+app.use('/api/', lectureRoutes);
+app.use(`/api/`, studentsRoutes);
+app.use(`/api/`, authenticateRoutes);
+app.use(`/api/`, bookingRoute);
+app.use(`/api/`, teachersRoute);
 
 app.use(errorHandler);
 
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
 
-mailserver.start((error) => {
+/* mailserver.start((error) => {
     if (error)
         throw new Error(error);
     if (process.env.NODE_ENV !== "test")
         console.log("Server is ready to send emails");
 });
-
+ */
 const sendEveryTenSeconds = '*/10 * * * * *';
 mailserver.job().start();
 

@@ -21,7 +21,7 @@ describe('Booking routes', function () {
     it('should allow student to book a lecture', async function() {
         const newBooking = { lecture_id: 1, student_id: 2};
         
-        const tmp = `/students/${newBooking.student_id}/bookings`;
+        const tmp = `/api/students/${newBooking.student_id}/bookings`;
 
         let res1 = await chai.request(server).post(tmp).send({lecture_id: newBooking.lecture_id});
         should.exist(res1);
@@ -34,7 +34,7 @@ describe('Booking routes', function () {
     it('should not allow student to book a lecture', async function() {
         const newBooking = { lecture_id: 1, student_id: 2};
         
-        const tmp = `/students/${newBooking.student_id}/bookings`;
+        const tmp = `/api/students/${newBooking.student_id}/bookings`;
 
         let res = await chai.request(server).post(tmp).send({lecture_id: newBooking.lecture_id});
         should.exist(res);

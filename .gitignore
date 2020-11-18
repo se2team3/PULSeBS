@@ -1,6 +1,10 @@
 /server/node_modules
 /client/node_modules
 .vscode
+.idea
+#/server/config/config.env
+/client/coverage
+/client/.nyc_output
 /server/.nyc_output
 /server/coverage
-#/server/config/config.env
+/client/coverage
