@@ -19,6 +19,7 @@ async function userLogin(username, password) {
             },
             body: JSON.stringify({ email: username, password: password }),
         }).then((response) => {
+            console.log(response)
             if (response.ok) {
                 response.json().then((user) => {
                     resolve(user);
