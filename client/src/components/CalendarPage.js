@@ -10,7 +10,7 @@ import CalendarModal from './CalendarModal';
 import API from '../api/API';
 
 /* JUST FOR DEBUGGING PURPOSES */
-let role = 'student'// change until login and auth user is implemented
+let role = 'teacher'// change until login and auth user is implemented
 
 class CalendarPage extends React.Component {
   constructor(props) {
@@ -32,7 +32,7 @@ class CalendarPage extends React.Component {
     let endOfWeek = moment().day(7).format("YYYY-MM-DD");
 
     console.log(startOfWeek + ' '+ endOfWeek);
-    let uid = 10;
+    let uid = 198;
     API.getLectures(startOfWeek,endOfWeek,role,uid)
     .then((res)=>{
       console.log("RES"+res[0].course_id)

@@ -89,7 +89,8 @@ class App extends React.Component {
 
   goToLecturePage = (event) => {
     this.setState({ lecture: event })
-    this.props.history.push("/lecture/");
+    let id = event.extendedProps.lectureId;
+    this.props.history.push(`/lectures/${id}`);
   }
 
   render() {
