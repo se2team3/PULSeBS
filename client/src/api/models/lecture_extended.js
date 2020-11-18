@@ -1,4 +1,4 @@
-import Lecture from './lecture'
+const Lecture=require('./lecture')
 /**
  * For swagger data types refer to: https://swagger.io/docs/specification/data-models/data-types/
  * For swagger live editor visit: https://editor.swagger.io/?_ga=2.139478195.1827220927.1604945624-383726330.1604945624
@@ -10,7 +10,7 @@ import Lecture from './lecture'
  *
  * components:
  *  schemas:
- *   Lecture:
+ *   LectureExtended:
  *     type: object
  *     required:
  *       - course_id
@@ -35,35 +35,34 @@ import Lecture from './lecture'
  *         type: string
  *         format: date-time
  *       course_name:
- *         type: string
- *         format: byte
+ *          type: string
+ *          format:byte
  *       teacher_name:
- *         type: string
- *         format: byte
+ *          type: string
+ *          format:byte
  *       teacher_surname:
- *         type: string
- *         format: byte
+ *          type: string
+ *          format:byte
  *       room_name:
- *         type: string
- *         format: byte
- *       available_seats:
- *         type: number
- *         format: integer
- *       bookable:
- *         type: string
- *         format: byte
+ *          type: string
+ *          format:byte
+ *       max_seats:
+ *          type: number
+ *          format:integer
+ *       booking_counter:
+ *          type: number
+ *          format:integer
  */
 
-class ExtendedLecture extends Lecture{
-    constructor(id,datetime,course_id,room_id,virtual,deleted_at,datetime_end,course_name,teacher_name,teacher_surname,room_name,available_seats,bookable){
-        super (id,datetime,course_id,room_id,virtual,deleted_at)
-        this.datetime_end=datetime_end;
+class LectureExtended extends Lecture{
+    constructor(id, datetime,datetime_end,course_id,room_id,virtual,deleted_at,course_name,teacher_name,teacher_surname,room_name,max_seats,booking_counter){
+        super (id,datetime,datetime_end,course_id,room_id,virtual,deleted_at)
         this.course_name=course_name;
         this.teacher_name=teacher_name;
         this.teacher_surname=teacher_surname;
         this.room_name=room_name;
-        this.available_seats=available_seats;  
-        this.bookable=bookable; 
+        this.max_seats=max_seats;  
+        this.booking_counter=booking_counter; 
     }
 }
-module.exports = ExtendedLecture;
+module.exports = LectureExtended;

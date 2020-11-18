@@ -12,17 +12,19 @@ const Header = (props) => {
     <AuthContext.Consumer>
       {(context) => (
         
-      <Navbar bg="primary" variant="dark" expand="sm" fixed="top">
+        <Navbar bg="primary" variant="dark" expand="sm">
         <Navbar.Toggle aria-controls="left-sidebar" aria-expanded="false" aria-label="Toggle sidebar" onClick={props.showSidebar}/>
 
         <Navbar.Brand href="index.html">
-       
           PULSeBS
         </Navbar.Brand>
         
-        <Nav className="mr-auto">
-        </Nav>
         
+        <Nav className="mr-auto" >
+        <Nav.Link href="#home">Calendar</Nav.Link>
+        <Nav.Link href="#">Help</Nav.Link>
+        <Nav.Link href="#">PoliTO</Nav.Link>
+        </Nav>
         
 
         <Nav className="ml-md-auto">

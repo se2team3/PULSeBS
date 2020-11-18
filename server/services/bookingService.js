@@ -1,4 +1,5 @@
 const bookingDao = require('../daos/booking_dao');
+const bookingExtendedDao = require('../daos/booking_extended_dao');
 const errHandler = require('./errorHandler');
 
 exports.createBookingTable = async function() {    
@@ -28,7 +29,7 @@ exports.deleteBookings = async function(){
 
 exports.retrieveBookingsbyLectureId = async function(lecture_id){
     try {
-        return bookingDao.retrieveLectureBookings(lecture_id);
+        return bookingExtendedDao.retrieveLectureBookings(lecture_id);
     } catch (error) {
         return errHandler(error);
     }
