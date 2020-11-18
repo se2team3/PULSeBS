@@ -11,12 +11,13 @@ exports.retrieveStudentLectures = function(student_id) {
         // course_name,teacher_name,teacher_surname,room_name,max_seats,booking_counter
         const sql = `SELECT L.id, datetime, course_id, room_id, virtual, L.deleted_at, C.name as course_name,
                             T.name as teacher_name, T.surname as teacher_surname,
-                            R.name as room_name, seats as max_seats, COUNT(B.lecture_id) as booking_counter
+                            R.name as room_name, seats as max_seats, COUNT(B.lecture_id) as booking_counter, B2.updated_at, B2.waiting, B2.present
                      FROM Lectures L, Rooms R, Bookings B, Users T, Courses C
+                     LEFT JOIN Bookings B2 ON B2.student_id = ? AND L.id = B2.lecture_id AND B2.deleted_at IS NULL
                      WHERE L.id=B.lecture_id AND L.course_id=C.id AND L.room_id= R.id AND C.teacher_id=T.id AND L.course_id IN
                                 (SELECT course_id FROM Course_Student WHERE student_id = ?)
                      GROUP BY B.lecture_id`
-        db.all(sql, [student_id], (err, rows) => {
+        db.all(sql, [student_id, student_id], (err, rows) => {
             if(err) {
                 console.error(err);
                 return reject(err);
