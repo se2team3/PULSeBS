@@ -23,14 +23,14 @@ class App extends React.Component {
   
   componentDidMount() {
     //check if the user is authenticated
-    /* API.isAuthenticated().then(
+    API.isAuthenticated().then(
       (user) => {
         this.setState({authUser: user});
       }
     ).catch((err) => { 
       this.setState({authErr: err.errorObj});
       this.props.history.push("/login");
-    }); */
+    }); 
   }
 
   handleErrors(err) {
@@ -61,9 +61,7 @@ class App extends React.Component {
     );
   }
 
-  showSidebar = () => {
-    this.setState((state) => ({openMobileMenu: !state.openMobileMenu}));
-  }
+
   
   render() {
     // compose value prop as object with user object and logout method
@@ -76,14 +74,14 @@ class App extends React.Component {
     return(
       <AuthContext.Provider value={value}>
         
-        <Header showSidebar={this.showSidebar}/>
+        <Header />
 
         <Container fluid>
 
           <Switch>
             <Route path="/login">
               <Row className="vheight-100">
-                <Col sm={4}></Col>
+               <Col sm={4}></Col>
                 <Col sm={4} className="below-nav"> 
                   <LoginForm/>
                 </Col>
