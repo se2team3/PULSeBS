@@ -112,6 +112,16 @@ class CalendarPage extends React.Component {
     .then((res)=>{
       // GIVE FEEDBACK TO USER + change status of selected lecture
       console.log(res);
+      // TODO this could be a function
+      let startOfWeek = moment().day(1).format("YYYY-MM-DD");
+      let endOfWeek = moment().day(7).format("YYYY-MM-DD");
+      API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
+          .then((res)=>{
+            //this.setState(state=>{return  state.lectures: [...res] });
+            this.setState({lectures:res})
+            this.transformIntoEvents();
+        })
+        .catch((err)=>console.log(`error`, err));
     })
     .catch((err)=>{
       console.log(err);
