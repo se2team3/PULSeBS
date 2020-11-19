@@ -84,7 +84,7 @@ exports.retrieveNextDayLectures = function({offset}) {
                 Users.name as teacher_name, Users.surname as teacher_surname, Users.email,
                 Lectures.datetime as date, count(*) as n_booked, Lectures.room_id as room
         FROM    Bookings, Lectures, Courses, Users
-        WHERE   Lectures.datetime = date('now', ?)   AND
+        WHERE   strftime('%Y-%m-%d',Lectures.datetime) = date('now', ?) AND
                 Bookings.lecture_id = Lectures.id           AND
                 Lectures.course_id = Courses.id             AND
                 Users.id = Courses.teacher_id
