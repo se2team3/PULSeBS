@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const login = async ({email, password}) => {
     // TODO: is this necessary?
     // sleep for a while
-    await sleep(1);
+    //await sleep(1);
     // check credentials
     const user = await userDao.retrieveUserByEmail(email);
     return user && await bcrypt.compare(password, user.hash)
