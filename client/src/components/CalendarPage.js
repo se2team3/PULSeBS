@@ -178,7 +178,7 @@ class CalendarPage extends React.Component {
             <Container fluid>
               <Row >
                 <Col sm={8} className="below-nav" >
-                  {this.renderCalendar(context.authUser.role)}
+                  {this.renderCalendar(this.props.authUser?.role)}
                 </Col>
 
                 <Col sm={4} className="sidebar">
