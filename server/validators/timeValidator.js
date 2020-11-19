@@ -3,8 +3,8 @@
 const {query,validationResult} = require('express-validator');
 
 exports.checkTime = [
-    query('start_date').isDate(),
-    query('end_date').isDate(),
+    query('from').isDate(),
+    query('to').isDate(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty())

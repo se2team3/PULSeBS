@@ -9,9 +9,6 @@ import { AuthContext } from '../auth/AuthContext';
 import CalendarModal from './CalendarModal';
 import API from '../api/API';
 
-/* JUST FOR DEBUGGING PURPOSES */
-let role = 'student'// change until login and auth user is implemented
-
 class CalendarPage extends React.Component {
   constructor(props) {
     super(props);
@@ -19,84 +16,6 @@ class CalendarPage extends React.Component {
     this.state = {
       modal: false,
       selected: { extendedProps: { status: null } },
-      /* lectures: [{  //booked
-        id: 1,
-        datetime: "2020-11-19T10:00:00",
-        course_id: 1,
-        room_id: 5,
-        virtual: false,
-        deleted_at: null,
-        datetime_end: "2020-11-19T13:00:00",
-        course_name: "Physics",
-        teacher_name: "Richard",
-        teacher_surname: "Feynman",
-        room_name: "ROOM4",
-        max_seats: 35,
-        booking_counter: 30
-      },
-      {
-        id: 2, //full
-        datetime: "2020-11-17T17:00:00",
-        course_id: 2,
-        room_id: 5,
-        virtual: false,
-        deleted_at: null,
-        datetime_end: "2020-11-17T18:30:00'",
-        course_name: "Chemistry",
-        teacher_name: "Walter",
-        teacher_surname: "White",
-        room_name: "ROOM4",
-        max_seats: 35,
-        booking_counter: 35
-      },
-      {
-        id: 3, //free
-        datetime: "2020-11-21T10:00:00",
-        course_id: 2,
-        room_id: 5,
-        virtual: false,
-        deleted_at: null,
-        datetime_end: "2020-11-21T10:00:00",
-        course_name: "Chemistry",
-        teacher_name: "Walter",
-        teacher_surname: "White",
-        room_name: "ROOM4",
-        max_seats: 42,
-        booking_counter: 37
-      },
-      {
-        id: 4,  //free
-        datetime: "2020-11-18T13:30:00",
-        course_id: 3,
-        room_id: 5,
-        virtual: false,
-        deleted_at: null,
-        datetime_end: "2020-11-18T11:30:00",
-        course_name: "Circuit Theory",
-        teacher_name: "Alessandro",
-        teacher_surname: "Volta",
-        room_name: "ROOM4",
-        max_seats: 42,
-        booking_counter: 20
-      },
-
-      {
-        id: 5,  //closed
-        datetime: "2020-11-16T08:30:00",
-        course_id: 4,
-        room_id: 5,
-        virtual: false,
-        deleted_at: null,
-        datetime_end: "2020-11-16TT11:30:00",
-        course_name: "Analysis II",
-        teacher_name: "Giuseppe",
-        teacher_surname: "Lagrange",
-        room_name: "ROOM4",
-        max_seats: 20,
-        booking_counter: 14
-      },
-
-      ], */
       lectures:null,
       events: []
     }
@@ -110,24 +29,22 @@ class CalendarPage extends React.Component {
     let endOfWeek = moment().day(7).format("YYYY-MM-DD");
 
     console.log(startOfWeek + ' '+ endOfWeek);
-    let uid = 1 ;
-    API.getLectures(startOfWeek,endOfWeek,role,uid)
+    API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
     .then((res)=>{
       console.log("RES"+res[0].course_id)
       //this.setState(state=>{return  state.lectures: [...res] });
       this.setState({lectures:res})
       this.transformIntoEvents();
     })
-    .catch((err)=>console.log(err)); 
+    .catch((err)=>console.log(`error`, err));
     //this.transformIntoEvents();
   }
 
 
   getStatus = (l) => {
-    let bookingArray = [true, false, false, false, true];
     if ((moment(l.datetime).isBefore(moment().format("YYYY-MM-DD"))))
       return "closed"
-    if (bookingArray[l.id - 1] === true)
+    if (l.booking_updated_at)
       return "booked";
     if (l.max_seats - l.booking_counter <= 0)
       return "full";
@@ -151,7 +68,7 @@ class CalendarPage extends React.Component {
 
   transformIntoEvents = () => {
     this.setState(state => {
-      console.log("ev"+state.lectures)
+      console.log("lectures", state.lectures)
       const list = state.lectures.map((l) => {
         let diff = l.max_seats - l.booking_counter
         let stat = this.getStatus(l)
@@ -194,6 +111,17 @@ class CalendarPage extends React.Component {
     API.bookLecture(student_id,lecture_id)
     .then((res)=>{
       // GIVE FEEDBACK TO USER + change status of selected lecture
+      console.log(res);
+      // TODO this could be a function
+      let startOfWeek = moment().day(1).format("YYYY-MM-DD");
+      let endOfWeek = moment().day(7).format("YYYY-MM-DD");
+      API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
+          .then((res)=>{
+            //this.setState(state=>{return  state.lectures: [...res] });
+            this.setState({lectures:res})
+            this.transformIntoEvents();
+        })
+        .catch((err)=>console.log(`error`, err));
     })
     .catch((err)=>{
       console.log(err);
@@ -208,7 +136,7 @@ class CalendarPage extends React.Component {
   }
 
 
-  renderCalendar = () => {
+  renderCalendar = (role) => {
     return (
       <FullCalendar
         plugins={[timeGridPlugin, dayGridPlugin, listPlugin]}
@@ -250,7 +178,7 @@ class CalendarPage extends React.Component {
             <Container fluid>
               <Row >
                 <Col sm={8} className="below-nav" >
-                  {this.renderCalendar(context.authUser?.role ?? role)}
+                  {this.renderCalendar(this.props.authUser?.role)}
                 </Col>
 
                 <Col sm={4} className="sidebar">
@@ -282,7 +210,7 @@ class CalendarPage extends React.Component {
               </Row>
               {this.state.modal ? 
               <CalendarModal closeModal={this.closeModal} 
-                bookLecture={()=>this.bookLecture(context.authUser?.university_id ?? 1,this.state.selected.extendedProps.lectureId)} 
+                bookLecture={()=>this.bookLecture(context.authUser?.id ?? 1,this.state.selected.extendedProps.lectureId)}
                 lecture={this.state.selected}/> : <></>}
 
             </Container>

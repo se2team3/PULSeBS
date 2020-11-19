@@ -18,49 +18,68 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { lecture: { title: "" }, filter: 'all',  };
+    this.state = { lecture: { title: "" }, filter: 'all', };
   }
 
   componentDidMount() {
-    //check if the user is authenticated
-    /* API.isAuthenticated().then(
+    API.isAuthenticated().then(
       (user) => {
-        this.setState({authUser: user});
+        this.setState({ authUser: user });
       }
-    ).catch((err) => { 
-      this.setState({authErr: err.errorObj});
+    ).catch((err) => {
+      this.setState({ authErr: err.errorObj });
       this.props.history.push("/login");
-    }); */
+    });
   }
 
   handleErrors(err) {
     if (err) {
       if (err.status && err.status === 401) {
-        this.setState({ authErr: err.errorObj });
+        this.setState({ authErr: err.errorObj, authUser: null });
         this.props.history.push("/login");
       }
+
+      /*if (err.status && err.status === 404) {
+        this.setState({ apiError: 404 })
+        this.props.history.push("/");
+      }*/
     }
   }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.    
+    this.handleErrors(error);
+  }
+
+  /*componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service  
+    console.log(error);
+    console.log(errorInfo);
+    this.handleErrors(error);
+  }*/
+
+
 
   // Add a logout method
   logout = () => {
     API.userLogout().then(() => {
-      this.setState({ authUser: null, authErr: null, tasks: null });
-      API.getTasks().catch((errorObj) => { this.handleErrors(errorObj) });
+      this.setState({ authUser: null, authErr: null });
+      this.props.history.push("/");
     });
   }
 
   // Add a login method
   login = (username, password) => {
     API.userLogin(username, password)
-    .then((user)=>{
-      this.setState({ carsauthUser: user, authErr: null });
-    }).catch(
-      (errorObj) => {
-        const err0 = errorObj.errors[0];
-        this.setState({ authErr: err0 });
-      }
-    );
+      .then((user) => {
+        this.setState({ authUser: user, authErr: null });
+        this.props.history.push("/calendar");
+      }).catch(
+        (errorObj) => {
+          const err = errorObj.message;
+          this.setState({ authErr: err });
+        }
+      );
   }
 
   showSidebar = () => {
@@ -69,9 +88,11 @@ class App extends React.Component {
 
 
 
+
   goToLecturePage = (event) => {
     this.setState({ lecture: event })
-    this.props.history.push("/lecture/");
+    let id = event.extendedProps.lectureId;
+    this.props.history.push(`/lectures/${id}`);
   }
 
   render() {
@@ -100,11 +121,15 @@ class App extends React.Component {
             </Route>
 
             <Route path="/calendar">
-              <CalendarPage goToLecturePage={this.goToLecturePage} />
+              <CalendarPage goToLecturePage={this.goToLecturePage} authUser={value.authUser}/>
             </Route>
-            <Route path="/lectures/:lecture_id" render={(props)=>
-              <LecturePage lecture_id={props.match.params.lecture_id}/>
-            }/>
+            <Route path="/lectures/:lecture_id" render={(props) =>
+              <LecturePage lecture_id={props.match.params.lecture_id} />
+            } />
+
+            <Route>
+              <Redirect to='/login'></Redirect>
+            </Route>
 
             <Route>
               <Redirect to='/login' />

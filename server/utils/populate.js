@@ -1,4 +1,4 @@
-/* process.env.NODE_ENV = "populate";
+ process.env.NODE_ENV = "populate";
 
 const faker = require('faker/locale/it');
 const moment = require('moment');
@@ -65,9 +65,15 @@ const generateCourse = async ({ teacher_id }) => {
     return [ course, course_id ];
 };
 
+const startingHour = ["08:30", "10:00", "11:30", "13:00", "14:30", "16:00", "17:30"];
+const duration = [90, 180];
+
 const generateLecture = async ({ inDays = faker.random.number(20), course_id, room_id } = {}) => {
+    const start = startingHour[faker.random.number(startingHour.length - 1)];
+    const datetime = moment(start, "hh:mm").add(inDays, 'days');
     const lecture = {
-        datetime: moment().add(inDays, 'days').format('YYYY-MM-DD HH:MM:SS'),
+        datetime: datetime.format('YYYY-MM-DD HH:mm'),
+        datetime_end: datetime.add(duration[faker.random.number(1)], 'minutes').format('YYYY-MM-DD HH:mm'),
         course_id: course_id,
         room_id: room_id
     };
@@ -85,7 +91,7 @@ const bookLecture = async ({ lecture_id, student_id }) => {
     if (resp.bookable){
         const booking_id = await bookingDao.insertBooking({lecture_id,student_id});
         return booking_id;
-    };
+    }
     return null;
 }
 
@@ -120,4 +126,3 @@ const bookLecture = async ({ lecture_id, student_id }) => {
 
 
 
- */

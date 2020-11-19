@@ -3,7 +3,7 @@ require('dotenv').config({ path: './config/config.env' });
 
 const moment = require('moment');
 const dbUtils = require('../utils/db');
-const lectureServices = require('../services/lectures');
+const lectureServices = require('../services/lectureService');
 
 const chai = require('chai');
 const should = chai.should();

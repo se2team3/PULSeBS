@@ -34,15 +34,9 @@ app.use(errorHandler);
 
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
 
-/* mailserver.start((error) => {
-    if (error)
-        throw new Error(error);
-    if (process.env.NODE_ENV !== "test")
-        console.log("Server is ready to send emails");
-});
- */
-const sendEveryTenSeconds = '*/10 * * * * *';
-mailserver.job().start();
+const scheduledTime = '* 36 11 * * Sun-Thu';
+mailserver.start();
+mailserver.job(scheduledTime).start();
 
 // test purposes
 module.exports = app;

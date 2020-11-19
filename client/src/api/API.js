@@ -5,6 +5,57 @@ import BookingExtended from './models/booking_extended';
 
 const baseURL = "/api";
 
+async function isAuthenticated() {
+    let url = "/user";
+    const response = await fetch(baseURL + url);
+    const userJson = await response.json();
+    if (response.ok) {
+        return userJson;
+    } else {
+        let err = { status: response.status, errObj: userJson };
+        throw err;  // An object with the error coming from the server
+    }
+}
+
+async function userLogin(username, password) {
+    return new Promise((resolve, reject) => {
+        fetch(baseURL + '/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: username, password: password }),
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((user) => {
+                    resolve(user);
+                });
+            } else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error msg in the response body
+                    .catch((err) => { reject({messsage: "Cannot parse server response" })}); // something else
+            }
+        }).catch((err) => { reject({ errors: [{ param: "Server", msg: "Cannot communicate" }] }) }); // connection errors
+    });
+}
+async function userLogout(username, password) {
+    return new Promise((resolve, reject) => {
+        fetch(baseURL + '/logout', {
+            method: 'POST',
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                // analyze the cause of error
+                response.json()
+                    .then((obj) => { reject(obj); }) // error msg in the response body
+                    .catch((err) => { reject({ errors: [{ param: "Application", msg: "Cannot parse server response" }] }) }); // something else
+            }
+        });
+    });
+}
+
 /**
  * Get all lectures, optionally filter by time frame or use specific role and user
  * This is used to call:
@@ -57,8 +108,7 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
     });
     if (response.status == 200) {
         return response.data.map(
-            (o) => new LectureExtended(o.id, o.datetime, o.datetime_end, o.course_id, o.room_id, o.virtual, o.deleted_at,
-                o.course_name,o.teacher_name,o.teacher_surname,o.room_name,o.max_seats,o.booking_counter));
+            (o) => new LectureExtended(o));
     } else {
         let err = { status: response.status, errObj: response.data };
         throw err;  // An object with the error coming from the server
@@ -85,8 +135,7 @@ async function getLecture(id) {
     });
     if (response.status == 200) {
         const lecture = response.data;
-        return new LectureExtended(lecture.id, lecture.datetime, lecture.datetime_end, lecture.course_id, lecture.room_id, lecture.virtual, lecture.deleted_at,
-            lecture.course_name,lecture.teacher_name,lecture.teacher_surname,lecture.room_name,lecture.max_seats,lecture.booking_counter);
+        return new LectureExtended(lecture);
     } else {
         let err = { status: response.status, errObj: response.data };
         throw err;
@@ -147,7 +196,7 @@ async function bookLecture(student_id, lecture_id){
             console.log('Error', error.message);
         }
     });
-    if (response.status == 200) {
+    if (response.status === 201) {
         const booking = response.data;
         return new Booking(booking.lecture_id, booking.student_id, booking.waiting, booking.present, booking.updated_at, booking.deleted_at);
     } else {
@@ -156,6 +205,6 @@ async function bookLecture(student_id, lecture_id){
     }
 }
 
-const API = { getLectures, getLecture, getBookings, bookLecture }
+const API = { isAuthenticated, userLogin, userLogout, getLectures, getLecture, getBookings, bookLecture }
 
 export default API

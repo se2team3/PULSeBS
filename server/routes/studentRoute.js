@@ -3,7 +3,7 @@ const app = express.Router();
 
 const studentService = require('../services/studentService');
 const bookingService = require('../services/bookingService')
-const authorize = require('../services/authorize');
+const authorize = require('../services/authorizeService');
 const role = require('../utils/roles');
 
 /* cannot be used like this, because the authorization rule is then applied
@@ -12,12 +12,6 @@ const role = require('../utils/roles');
  *      app.use(authorize(role.Student));
  *
  */
-
-app.get(`/restricted`, authorize(role.Student), restrictedData);
-
-async function restrictedData(req, res) {
-    return res.json(await studentService.restrictedData());
-}
 
 /**
  * @swagger
@@ -45,15 +39,19 @@ async function restrictedData(req, res) {
  *       - "read:pets"
  */
 
-app.get('/students/:student_id/lectures', async(req,res) =>{
-    const student_id= + req.params.student_id;
+app.get('/students/:student_id/lectures', authorize(role.Student), async(req,res) =>{
+    const student_id = +req.params.student_id;
+    const {from, to} = req.query;
+    console.log(`query:`);
+    console.log(`from`, from);
+    console.log(`to`, to);
     try{
         let lectures = await studentService.getStudentLecture(student_id);
-        return res.status(201).json(lectures);
+        return res.status(200).json(lectures);
     } catch(error){
         res.json(error);
     }
-  })
+})
 
 /**
  * @swagger
@@ -82,7 +80,7 @@ app.get('/students/:student_id/lectures', async(req,res) =>{
  *       - "read:pets"
  */
 
-app.get('/students/:lecture_id/', async(req,res) =>{
+app.get('/students/:lecture_id/', authorize(role.Student), async(req,res) =>{
     const lecture_id= + req.params.student_id;
     const student_id=req.user && req.user.user;
     try{

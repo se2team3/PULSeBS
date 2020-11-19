@@ -23,7 +23,7 @@ describe('Teachers routes', function () {
         let tomorrow = moment().add(-1,'days').format("YYYY-MM-DD");
         //res = await teacherService.getLecturesByTeacherAndTime('1',yesterday,tomorrow)
 
-        let res = await chai.request(server).get(route).query({start_date: yesterday, end_date: tomorrow});
+        let res = await chai.request(server).get(route).query({from: yesterday, to: tomorrow});
         res.should.have.status(200);
         res.body.should.be.an('array');
         res.body.should.have.length(0);

@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const teacherService = require('../services/teachersService');
-const timeValidator = require('../validators/timeValidator');
+const authorize = require('../services/authorizeService');
+const role = require('../utils/roles');
+const timeValidator = require('../validators/timeValidator')
+
 /**
  * @swagger
  * /teachers/getLecturesByTeacherAndTime:
@@ -57,10 +60,11 @@ const timeValidator = require('../validators/timeValidator');
  */
 
 
-router.get('/teachers/:teacher_id/lectures', timeValidator.checkTime, async (req, res) => {
+router.get('/teachers/:teacher_id/lectures',timeValidator.checkTime, async (req, res) => {
 
     const teacher_id = req.params.teacher_id;
-    const { start_date, end_date } = {...req.query};
+    const start_date = req.query.from;
+    const end_date = req.query.to;
 
     try {
         let lectures = await teacherService.getLecturesByTeacherAndTime(teacher_id, start_date, end_date);
