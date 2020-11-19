@@ -7,9 +7,7 @@ const LectureExtended = require('../models/lecture_extended');
 //gets the courses given the student_id
 exports.retrieveStudentLectures = function(student_id) {
     return new Promise ((resolve,reject) =>{
-        // id, datetime,datetime_end,course_id,room_id,virtual,deleted_at,
-        // course_name,teacher_name,teacher_surname,room_name,max_seats,booking_counter
-        const sql = `SELECT L.id, datetime, course_id, room_id, virtual, L.deleted_at, C.name as course_name,
+        const sql = `SELECT L.id, datetime, datetime_end, course_id, room_id, virtual, L.deleted_at, C.name as course_name,
                             T.name as teacher_name, T.surname as teacher_surname,
                             R.name as room_name, seats as max_seats, COUNT(B.lecture_id) as booking_counter,
                             B2.updated_at as booking_updated_at, B2.waiting as booking_waiting, B2.present
@@ -26,7 +24,6 @@ exports.retrieveStudentLectures = function(student_id) {
             if (!rows)
                 resolve(null);
             else{
-                console.log(`after query`);
                 resolve(rows.map(r => new LectureExtended(r)));
             }               
         });
