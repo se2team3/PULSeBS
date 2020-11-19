@@ -222,15 +222,15 @@ describe('Client API calls', () => {
             mock.reset()
         });
 
-        it('returns all the bookings for a lecture', async () => {
-            mock.onPost(base_url+`/students/${sample_booking.student_id}/bookings`,{lecture_id: sample_booking.lecture_id}).reply(200, sample_booking);
+        it('book a lecture', async () => {
+            mock.onPost(base_url+`/students/${sample_booking.student_id}/bookings`,{lecture_id: sample_booking.lecture_id}).reply(201, sample_booking);
             const booking = await API.bookLecture(sample_booking.student_id, sample_booking.lecture_id);
             expect(booking.lecture_id).toEqual(sample_booking.lecture_id);
             expect(booking.student_id).toEqual(sample_booking.student_id);
             expect(booking.updated_at).toEqual(sample_booking.updated_at); //TODO do more reasonable tests
         });
 
-        it('something went wrong getting bookings', async () => {
+        it('something went wrong booking lecture', async () => {
             mock.onPost(base_url+`/students/${sample_booking.student_id}/bookings`).reply(500, "internal server error");
             try {
                 await API.bookLecture(sample_booking.student_id, sample_booking.lecture_id);
