@@ -68,7 +68,7 @@ class CalendarPage extends React.Component {
 
   transformIntoEvents = () => {
     this.setState(state => {
-      console.log("ev"+state.lectures)
+      console.log("lectures", state.lectures)
       const list = state.lectures.map((l) => {
         let diff = l.max_seats - l.booking_counter
         let stat = this.getStatus(l)
