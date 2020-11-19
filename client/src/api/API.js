@@ -135,8 +135,7 @@ async function getLecture(id) {
     });
     if (response.status == 200) {
         const lecture = response.data;
-        return new LectureExtended(lecture.id, lecture.datetime, lecture.datetime_end, lecture.course_id, lecture.room_id, lecture.virtual, lecture.deleted_at,
-            lecture.course_name,lecture.teacher_name,lecture.teacher_surname,lecture.room_name,lecture.max_seats,lecture.booking_counter);
+        return new LectureExtended(lecture);
     } else {
         let err = { status: response.status, errObj: response.data };
         throw err;
