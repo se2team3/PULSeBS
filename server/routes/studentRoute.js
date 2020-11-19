@@ -76,7 +76,7 @@ app.get('/students/:student_id/lectures', authorize(role.Student), async(req,res
  *       - "read:pets"
  */
 
-app.get('/students/:lecture_id/', async(req,res) =>{
+app.get('/students/:lecture_id/', authorize(role.Student), async(req,res) =>{
     const lecture_id= + req.params.student_id;
     const student_id=req.user && req.user.user;
     try{

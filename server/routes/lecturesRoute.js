@@ -68,7 +68,7 @@ router.get('/lectures/:lecture_id/bookings', authorize(), async(req,res) =>{
  *       - "write:pets"
  *       - "read:pets"
  */
-router.get('/lectures/:lecture_id', async(req,res) =>{
+router.get('/lectures/:lecture_id', authorize(), async(req,res) =>{
   const lecture_id= + req.params.lecture_id;
   try{
       let lecture = await extendedLectureService.getLectureById(lecture_id);
