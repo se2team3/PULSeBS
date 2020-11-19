@@ -13,6 +13,7 @@ const moment = require('moment');
  */
 const createTables = async () => {
     await Promise.allSettled([
+        lectureDao.deleteLectureTable(),
         lectureDao.createLectureTable(),
         roomDao.createRoomsTable(),
         bookingDao.createBookingTable(),
