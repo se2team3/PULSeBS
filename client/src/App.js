@@ -64,6 +64,7 @@ class App extends React.Component {
   logout = () => {
     API.userLogout().then(() => {
       this.setState({ authUser: null, authErr: null });
+      this.props.history.push("/");
     });
   }
 
@@ -84,6 +85,7 @@ class App extends React.Component {
   showSidebar = () => {
     this.setState((state) => ({ openMobileMenu: !state.openMobileMenu }));
   }
+
 
 
 
