@@ -18,7 +18,8 @@ exports.getLectureById = function(id) {
             FROM Lectures L, Users T, Users U, Courses C,Rooms R, Bookings B
             WHERE L.course_id=C.id AND L.room_id=R.id AND C.teacher_id=T.id AND
             L.id=B.lecture_id AND B.student_id=U.id AND L.id=? AND T.role="teacher" AND U.role="student"
-            GROUP BY B.lecture_id`;
+            GROUP BY B.lecture_id
+            ORDER BY datetime`;
         db.get(sql, [id], (err, row) => {
             if(err)
                 return reject(err);

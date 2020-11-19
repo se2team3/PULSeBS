@@ -44,7 +44,7 @@ class CalendarPage extends React.Component {
   getStatus = (l) => {
     if ((moment(l.datetime).isBefore(moment().format("YYYY-MM-DD"))))
       return "closed"
-    if (l.updated_at)
+    if (l.booking_updated_at)
       return "booked";
     if (l.max_seats - l.booking_counter <= 0)
       return "full";
