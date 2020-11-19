@@ -40,7 +40,11 @@ const role = require('../utils/roles');
  */
 
 app.get('/students/:student_id/lectures', authorize(role.Student), async(req,res) =>{
-    const student_id= + req.params.student_id;
+    const student_id = +req.params.student_id;
+    const {from, to} = req.query;
+    console.log(`query:`);
+    console.log(`from`, from);
+    console.log(`to`, to);
     try{
         let lectures = await studentService.getStudentLecture(student_id);
         return res.status(200).json(lectures);

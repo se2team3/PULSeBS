@@ -39,12 +39,14 @@ const router = express.Router();
  */
 router.post('/students/:student_id/bookings',authorize(role.Student), lectureValidation.checkLecture(),validator, async(req,res) =>{
     const {lecture_id} = req.body;
-    const student_id= + req.params.student_id;
+    const student_id= +req.params.student_id;
+    console.log(`I'm booking`)
     try{
         let booking = await bookingService.insertBooking({lecture_id,student_id});
+        console.log(`I have booked`)
         return res.status(201).json(booking);
     } catch(error){
-        res.json(error);
+        res.status(400).json(error);
     }
 })
 module.exports = router;

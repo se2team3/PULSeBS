@@ -196,7 +196,7 @@ async function bookLecture(student_id, lecture_id){
             console.log('Error', error.message);
         }
     });
-    if (response.status == 200) {
+    if (response.status === 201) {
         const booking = response.data;
         return new Booking(booking.lecture_id, booking.student_id, booking.waiting, booking.present, booking.updated_at, booking.deleted_at);
     } else {

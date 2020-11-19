@@ -111,6 +111,7 @@ class CalendarPage extends React.Component {
     API.bookLecture(student_id,lecture_id)
     .then((res)=>{
       // GIVE FEEDBACK TO USER + change status of selected lecture
+      console.log(res);
     })
     .catch((err)=>{
       console.log(err);
@@ -199,7 +200,7 @@ class CalendarPage extends React.Component {
               </Row>
               {this.state.modal ? 
               <CalendarModal closeModal={this.closeModal} 
-                bookLecture={()=>this.bookLecture(context.authUser?.university_id ?? 1,this.state.selected.extendedProps.lectureId)} 
+                bookLecture={()=>this.bookLecture(context.authUser?.id ?? 1,this.state.selected.extendedProps.lectureId)}
                 lecture={this.state.selected}/> : <></>}
 
             </Container>

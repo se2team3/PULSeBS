@@ -4,7 +4,6 @@ const errHandler = require('./errorHandler');
 const getStudentLecture = async function(student_id) {
     try {
         const lectures = await studentDao.retrieveStudentLectures(student_id);
-        console.log(lectures);
         return lectures;
     } catch (error) {
         return errHandler(error);
