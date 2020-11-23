@@ -113,7 +113,7 @@ class App extends React.Component {
           <Switch>
             <Route path="/login">
               <Row className="vheight-100">
-                <Col sm={4}></Col>
+                <Col sm={4}/>
                 <Col sm={4} className="below-nav">
                   <LoginForm />
                 </Col>
@@ -123,14 +123,16 @@ class App extends React.Component {
             <Route path="/calendar">
               <CalendarPage goToLecturePage={this.goToLecturePage} authUser={value.authUser}/>
             </Route>
+
             <Route path="/lectures/:lecture_id" render={(props) =>
               <LecturePage lecture_id={props.match.params.lecture_id} />
             } />
 
             <Route>
-              <Redirect to='/login'></Redirect>
+              <Redirect to='/login'/>
             </Route>
 
+            // TODO: remove duplicated ?
             <Route>
               <Redirect to='/login' />
             </Route>

@@ -16,7 +16,7 @@ class CalendarPage extends React.Component {
     this.state = {
       modal: false,
       selected: { extendedProps: { status: null } },
-      lectures:null,
+      lectures: null,
       events: []
     }
 
@@ -76,7 +76,7 @@ class CalendarPage extends React.Component {
           lectureId: l.id,
           subjectId: l.course_id,
           subjectName: l.course_name,
-          teacher: l.teacher_name + l.teacher_surname,
+          teacher: l.teacher_name + " " + l.teacher_surname,
           status: stat,
           seats: diff,
           title: l.course_name +'\n'+ l.room_name + "\n" + stat,
@@ -112,7 +112,7 @@ class CalendarPage extends React.Component {
     .then((res)=>{
       // GIVE FEEDBACK TO USER + change status of selected lecture
       console.log(res);
-      // TODO this could be a function
+      // TODO this could be a function to remove duplication
       let startOfWeek = moment().day(1).format("YYYY-MM-DD");
       let endOfWeek = moment().day(7).format("YYYY-MM-DD");
       API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
@@ -177,30 +177,22 @@ class CalendarPage extends React.Component {
           {(context) => (
             <Container fluid>
               <Row >
-                <Col sm={8} className="below-nav" >
+                <Col sm={9} className="below-nav" >
                   {this.renderCalendar(this.props.authUser?.role)}
                 </Col>
 
-                <Col sm={4} className="sidebar">
+                <Col sm={3} className="sidebar">
                   <Nav className="col-md-12 d-none d-md-block bg-light sidebar">
                     <h2>Courses</h2>
                     <Form>
                       {this.state.events.map((e) => {
                         if (showArray.indexOf(e.subjectId) === -1) {
                           showArray.push(e.subjectId)
-                          return (
-                            <h2 key={e.lectureId}>
-                              <Badge style={{ 'backgroundColor': e.backgroundColor }}>
-                                <Form.Check
-                                  type="checkbox"
-                                  defaultChecked="true"
-                                  value={e.subjectId}
-                                  label={e.subjectName + '-Prof.' + e.teacher}
-                                  onClick={(ev) => this.changeDisplayEvent(e.subjectId, ev)}
-                                />
-                              </Badge>
-                            </h2>
-                          )
+                          return <CourseBadge
+                              key = {e.subjectId}
+                              {...e}
+                              handleClick = {this.changeDisplayEvent}
+                          />
                         }
                         else return null
                       })}
@@ -221,6 +213,25 @@ class CalendarPage extends React.Component {
         </AuthContext.Consumer>
       </>)
   }
+}
+
+function CourseBadge (props) {
+  return (
+    <h2 key={props.lectureId}>
+      <Badge style={{'backgroundColor': props.backgroundColor}}>
+        <Form.Check
+            type="checkbox"
+            defaultChecked="true"
+            value={props.subjectId}
+            label={props.subjectName}
+            onClick={(ev) => props.handleClick(props.subjectId, ev)}
+        />
+        <h4>
+          -Prof. {props.teacher}
+        </h4>
+      </Badge>
+    </h2>
+  );
 }
 
 export default CalendarPage
