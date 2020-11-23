@@ -82,7 +82,8 @@ class CalendarPage extends React.Component {
           title: l.course_name +'\n'+ l.room_name + "\n" + stat,
           start: l.datetime, end: l.datetime_end,
           backgroundColor: this.getColor(l.course_id),
-          display: 'auto'
+          display: 'auto',
+          textColor: 'black'
         });
       });
       return { events: [...list] }
