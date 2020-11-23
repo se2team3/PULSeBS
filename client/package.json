@@ -25,6 +25,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-test": "react-scripts -r @cypress/instrument-cra start",
     "build": "react-scripts build",
     "test": "react-scripts test --ci --coverage --watchAll=false",
     "eject": "react-scripts eject",
@@ -47,6 +48,7 @@
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.8.5",
+    "@cypress/instrument-cra": "^1.4.0",
     "axios-mock-adapter": "^1.19.0",
     "cypress": "^5.6.0"
   }
