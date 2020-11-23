@@ -11,3 +11,11 @@ script:
   - npm test
   - cd ..
   - codecov
+  - cd server
+  - npm start & PIDS="$!"
+  - cd ../client
+  - npm run start-test & PIDS="$!"
+  - sleep 30
+  - npx cypress run
+  - npx nyc report --reporter=lcov
+  - codecov
