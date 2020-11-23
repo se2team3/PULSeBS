@@ -79,7 +79,9 @@ class CalendarPage extends React.Component {
           teacher: l.teacher_name + " " + l.teacher_surname,
           status: stat,
           seats: diff,
-          title: l.course_name +'\n'+ l.room_name + "\n" + stat,
+          title: l.course_name,
+          room: l.room_name,
+          stat: stat,
           start: l.datetime, end: l.datetime_end,
           backgroundColor: this.getColor(l.course_id),
           display: 'auto',
@@ -158,6 +160,18 @@ class CalendarPage extends React.Component {
           if(role ==='student') this.setState({ modal: true, selected: info.event })
           else if (role ==='teacher') this.props.goToLecturePage(info.event);
         }}
+        eventContent={(eventInfo) => {
+          return (
+            <div style={{'text-overflow': 'ellipsis', 'white-space': 'nowrap', 'overflow': 'hidden'}}>
+              {eventInfo.timeText}<br/>
+              <b>{eventInfo.event.title}</b><br/>
+              <i>{eventInfo.event._def.extendedProps.room}</i><br/>
+              <div style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
+                <b>{eventInfo.event._def.extendedProps.stat}</b>
+              </div>
+            </div>
+          )}
+        }
         datesSet={(date) => {
           let startDate = moment(date.startStr).format('YYYY-MM-DD');
           let endDate = moment(date.endStr).add(-1, 'days').format('YYYY-MM-DD'); // -1 because it counts up to the next week
