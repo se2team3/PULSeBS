@@ -49,7 +49,7 @@ const notifyTeachers = async () => {
  *                                  Default: every day at 11 p.m.
  * @returns {function} - update function
  */
-const job = (expression = '* * 23 * * Sun-Thu') => {
+const job = (expression = '00 23 * * Sun-Thu') => {
     const cron = require('node-cron');
     if (!cron.validate(expression))
         throw new Error("Invalid node-cron expression");

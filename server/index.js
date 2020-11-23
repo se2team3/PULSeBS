@@ -34,9 +34,9 @@ app.use(errorHandler);
 
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
 
-const scheduledTime = '* 36 11 * * Sun-Thu';
+const scheduledTime = '53 10 * * Sun-Thu';
 mailserver.start();
-mailserver.job(scheduledTime).start();
+mailserver.job().start();
 
 // test purposes
 module.exports = app;
