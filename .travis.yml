@@ -12,10 +12,9 @@ script:
   - cd ..
   - codecov
   - cd server
-  - npm start & PIDS="$!"
-  - cd ../client
-  - npm run start-test & PIDS="$!"
+  - npm run start:ci&
   - sleep 30
-  - npx cypress run
+  - cd ../client
+  - npm run ci:client"
   - npx nyc report --reporter=lcov
   - codecov
