@@ -16,10 +16,10 @@ cache:
 install:
   - npm install -g codecov
 script:
-  - cd client ; npm install
+  - cd client ; npm ci
   - npm test
   - cd ..
-  - cd server ; npm install
+  - cd server ; npm ci
   - npm test
   - cd ..
   - codecov
