@@ -27,6 +27,6 @@ script:
   - npm run start:ci&
   - sleep 30
   - cd ../client
-  - npm run ci:client"
+  - npm run ci:client
   - npx nyc report --reporter=lcov
   - codecov
