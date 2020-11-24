@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'test';
 require('dotenv').config({ path: './config/config.env' });
 const dbUtils = require('../utils/db');
+const moment = require('moment');
 
 const chai = require('chai');
 const server = require('../index');
@@ -49,23 +50,23 @@ describe('Booking routes', function () {
         const tmp = `/api/students/${newBooking.student_id}/delete_booking`;
         let res1 = await chai.request(server).post(tmp).send({lecture_id: newBooking.lecture_id});
         should.exist(res1);
-        res1.should.have.status(201);
+        res1.should.have.status(200);
         res1.body.should.be.an('object');
-        res1.body.number.should.be.eql(1);
+      
     });
 
     
 
-    it('should not allow student to delete a booking', async function() {
+    it('should not allow student to delete a booking yet deleted', async function() {
         const newBooking = { lecture_id: 1, student_id: 2};
         
         const tmp = `/api/students/${newBooking.student_id}/delete_booking`;
 
         let res = await chai.request(server).post(tmp).send({lecture_id: newBooking.lecture_id});
         should.exist(res);
-        res.should.have.status(201);
+        res.should.have.status(304);
         res.body.should.be.an('object');
-        res.body.number.should.be.eql(0);
+        
     });
 
 });

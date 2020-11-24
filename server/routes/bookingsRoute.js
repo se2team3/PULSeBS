@@ -1,5 +1,6 @@
 //import modules
 const express = require('express');
+const moment = require('moment');
 //import validators
 const {validator,lectureValidation }= require('../validators/validator');
 const authorize = require('../services/authorizeService');
@@ -84,10 +85,13 @@ router.post('/students/:student_id/bookings', lectureValidation.checkLecture(),v
 router.post('/students/:student_id/delete_booking', lectureValidation.checkLecture(),validator, async(req,res) =>{
     const {lecture_id} = req.body;
     const student_id= +req.params.student_id;
+    const datetime= moment();
     try{
-        let number = await bookingService.deleteBooking({lecture_id,student_id});
-        let booking={number:number};
-        return res.status(201).json(booking);
+        let number = await bookingService.deleteBooking({datetime,lecture_id,student_id});
+        if(number===1)
+            return res.status(200).json({});
+        else if (number==0) 
+            return res.status(304).json({});
     } catch(error){
         res.status(400).json(error);
     }

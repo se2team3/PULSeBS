@@ -117,18 +117,18 @@ exports.deleteBookingTable = function() {
 
 
 //it allows you to delete a booking
-exports.deleteBooking = function({lecture_id,student_id}) {
+exports.deleteBooking = function({datetime,lecture_id,student_id}) {
     return new Promise ((resolve,reject) =>{
-        const sql = 'DELETE FROM Bookings WHERE lecture_id= ? AND student_id= ?'
-        db.run(sql,[lecture_id,student_id],function(err){
+
+        const sql = 'UPDATE Bookings SET deleted_at= ? WHERE lecture_id= ? AND student_id= ? AND deleted_at IS NULL'
+        db.run(sql,[datetime,lecture_id,student_id],function(err){
             if(err ){
             console.log(err)
                 reject(err);
             }
-            else
-                {
-                    resolve(this.changes);  
-                }
+            else 
+               resolve(this.changes);  
+                
         });
     })
 }
