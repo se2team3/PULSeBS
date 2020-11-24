@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Container, Col, Nav, Badge, Form} from 'react-bootstrap';
+import { Row, Container, Col, Nav, Badge, Form } from 'react-bootstrap';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -16,8 +16,10 @@ class CalendarPage extends React.Component {
     this.state = {
       modal: false,
       selected: { extendedProps: { status: null } },
-      lectures: null,
-      events: []
+      lectures: [],
+      events: [],
+      statusFilters: [],
+      courseFilters: []
     }
 
   }
@@ -28,15 +30,14 @@ class CalendarPage extends React.Component {
     let startOfWeek = moment().day(1).format("YYYY-MM-DD");
     let endOfWeek = moment().day(7).format("YYYY-MM-DD");
 
-    console.log(startOfWeek + ' '+ endOfWeek);
-    API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
-    .then((res)=>{
-      console.log("RES"+res[0].course_id)
-      //this.setState(state=>{return  state.lectures: [...res] });
-      this.setState({lectures:res})
-      this.transformIntoEvents();
-    })
-    .catch((err)=>console.log(`error`, err));
+    // API.getLectures(startOfWeek, endOfWeek, this.props.authUser.role, this.props.authUser.id)
+    API.getLectures(startOfWeek, endOfWeek, 'student',1)
+      .then((res) => {
+        this.setState({ lectures: res, courseFilters: this.getCourses(res)})
+        console.log(this.state.courseFilters);
+        // this.transformIntoEvents();
+      })
+      .catch((err) => console.log(`error`, err));
     //this.transformIntoEvents();
   }
 
@@ -66,33 +67,27 @@ class CalendarPage extends React.Component {
     return self.indexOf(value) === index;
   }
 
-  transformIntoEvents = () => {
-    this.setState(state => {
-      console.log("lectures", state.lectures)
-      const list = state.lectures.map((l) => {
-        let diff = l.max_seats - l.booking_counter
-        let stat = this.getStatus(l)
-        return ({
-          lectureId: l.id,
-          subjectId: l.course_id,
-          subjectName: l.course_name,
-          teacher: l.teacher_name + " " + l.teacher_surname,
-          status: stat,
-          seats: diff,
-          title: l.course_name,
-          room: l.room_name,
-          stat: stat,
-          start: l.datetime, end: l.datetime_end,
-          backgroundColor: this.getColor(l.course_id),
-          display: 'auto',
-          textColor: 'black'
-        });
+  filteredEvents = ()=>{
+    let filteredLectures = this.filterLectures();
+    let events = filteredLectures.map((l) => {
+      let diff = l.max_seats - l.booking_counter
+      let stat = this.getStatus(l)
+      return ({
+        lectureId: l.id,
+        subjectId: l.course_id,
+        subjectName: l.course_name,
+        teacher: l.teacher_name + l.teacher_surname,
+        status: stat,
+        seats: diff,
+        title: l.course_name + '\n' + l.room_name + "\n" + stat,
+        start: l.datetime, end: l.datetime_end,
+        backgroundColor: this.getColor(l.course_id),
+        display: 'auto'
       });
-      return { events: [...list] }
     });
+    return events;
   }
-
-
+ 
   changeDisplayEvent = (subjectId, event) => {
     let value;
     event.target.checked === true ? value = 'auto' : value = "none"
@@ -108,34 +103,28 @@ class CalendarPage extends React.Component {
   }
 
 
-  bookLecture = (student_id,lecture_id)=> {
-    // console.log('hello');
-    // console.log(student_id+ ' '+ lecture_id);
-    API.bookLecture(student_id,lecture_id)
-    .then((res)=>{
-      // GIVE FEEDBACK TO USER + change status of selected lecture
-      console.log(res);
-      // TODO this could be a function to remove duplication
-      let startOfWeek = moment().day(1).format("YYYY-MM-DD");
-      let endOfWeek = moment().day(7).format("YYYY-MM-DD");
-      API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
-          .then((res)=>{
-            //this.setState(state=>{return  state.lectures: [...res] });
-            this.setState({lectures:res})
+  bookLecture = (student_id, lecture_id) => {
+    API.bookLecture(student_id, lecture_id)
+      .then((res) => {
+        let startOfWeek = moment().day(1).format("YYYY-MM-DD");
+        let endOfWeek = moment().day(7).format("YYYY-MM-DD");
+        API.getLectures(startOfWeek, endOfWeek, this.props.authUser.role, this.props.authUser.id)
+          .then((res) => {
+            this.setState({ lectures: res })
             this.transformIntoEvents();
-        })
-        .catch((err)=>console.log(`error`, err));
-    })
-    .catch((err)=>{
-      console.log(err);
-    })
-    
+          })
+          .catch((err) => console.log(`error`, err));
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+
     this.setState({ modal: false })
   }
 
 
-  closeModal = () =>{
-    this.setState({modal: false})
+  closeModal = () => {
+    this.setState({ modal: false })
   }
 
 
@@ -155,70 +144,128 @@ class CalendarPage extends React.Component {
           center: "title",
           right: "timeGridWeek,listWeek,dayGridMonth"
         }}
-        events={this.state.events}
+        events={this.filteredEvents()}
         eventClick={(info) => {
-          if(role ==='student') this.setState({ modal: true, selected: info.event })
-          else if (role ==='teacher') this.props.goToLecturePage(info.event);
+          if (role === 'student') this.setState({ modal: true, selected: info.event })
+          else if (role === 'teacher') this.props.goToLecturePage(info.event);
         }}
-        eventContent={(eventInfo) => {
-          return (
-            <div style={{'font-size': '110%', 'text-overflow': 'ellipsis', 'white-space': 'nowrap', 'overflow': 'hidden'}}>
-              <b>{eventInfo.event.title}</b><br/>
-              <i>{eventInfo.event._def.extendedProps.room}</i><br/>
-              <div style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
-                <b>{eventInfo.event._def.extendedProps.stat}</b>
-              </div>
-            </div>
-          )}
-        }
         datesSet={(date) => {
           let startDate = moment(date.startStr).format('YYYY-MM-DD');
           let endDate = moment(date.endStr).add(-1, 'days').format('YYYY-MM-DD'); // -1 because it counts up to the next week
-          console.log('START: ' + startDate)
-          console.log('END: ' + endDate)
         }}
       />
     );
-
   }
 
 
-  render() {
+
+  filterBookedLectures = (ev) => {
+    let bookedFilter = ev.target.checked;
+    let filteredLectures = bookedFilter?  this.state.lectures.filter((lec) => {
+      if (lec.booking_updated_at) return true
+      else return false;
+    }): this.state.lectures;
+
+    this.setState({events: filteredLectures});
+  }
+
+  filterLectures = () => {
+    let filteredLectures = this.state.lectures.filter((lec) => {
+      let rightCourse = true;
+      if (this.state.courseFilters.length > 0) {
+        rightCourse = this.state.courseFilters.some((filter) => filter === lec.course_id);
+      }
+
+      let rightStatus = true;
+      if (this.state.statusFilters.length > 0) {
+        rightStatus = this.state.statusFilters.some((filter) => filter === this.getStatus(lec));
+      }
+
+      return rightCourse && rightStatus;
+    });
+
+    return (filteredLectures.length>0)? filteredLectures : [];
+  }
+
+  getCourses(lectures){
+    return [...new Set(lectures.map((lec) => lec.course_id))];
+  }
+
+  onFilterSelected = (event, filterName, filterValue) => {
+    console.log(filterName+ ' ' + filterValue);
+    if (event.target.checked) {
+      if(filterName==='courseFilter'){
+        this.setState(state => {
+        const coursesList = state.courseFilters.concat(filterValue);
+        return { courseFilters: coursesList };
+      });
+      }else if(filterName === 'statusFilter'){
+        this.setState(state => {
+          const stautsList = state.statusFilters.concat(filterValue);
+          return { statusFilters: stautsList };
+        });
+      }
+    } else {
+      if(filterName==='courseFilter'){
+        this.setState(state => {
+        const coursesList = state.courseFilters.filter((cf) => cf !== filterValue);
+        return { courseFilters: coursesList };
+      });
+      }else{
+        this.setState(state => {
+          const statusFilter = state.statusFilters.filter((sf) => sf !== filterValue);
+          return { statusFilters : statusFilter };
+        });
+      }
+      
+    }
+  }
+
+  getCoursesFiltersFromLectures = () =>{
     let showArray = [];
+    let filters = this.state.lectures.map((l) => {
+      if (showArray.indexOf(l.course_id) === -1) {
+        showArray.push(l.course_id)
+        return (
+          <h2 key={l.id}>
+            <Badge style={{ 'backgroundColor': this.getColor(l.course_id) }}>
+              <Form.Check
+                type="checkbox"
+                defaultChecked="true"
+                value={l.course_id}
+                label={l.course_name + '-Prof.' + l.teacher_name}
+                onClick={(ev) => this.onFilterSelected(ev,'courseFilter',l.course_id)}
+              />
+            </Badge>
+          </h2>
+        )}});
+    return filters;
+  }
+
+  render() {
     return (
       <>
         <AuthContext.Consumer>
           {(context) => (
             <Container fluid>
-              <Row>
-                <Col sm={9} className="below-nav" >
+              <Row >
+                <Col sm={8} className="below-nav" >
                   {this.renderCalendar(this.props.authUser?.role)}
                 </Col>
 
-                <Col sm={3} className="sidebar">
-                  <Nav className="px-4 py-4 col-md-12 d-none d-md-block bg-light sidebar">
-                    <h2 className="mb-3">Courses</h2>
+                <Col sm={4} className="sidebar">
+                  <Nav className="col-md-12 d-none d-md-block bg-light sidebar">
+                    <h2>Courses</h2>
                     <Form>
-                      {
-                        this.state.events.map((e) => {
-                          if (showArray.indexOf(e.subjectId) === -1) {
-                            showArray.push(e.subjectId)
-                            return <CourseBadge
-                                key = {e.subjectId}
-                                {...e}
-                                handleClick = {this.changeDisplayEvent}
-                            />
-                          }
-                        })
-                      }
+                        {this.getCoursesFiltersFromLectures()}
                     </Form>
                   </Nav>
                 </Col>
               </Row>
-              {this.state.modal ? 
-              <CalendarModal closeModal={this.closeModal} 
-                bookLecture={()=>this.bookLecture(context.authUser?.id ?? 1,this.state.selected.extendedProps.lectureId)}
-                lecture={this.state.selected}/> : <></>}
+              {this.state.modal ?
+                <CalendarModal closeModal={this.closeModal}
+                  bookLecture={() => this.bookLecture(context.authUser?.id ?? 1, this.state.selected.extendedProps.lectureId)}
+                  lecture={this.state.selected} /> : <></>}
 
             </Container>
 
@@ -228,37 +275,6 @@ class CalendarPage extends React.Component {
         </AuthContext.Consumer>
       </>)
   }
-}
-
-function CourseBadge (props) {
-  const style = {
-    'backgroundColor': props.backgroundColor,
-  };
-  return (
-    <div className="rounded" style={style}>
-      <Row className="mb-3 w-100 d-flex justify-content-between align-items-center">
-        <Col lg={1} className="ml-3">
-          <Form.Check
-            type="checkbox"
-            defaultChecked="true"
-            value={props.subjectId}
-            onClick={(ev) => props.handleClick(props.subjectId, ev)}
-          />
-        </Col>
-        <Col className="align-items-center my-auto" lg={10}>
-          <span key={props.lectureId}>
-            <span className="font-weight-bold">
-              {props.subjectName}
-            </span>
-            <br/>
-            <span style={{'fontSize': '90%'}}>
-              Prof. {props.teacher}
-            </span>
-          </span>
-        </Col>
-      </Row>
-    </div>
-  );
 }
 
 export default CalendarPage

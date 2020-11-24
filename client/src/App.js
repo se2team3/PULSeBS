@@ -13,6 +13,16 @@ import { AuthContext } from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
 import CalendarPage from './components/CalendarPage';
 
+
+let usr = {
+  id: 1,
+  university_id: 's696',
+  email: 'Eliano_Neri56@pulsebs.com',
+  name: 'Eliano',
+  surname: 'Neri',
+  role: 'student',
+  password: 'OJ_p2xkyBmTx8mZ'
+}
 class App extends React.Component {
 
 
@@ -22,14 +32,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    API.isAuthenticated().then(
+    /* API.isAuthenticated().then(
       (user) => {
         this.setState({ authUser: user });
       }
     ).catch((err) => {
       this.setState({ authErr: err.errorObj });
       this.props.history.push("/login");
-    });
+    }); */
   }
 
   handleErrors(err) {
@@ -72,6 +82,7 @@ class App extends React.Component {
   login = (username, password) => {
     API.userLogin(username, password)
       .then((user) => {
+        console.log(user);
         this.setState({ authUser: user, authErr: null });
         this.props.history.push("/calendar");
       }).catch(
@@ -98,7 +109,7 @@ class App extends React.Component {
   render() {
     // compose value prop as object with user object and logout method
     const value = {
-      authUser: this.state.authUser,
+      authUser: usr,
       authErr: this.state.authErr,
       loginUser: this.login,
       logoutUser: this.logout
