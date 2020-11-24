@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Alert, Button, Card, Col, Container, Form, Row, Table } from 'react-bootstrap';
-import API from '../api/API';
+import API from '../api';
 
 function LecturePage(props) {
 
