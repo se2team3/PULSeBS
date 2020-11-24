@@ -205,6 +205,36 @@ async function bookLecture(student_id, lecture_id){
     }
 }
 
-const API = { isAuthenticated, userLogin, userLogout, getLectures, getLecture, getBookings, bookLecture }
+/**
+ * Cancel a booking given student and lecture
+ *
+ * @param {*} student_id a valid student id
+ * @param {*} lecture_id a valid lecture id
+ * @returns true if cancelled successfully, throws error otherwise
+ */
+async function cancelBooking(student_id, lecture_id){
+    let url = `/students/${student_id}/lectures/${lecture_id}`;
+
+    const response = await axios.delete(baseURL + url).catch(error => {
+        if (error.response) {
+            let err = { status: error.response.status, errObj: error.response.data };
+            throw err;  // An object with the error coming from the server
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+        }
+    });
+    if (response.status === 200) {
+        return true;
+    } else {
+        let err = { status: response.status, errObj: response.data };
+        throw err;  // An object with the error coming from the server
+    }
+}
+
+const API = { isAuthenticated, userLogin, userLogout, getLectures, getLecture, getBookings, bookLecture, cancelBooking }
 
 export default API
