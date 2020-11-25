@@ -143,7 +143,9 @@ class CalendarPage extends React.Component {
   }
 
   eventHandler = (() => {
+    let role = "";
     return {
+      setRole: (role) => this.role = role,
       manipulateDOM: (eventInfo) => {
         return (
             <div style={{'fontSize': '110%', 'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'overflow': 'hidden'}}>
@@ -155,14 +157,15 @@ class CalendarPage extends React.Component {
             </div>
         )
       },
-      onLectureClick: (info, role) => {
-        if(role === 'student')        this.setState({ modal: true, selected: info.event });
-        else if (role === 'teacher')  this.props.goToLecturePage(info.event);
+      onLectureClick: (info) => {
+        if(this.role === 'student')        this.setState({ modal: true, selected: info.event });
+        else if (this.role === 'teacher')  this.props.goToLecturePage(info.event);
       }
     }
   })()
 
   renderCalendar = (role) => {
+    this.eventHandler.setRole(role);
     return (
       <FullCalendar
         plugins={[timeGridPlugin, dayGridPlugin, listPlugin]}
@@ -179,7 +182,7 @@ class CalendarPage extends React.Component {
           right: "timeGridWeek,listWeek,dayGridMonth"
         }}
         events={this.state.events}
-        eventClick={(info) => this.eventHandler.onLectureClick(info, role)}
+        eventClick={this.eventHandler.onLectureClick}
         eventContent={this.eventHandler.manipulateDOM}
         datesSet={(date) => {
           let startDate = moment(date.startStr).format('YYYY-MM-DD');
