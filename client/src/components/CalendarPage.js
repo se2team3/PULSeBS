@@ -166,7 +166,7 @@ class CalendarPage extends React.Component {
         }}
         eventContent={(eventInfo) => {
           return (
-            <div style={{'font-size': '110%', 'text-overflow': 'ellipsis', 'white-space': 'nowrap', 'overflow': 'hidden'}}>
+            <div style={{'fontSize': '110%', 'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'overflow': 'hidden'}}>
               <b>{eventInfo.event.title}</b><br/>
               <i>{eventInfo.event._def.extendedProps.room}</i><br/>
               <div style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
