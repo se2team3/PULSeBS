@@ -22,20 +22,15 @@ class CalendarPage extends React.Component {
 
   }
 
-
-  async componentDidMount() {
-    let startOfWeek = moment().day(1).format("YYYY-MM-DD");
-    let endOfWeek = moment().day(7).format("YYYY-MM-DD");
-
-    console.log(startOfWeek + ' '+ endOfWeek);
-    API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
-    .then((res)=>{
-      this.setState({lectures:res})
+  getLectures = async ({startDate, endDate} = {}) => {
+    try {
+      const lectures = await API.getLectures(startDate,endDate,this.props.authUser.role,this.props.authUser.id);
+      this.setState({lectures});
       this.transformIntoEvents();
-    })
-    .catch((err)=>console.log(`error`, err));
+    } catch (err) {
+      console.error(`error`, err);
+    }
   }
-
 
   getStatus = (l) => {
     if ((moment(l.datetime).isBefore(moment().format("YYYY-MM-DD"))))
@@ -57,14 +52,12 @@ class CalendarPage extends React.Component {
     return colorArray[index];
   }
 
-
   onlyUnique = function (value, index, self) {
     return self.indexOf(value) === index;
   }
 
   transformIntoEvents = () => {
     this.setState(state => {
-      console.log("lectures", state.lectures)
       const list = state.lectures.map((l) => {
         let diff = l.max_seats - l.booking_counter
         let stat = this.getStatus(l)
@@ -87,7 +80,6 @@ class CalendarPage extends React.Component {
       return { events: [...list] }
     });
   }
-
 
   changeDisplayEvent = (filterName, filterValue, event) => {
     let value;
@@ -117,33 +109,23 @@ class CalendarPage extends React.Component {
     
   }
 
+  bookLecture = async (student_id,lecture_id) => {
+    try {
+      await API.bookLecture(student_id, lecture_id);
+      /*  date arguments are intentionally missing since it possible to book a lecture
+          in the future and it won't be trivial to retrieve the actual view   */
+      await this.getLectures();
+      this.closeModal();
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
-  bookLecture = (student_id,lecture_id)=> {
-    API.bookLecture(student_id,lecture_id)
-    .then((res)=>{
-      let startOfWeek = moment().day(1).format("YYYY-MM-DD");
-      let endOfWeek = moment().day(7).format("YYYY-MM-DD");
-      API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
-          .then((res)=>{
-            this.setState({lectures:res})
-            this.transformIntoEvents();
-        })
-        .catch((err)=>console.log(`error`, err));
-    })
-    .catch((err)=>{
-      console.log(err);
-    })
-    
+  closeModal = () =>{
     this.setState({ modal: false })
   }
 
-
-  closeModal = () =>{
-    this.setState({modal: false})
-  }
-
   eventHandler = (() => {
-    let role = "";
     return {
       setRole: (role) => this.role = role,
       manipulateDOM: (eventInfo) => {
@@ -160,6 +142,13 @@ class CalendarPage extends React.Component {
       onLectureClick: (info) => {
         if(this.role === 'student')        this.setState({ modal: true, selected: info.event });
         else if (this.role === 'teacher')  this.props.goToLecturePage(info.event);
+      },
+      onViewChange: async (date) => {
+        let startDate = moment(date.startStr).format('YYYY-MM-DD');
+        let endDate = moment(date.endStr).subtract(1, 'days').format('YYYY-MM-DD');
+        console.log(`start date`, startDate);
+        console.log(`end date`, endDate);
+        await this.getLectures({startDate, endDate});
       }
     }
   })()
@@ -181,13 +170,24 @@ class CalendarPage extends React.Component {
           center: "title",
           right: "timeGridWeek,listWeek,dayGridMonth"
         }}
+        customButtons={{
+          customLeft: {
+            left: 'left-single-arrow',
+            click: function() {
+
+            }
+          },
+          customRight: {
+            right: 'right-single-arrow',
+            click: function() {
+
+            }
+          }
+        }}
         events={this.state.events}
         eventClick={this.eventHandler.onLectureClick}
         eventContent={this.eventHandler.manipulateDOM}
-        datesSet={(date) => {
-          let startDate = moment(date.startStr).format('YYYY-MM-DD');
-          let endDate = moment(date.endStr).add(-1, 'days').format('YYYY-MM-DD'); // -1 because it counts up to the next week
-        }}
+        datesSet={this.eventHandler.onViewChange}
       />
     );
 
@@ -282,12 +282,4 @@ function CourseBadge (props) {
   );
 }
 
-export default CalendarPage
-/* <Badge>
-                    <Form.Check
-                type="checkbox"
-                defaultChecked="true"
-                label='Booked'
-                onClick={(ev) => this.changeDisplayEvent('statusFilter','booked',ev)}
-              />
-                    </Badge> */
+export default CalendarPage;
