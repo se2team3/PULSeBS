@@ -68,7 +68,7 @@ exports.insertBooking = function ({ lecture_id, student_id }) {
 //gets the bookings given the student_id
 exports.retrieveStudentBookings = function (student_id) {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT lecture_id FROM Bookings WHERE student_id = ?'
+        const sql = 'SELECT lecture_id FROM Bookings WHERE student_id = ? AND deleted_at IS NULL'
         db.all(sql, [student_id], (err, rows) => {
             if (err)
                 return reject(err);
@@ -83,7 +83,7 @@ exports.retrieveStudentBookings = function (student_id) {
 //gets the bookings given the lecture_id
 exports.retrieveLectureBookings = function (lecture_id) {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM Bookings WHERE lecture_id = ?'
+        const sql = 'SELECT * FROM Bookings WHERE lecture_id = ? AND deleted_at IS NULL'
         db.all(sql, [lecture_id], (err, rows) => {
             if (err)
                 return reject(err);
