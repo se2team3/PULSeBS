@@ -7,6 +7,7 @@ import listPlugin from '@fullcalendar/list';
 import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CalendarModal from './CalendarModal';
+import CourseBadge from "./CourseBadge"
 import API from '../api/API';
 
 class CalendarPage extends React.Component {
@@ -16,15 +17,15 @@ class CalendarPage extends React.Component {
     this.state = {
       modal: false,
       selected: { extendedProps: { status: null } },
-      lectures: null,
+      lectures: [],
       events: []
     }
 
   }
 
-  getLectures = async ({startDate, endDate} = {}) => {
+  getLectures = async () => {
     try {
-      const lectures = await API.getLectures(startDate,endDate,this.props.authUser.role,this.props.authUser.id);
+      const lectures = await API.getLectures(this.state.startDate, this.state.endDate, this.props.authUser?.role, this.props.authUser?.id);
       this.setState({lectures});
       this.transformIntoEvents();
     } catch (err) {
@@ -50,6 +51,12 @@ class CalendarPage extends React.Component {
     let index = ids.indexOf(course_id);
 
     return colorArray[index];
+  }
+
+  setDates = (date) => {
+    let startDate = moment(date.startStr).format('YYYY-MM-DD');
+    let endDate = moment(date.endStr).subtract(1, 'days').format('YYYY-MM-DD');
+    this.setState({ startDate, endDate }, this.getLectures);
   }
 
   onlyUnique = function (value, index, self) {
@@ -112,9 +119,6 @@ class CalendarPage extends React.Component {
   bookLecture = async (student_id,lecture_id) => {
     try {
       await API.bookLecture(student_id, lecture_id);
-      // TODO retrieve dates
-      /*  date arguments are intentionally missing since it possible to book a lecture
-          in the future and it won't be trivial to retrieve the actual view   */
       await this.getLectures();
       this.closeModal();
     } catch (err) {
@@ -135,7 +139,7 @@ class CalendarPage extends React.Component {
               <b>{eventInfo.event.title}</b><br/>
               <i>{eventInfo.event._def.extendedProps.room}</i><br/>
               <div style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
-                <b>{eventInfo.event._def.extendedProps.stat}</b>
+                <b>{eventInfo.event._def.extendedProps.status}</b>
               </div>
             </div>
         )
@@ -145,9 +149,7 @@ class CalendarPage extends React.Component {
         else if (this.role === 'teacher')  this.props.goToLecturePage(info.event);
       },
       onViewChange: async (date) => {
-        let startDate = moment(date.startStr).format('YYYY-MM-DD');
-        let endDate = moment(date.endStr).subtract(1, 'days').format('YYYY-MM-DD');
-        await this.getLectures({startDate, endDate});
+        this.setDates(date);
       }
     }
   })()
@@ -223,7 +225,7 @@ class CalendarPage extends React.Component {
               </Row>
               {this.state.modal ? 
               <CalendarModal closeModal={this.closeModal} 
-                bookLecture={()=>this.bookLecture(context.authUser?.id ?? 1,this.state.selected.extendedProps.lectureId)}
+                bookLecture={()=>this.bookLecture(context.authUser?.id ?? 1, this.state.selected.extendedProps.lectureId)}
                 lecture={this.state.selected}/> : <></>}
 
             </Container>
@@ -234,37 +236,6 @@ class CalendarPage extends React.Component {
         </AuthContext.Consumer>
       </>)
   }
-}
-
-function CourseBadge (props) {
-  const style = {
-    'backgroundColor': props.backgroundColor,
-  };
-  return (
-    <div className="rounded" style={style}>
-      <Row className="mb-3 w-100 d-flex justify-content-between align-items-center">
-        <Col lg={1} className="ml-3">
-          <Form.Check
-            type="checkbox"
-            defaultChecked="true"
-            value={props.subjectId}
-            onClick={(ev) => props.handleClick('courseFilter',props.subjectId, ev)}
-          />
-        </Col>
-        <Col className="align-items-center my-auto" lg={10}>
-          <span key={props.lectureId}>
-            <span className="font-weight-bold">
-              {props.subjectName}
-            </span>
-            <br/>
-            <span style={{'fontSize': '90%'}}>
-              Prof. {props.teacher}
-            </span>
-          </span>
-        </Col>
-      </Row>
-    </div>
-  );
 }
 
 export default CalendarPage;
