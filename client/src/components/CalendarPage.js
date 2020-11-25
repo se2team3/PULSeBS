@@ -274,11 +274,3 @@ function CourseBadge (props) {
 }
 
 export default CalendarPage
-/* <Badge>
-                    <Form.Check
-                type="checkbox"
-                defaultChecked="true"
-                label='Booked'
-                onClick={(ev) => this.changeDisplayEvent('statusFilter','booked',ev)}
-              />
-                    </Badge> */
