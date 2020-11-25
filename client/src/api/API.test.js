@@ -1,4 +1,4 @@
-import API from "./API";
+import API from "./";
 var axios = require("axios");
 var MockAdapter = require("axios-mock-adapter");
 

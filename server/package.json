@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
+    "start:ci": "node index.js",
     "test": "nyc --reporter=lcov mocha --exit --timeout 100000"
   },
   "license": "ISC",
@@ -23,6 +24,7 @@
     "morgan": "^1.10.0",
     "node-cron": "^2.0.3",
     "nodemailer": "^6.4.15",
+    "require-directory": "^2.1.1",
     "sqlite3": "^5.0.0",
     "swagger-jsdoc": "^5.0.1",
     "swagger-ui-express": "^4.1.4"

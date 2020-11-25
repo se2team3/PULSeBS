@@ -16,6 +16,15 @@
  * @type {Cypress.PluginConfig}
  */
 module.exports = (on, config) => {
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
+  // custom tasks for sending and reporting code coverage
+  // custom tasks for sending and reporting code coverage
+  require('@cypress/code-coverage/task')(on, config)
+  // this line instruments spec files and loaded unit test code
+  on(
+    'file:preprocessor',
+    require('@cypress/code-coverage/use-browserify-istanbul')
+  )
+  // It's IMPORTANT to return the config object
+  // with any changed environment variables
+  return config
 }

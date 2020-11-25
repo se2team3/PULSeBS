@@ -34,10 +34,8 @@ const router = express.Router();
 
 router.get('/lectures/:lecture_id/bookings', async(req,res) =>{
   const lecture_id= + req.params.lecture_id;
-  console.log("sono nella route",lecture_id)
   try{
       let bookings = await bookingService.retrieveBookingsbyLectureId(lecture_id);
-      console.log("returned",bookings)
       return res.status(200).json(bookings);
   } catch(error){
       res.json(error);

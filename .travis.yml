@@ -1,6 +1,18 @@
 language: node_js
 node_js:
   - 14
+addons:
+  apt:
+    packages:
+      # Ubuntu 16+ does not install this dependency by default, so we need to install it ourselves
+      - libgconf-2-4
+cache:
+  # Caches $HOME/.npm when npm ci is default script command
+  # Caches node_modules in all other cases
+  npm: true
+  directories:
+    # we also need to cache folder with Cypress binary
+    - ~/.cache
 install:
   - npm install -g codecov
 script:
@@ -10,4 +22,11 @@ script:
   - cd server ; npm install
   - npm test
   - cd ..
+  - codecov
+  - cd server
+  - npm run start:ci&
+  - sleep 30
+  - cd ../client
+  - npm run ci:client
+  - npx nyc report --reporter=lcov
   - codecov
