@@ -11,7 +11,7 @@ const server = require('../index');
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 
-/*
+
 describe('Lecture testing', function() {
     before('create tables and clear db', async function() {
         await dbUtils.reset();
@@ -80,4 +80,4 @@ describe('Lecture testing', function() {
 
     })
 
-});*/
+});

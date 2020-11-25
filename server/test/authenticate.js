@@ -11,7 +11,7 @@ const userDao = require('../daos/user_dao');
 const chaiHttp = require("chai-http");
 
 chai.use(chaiHttp);
-/*
+
 describe('Authentication routes', function () {
     before('create table and clear db', async function() {
         await userDao.createUsersTable();
@@ -111,4 +111,3 @@ const wrongCredentials = (res) => {
     const response = { message: 'Username or password is incorrect' };
     res.body.should.be.eql(response);
 };
-*/

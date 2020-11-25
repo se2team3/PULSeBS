@@ -9,6 +9,7 @@ const chaiHttp = require("chai-http");
 const BookingService = require ("../services/bookingService");
 const populateDb = require('../utils/populate')
 
+
 chai.use(chaiHttp);
 /*
 describe('Booking routes', function () {
@@ -57,31 +58,34 @@ describe('Assert bookings', function () {
     });
 
     it('should verify that the student is already booked for a specific lecture', async function() {
+        const data = await populateDb.populate();
         const lecture_id = 1;
-        const tmp = `/api/students/${lecture_id}`;       
-        const students = await populateDb.populate();
-        console.log(students[0].email, students[0].password)
-        await chai.request(server).get('/login').send({email:students[0].email, password: students[0].password}); 
-        let res = await chai.request(server).get(tmp).send(lecture_id);
+        const tmp = `/api/students/${lecture_id}`;     
+
+        let credentials = {email:data.students[0].email, password:data.students[0].password};
+        const agent = chai.request.agent(server);
+        await agent.post(`/api/login`).send(credentials);
+   
+        let res = await agent.get(tmp);
         res.should.have.status(200);
         res.body.should.be.an('object');
-        res.body.bookable.should.be.equal(true)
+        res.body.bookable.should.be.equal(false);
 
-        const lecture_id2 = 13;
-        const tmp2 = `/api/students/${lecture_id}`;
-        let res2 = await chai.request(server).get(tmp2).send(lecture_id2);
-        res2.should.have.status(200);
-        res2.body.should.be.an('object');
-        res2.body.bookable.should.be.equal(false)
+       
 
     });
     it('should verify that the student is already booked for a specific lecture', async function() {
-        const lecture_id = 13;
-        const tmp = `/api/students/${lecture_id}`;
-        let res = await chai.request(server).get(tmp).send({user:2},lecture_id);
-        res.should.have.status(200);
-        res.body.should.be.an('object');
-        res.body.bookable.should.be.equal(false)
+        const data = await populateDb.populate();
+        const lecture_id = 8;
+        const tmp = `/api/students/${lecture_id}`;     
 
+        let credentials = {email:data.students[0].email, password:data.students[0].password};
+        const agent = chai.request.agent(server);
+        await agent.post(`/api/login`).send(credentials);
+        let res2 = await agent.get(tmp);
+        res2.should.have.status(200);
+        res2.body.should.be.an('object');
+        res2.body.bookable.should.be.equal(true)
+        
     });
 });

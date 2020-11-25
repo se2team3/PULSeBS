@@ -5,7 +5,7 @@ const studentService = require('../services/studentService');
 const bookingService = require('../services/bookingService')
 const authorize = require('../services/authorizeService');
 const role = require('../utils/roles');
-const timeValidator = require('../validators/timeValidator')
+const timeValidator = require('../validators/timeValidator');
 
 /* cannot be used like this, because the authorization rule is then applied
  * to all the following routes (even in other modules)
@@ -79,13 +79,11 @@ app.get('/students/:student_id/lectures', timeValidator.checkTime, async(req,res
  *       - "read:pets"
  */
 
-app.get('/students/:lecture_id/', async(req,res) =>{
+app.get('/students/:lecture_id/',authorize(role.Student), async(req,res) =>{
     const lecture_id= req.params.lecture_id;
-    const student_id=req.user && req.user.user;
-    console.log(lecture_id,student_id)
+    const student_id=req.user && req.user.sub;
     try{
         let bool = await bookingService.assertBooking(lecture_id,student_id);
-        console.log(bool)
         return res.status(200).json(bool);
     } catch(error){
         res.json(error);

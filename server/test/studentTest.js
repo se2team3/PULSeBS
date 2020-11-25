@@ -10,7 +10,7 @@ const moment = require('moment');
 const db = require('../utils/db');
 
 chai.use(chaiHttp);
-/*
+
 describe('Student routes', function () {
     
     before('create tables and clear db', async function() {
@@ -54,4 +54,3 @@ describe('Student routes', function () {
         res.body.should.have.property('errors');
     });
 });
-*/
