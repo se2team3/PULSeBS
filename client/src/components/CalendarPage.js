@@ -133,6 +133,29 @@ class CalendarPage extends React.Component {
     this.setState({ modal: false })
   }
 
+  cancelBooking = (student_id,lecture_id)=> {
+    API.cancelBooking(student_id,lecture_id)
+    .then((res)=>{
+      // GIVE FEEDBACK TO USER + change status of selected lecture
+      console.log(res);
+      // TODO this could be a function to remove duplication
+      let startOfWeek = moment().day(1).format("YYYY-MM-DD");
+      let endOfWeek = moment().day(7).format("YYYY-MM-DD");
+      API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
+          .then((res)=>{
+            //this.setState(state=>{return  state.lectures: [...res] });
+            this.setState({lectures:res})
+            this.transformIntoEvents();
+        })
+        .catch((err)=>console.log(`error`, err));
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+    
+    this.setState({ modal: false })
+  }
+
 
   closeModal = () =>{
     this.setState({modal: false})
@@ -218,10 +241,11 @@ class CalendarPage extends React.Component {
                   </Nav>
                 </Col>
               </Row>
-              {this.state.modal ? 
+              {this.state.modal && 
               <CalendarModal closeModal={this.closeModal} 
                 bookLecture={()=>this.bookLecture(context.authUser?.id ?? 1,this.state.selected.extendedProps.lectureId)}
-                lecture={this.state.selected}/> : <></>}
+                cancelBooking={()=>this.cancelBooking(context.authUser?.id ?? 1,this.state.selected.extendedProps.lectureId)}
+                lecture={this.state.selected}/>}
 
             </Container>
 

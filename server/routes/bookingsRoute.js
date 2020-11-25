@@ -82,7 +82,7 @@ router.post('/students/:student_id/bookings', lectureValidation.checkLecture(),v
  *       - "write:pets"
  *       - "read:pets"
  */
-router.post('/students/:student_id/lectures/:lecture_id', async(req,res) =>{
+router.delete('/students/:student_id/lectures/:lecture_id', async(req,res) =>{
     const student_id= +req.params.student_id;
     const lecture_id= +req.params.lecture_id;
     const datetime= moment().format('YYYY-MM-DD HH:mm');
