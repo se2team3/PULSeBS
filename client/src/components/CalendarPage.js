@@ -142,6 +142,25 @@ class CalendarPage extends React.Component {
     this.setState({modal: false})
   }
 
+  eventHandler = (() => {
+    return {
+      manipulateDOM: (eventInfo) => {
+        return (
+            <div style={{'fontSize': '110%', 'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'overflow': 'hidden'}}>
+              <b>{eventInfo.event.title}</b><br/>
+              <i>{eventInfo.event._def.extendedProps.room}</i><br/>
+              <div style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
+                <b>{eventInfo.event._def.extendedProps.stat}</b>
+              </div>
+            </div>
+        )
+      },
+      onLectureClick: (info, role) => {
+        if(role === 'student')        this.setState({ modal: true, selected: info.event });
+        else if (role === 'teacher')  this.props.goToLecturePage(info.event);
+      }
+    }
+  })()
 
   renderCalendar = (role) => {
     return (
@@ -160,21 +179,8 @@ class CalendarPage extends React.Component {
           right: "timeGridWeek,listWeek,dayGridMonth"
         }}
         events={this.state.events}
-        eventClick={(info) => {
-          if(role ==='student') this.setState({ modal: true, selected: info.event })
-          else if (role ==='teacher') this.props.goToLecturePage(info.event);
-        }}
-        eventContent={(eventInfo) => {
-          return (
-            <div style={{'fontSize': '110%', 'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'overflow': 'hidden'}}>
-              <b>{eventInfo.event.title}</b><br/>
-              <i>{eventInfo.event._def.extendedProps.room}</i><br/>
-              <div style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
-                <b>{eventInfo.event._def.extendedProps.stat}</b>
-              </div>
-            </div>
-          )}
-        }
+        eventClick={(info) => this.eventHandler.onLectureClick(info, role)}
+        eventContent={this.eventHandler.manipulateDOM}
         datesSet={(date) => {
           let startDate = moment(date.startStr).format('YYYY-MM-DD');
           let endDate = moment(date.endStr).add(-1, 'days').format('YYYY-MM-DD'); // -1 because it counts up to the next week
