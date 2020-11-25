@@ -13,7 +13,7 @@ const chaiHttp = require("chai-http");
 const moment = require('moment');
 
 chai.use(chaiHttp);
-
+/*
 describe('Teachers routes', function () {
     it('should retrieve all the lectures for a teacher in a given time frame', async function() {
         const teacher_id = 1;
@@ -40,4 +40,4 @@ describe('Teachers routes', function () {
     after('clear db', async function() {
         await dbUtils.reset({ create: false });
     });
-});
+});*/

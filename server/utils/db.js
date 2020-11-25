@@ -129,8 +129,10 @@ const populate = async ({n_students, datetime} = def_options) => {
     for (let student of data.students) {
         const student_id = await userDao.insertUser(student);
         data.students_id.push(student_id);
-        data.booked++;
-        await bookingDao.insertBooking({ lecture_id: data.lecture_id, student_id });
+        if(data.booked<45){   
+            data.booked++;
+            await bookingDao.insertBooking({ lecture_id: data.lecture_id, student_id });
+        }
     }
         data.assign1.student_id = data.students_id[0]
         data.assign2.student_id = data.students_id[0]

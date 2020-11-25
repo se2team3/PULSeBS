@@ -13,6 +13,7 @@ exports.createBookingTable = async function() {
 exports.insertBooking = async function(booking) {
     try {
         let book = await bookingDao.insertBooking({...booking});
+        console.log(book)
         return book;
     } catch (error) {
         return errHandler(error);
