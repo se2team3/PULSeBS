@@ -71,7 +71,8 @@ class CalendarPage extends React.Component {
           title: l.course_name,
           room: l.room_name,
           stat: stat,
-          start: l.datetime, end: l.datetime_end,
+          start: l.datetime,
+          end: l.datetime_end,
           backgroundColor: this.getColor(l.course_id),
           display: 'auto',
           textColor: 'black'
@@ -140,14 +141,12 @@ class CalendarPage extends React.Component {
         )
       },
       onLectureClick: (info) => {
-        if(this.role === 'student')        this.setState({ modal: true, selected: info.event });
+        if (this.role === 'student')       this.setState({ modal: true, selected: info.event });
         else if (this.role === 'teacher')  this.props.goToLecturePage(info.event);
       },
       onViewChange: async (date) => {
         let startDate = moment(date.startStr).format('YYYY-MM-DD');
         let endDate = moment(date.endStr).subtract(1, 'days').format('YYYY-MM-DD');
-        console.log(`start date`, startDate);
-        console.log(`end date`, endDate);
         await this.getLectures({startDate, endDate});
       }
     }
@@ -169,20 +168,6 @@ class CalendarPage extends React.Component {
           left: "prev,next today",
           center: "title",
           right: "timeGridWeek,listWeek,dayGridMonth"
-        }}
-        customButtons={{
-          customLeft: {
-            left: 'left-single-arrow',
-            click: function() {
-
-            }
-          },
-          customRight: {
-            right: 'right-single-arrow',
-            click: function() {
-
-            }
-          }
         }}
         events={this.state.events}
         eventClick={this.eventHandler.onLectureClick}
