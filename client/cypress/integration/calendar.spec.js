@@ -71,9 +71,9 @@ describe('Calendar page', () => {
             cy.get('#password').should('exist');
             cy.get('.btn').contains('Login').should('exist');
             cy.get('#username').focus().clear()
-            .type('Elvino32@pulsebs.com');
+            .type('Elvezio86@pulsebs.com');
             cy.get('#password').focus().clear()
-            .type('z8mwdz9xqWgaLRf')
+            .type('QYJCV0PfU5Ef_er')
             .type('{enter}');
             
         });
@@ -118,9 +118,9 @@ describe('Calendar page', () => {
         before('visit page', () => {
             cy.visit('/');
             cy.get('#username').focus().clear()
-            .type('Elvino32@pulsebs.com');
+            .type('Elvezio86@pulsebs.com');
             cy.get('#password').focus().clear()
-            .type('z8mwdz9xqWgaLRf')
+            .type('QYJCV0PfU5Ef_er')
             .type('{enter}');
             
             
@@ -138,7 +138,7 @@ describe('Calendar page', () => {
 
    describe('calendar teacher basic interface, real API',()=>{
         before('visit page', () => {
-            cy.route2('/api/teachers/1/lectures', { fixture: 'list_of_lectures.json' })
+            //cy.route2('/api/teachers/1/lectures', { fixture: 'list_of_lectures.json' })
             cy.visit('/');
             cy.contains('Login').should('exist');
             cy.contains('Login').click();
