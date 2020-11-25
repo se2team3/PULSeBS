@@ -70,7 +70,6 @@ class CalendarPage extends React.Component {
           seats: diff,
           title: l.course_name,
           room: l.room_name,
-          stat: stat,
           start: l.datetime,
           end: l.datetime_end,
           backgroundColor: this.getColor(l.course_id),
@@ -113,6 +112,7 @@ class CalendarPage extends React.Component {
   bookLecture = async (student_id,lecture_id) => {
     try {
       await API.bookLecture(student_id, lecture_id);
+      // TODO retrieve dates
       /*  date arguments are intentionally missing since it possible to book a lecture
           in the future and it won't be trivial to retrieve the actual view   */
       await this.getLectures();
