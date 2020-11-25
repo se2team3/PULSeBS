@@ -1,4 +1,4 @@
-const courseStudentDao = require('../daos/course_student');
+const courseStudentDao = require('../daos/course_student_dao');
 const errHandler = require('./errorHandler');
 
 exports.createCourseStudentTable = async function() {    

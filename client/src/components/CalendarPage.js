@@ -8,7 +8,7 @@ import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CalendarModal from './CalendarModal';
 import CourseBadge from "./CourseBadge"
-import API from '../api/API';
+import API from '../api';
 
 class CalendarPage extends React.Component {
   constructor(props) {

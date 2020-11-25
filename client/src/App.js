@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import LoginForm from './components/LoginForm';
 import LecturePage from './components/LecturePage';
-import API from './api/API';
+import API from './api';
 import { Redirect, Route} from 'react-router-dom';
 import { Switch } from 'react-router';
 import { AuthContext } from './auth/AuthContext';
