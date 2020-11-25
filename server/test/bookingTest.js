@@ -47,8 +47,8 @@ describe('Booking routes', function () {
     it('should allow student to delete a booking', async function() {
         const newBooking = { lecture_id: 1, student_id: 2};
         
-        const tmp = `/api/students/${newBooking.student_id}/delete_booking`;
-        let res1 = await chai.request(server).post(tmp).send({lecture_id: newBooking.lecture_id});
+        const tmp = `/api/students/${newBooking.student_id}/lectures/${newBooking.lecture_id}`;
+        let res1 = await chai.request(server).post(tmp).send();
         should.exist(res1);
         res1.should.have.status(200);
         res1.body.should.be.an('object');
@@ -60,9 +60,8 @@ describe('Booking routes', function () {
     it('should not allow student to delete a booking yet deleted', async function() {
         const newBooking = { lecture_id: 1, student_id: 2};
         
-        const tmp = `/api/students/${newBooking.student_id}/delete_booking`;
-
-        let res = await chai.request(server).post(tmp).send({lecture_id: newBooking.lecture_id});
+        const tmp = `/api/students/${newBooking.student_id}/lectures/${newBooking.lecture_id}`;
+        let res = await chai.request(server).post(tmp).send();
         should.exist(res);
         res.should.have.status(304);
         res.body.should.be.an('object');

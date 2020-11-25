@@ -67,11 +67,11 @@ router.post('/students/:student_id/bookings', lectureValidation.checkLecture(),v
  *          type: integer
  *          format: int64
  *    responses:
- *       "201 and num=1":
+ *       "201":
  *         description: "Successful deletion"
  *         schema:
  *           type: "object"
- *       "201 and num=0":
+ *       "304":
  *         description: "Nothing to delete"
  *         schema:
  *           type: "object"
@@ -82,10 +82,10 @@ router.post('/students/:student_id/bookings', lectureValidation.checkLecture(),v
  *       - "write:pets"
  *       - "read:pets"
  */
-router.post('/students/:student_id/delete_booking', lectureValidation.checkLecture(),validator, async(req,res) =>{
-    const {lecture_id} = req.body;
+router.post('/students/:student_id/lectures/:lecture_id', async(req,res) =>{
     const student_id= +req.params.student_id;
-    const datetime= moment();
+    const lecture_id= +req.params.lecture_id;
+    const datetime= moment().format('YYYY-MM-DD HH:mm');
     try{
         let number = await bookingService.deleteBooking({datetime,lecture_id,student_id});
         if(number===1)
