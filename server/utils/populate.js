@@ -98,9 +98,9 @@ const bookLecture = async ({ lecture_id, student_id }) => {
 
 const populate = (async () => {
     const [students, students_id] = await generateUsers({ n: 10, role: "student" });
-    const [teachers, teachers_id] = await generateUsers({ n: 1, role: "teacher" });
+    const [ teachers_id] = await generateUsers({ n: 1, role: "teacher" });
     const [rooms, rooms_id] = await generateRoom({n:10});
-    let count = 0;
+
     for (let teacher_id of teachers_id) {
         const [course, course_id] = await generateCourse({ teacher_id });
         const n = 10;

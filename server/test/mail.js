@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './config/config.env' });
+/*require('dotenv').config({ path: './config/config.env' });
 
 process.env.NODE_ENV = 'test';
 require('dotenv').config({ path: './config/config.env' });
@@ -48,3 +48,4 @@ const sendError = (err) => {
     console.error("Error in sending email", err);
     should.fail("Error in sending email with nodemailer.. asserting failure");
 };
+*/
