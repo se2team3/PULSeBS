@@ -16,10 +16,18 @@ describe('Calendar page', () => {
 
         it('has forward button working', () => {
             
-            cy.get ("button").eq(2).click();
-            cy.contains("Nov 16 – 22, 2020").should('not.exist');
-            //cy.contains("Aula 49").should('not.exist');
-            cy.get ("button").eq(1).click();
+            // GET LECTURES WEEK BY WEEK TEST
+            cy.server();
+            cy.route('GET', '/api/students/194/lectures?from=2020-11-30&to=2020-12-06').as('get')
+            
+
+            cy.get ('button[aria-label="next"]').click();
+            cy.contains("Nov 30 – Dec 6, 2020").should('exist');
+            cy.wait('@get')
+            cy.get('@get').then((res)=>{
+                expect(res).to.have.property('status', 200)
+                expect(res.response.body).to.be.a('array')
+            })
         })
 
         it('has today button working', () => {
