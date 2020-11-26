@@ -33,18 +33,20 @@ const start = (callback = _ => {}) => {
 };
 
 const notifyBooking = async (booking,emailTest) => {
-    console.log("booking",booking,emailTest,booking.student_id)
+
+    if (!booking) return new Promise((resolve, reject) => {reject("Undefined recipient")});
+    
     const user = await userService.getUser(booking.student_id);
     const lecture = await extendedLectureService.getLectureById(booking.lecture_id);
-    console.log("user",user)
-    console.log("lecture",lecture)
     const email = emailTest||user.email;
-    send({
+    
+    const info = await send({
         to: email,
         subject: __subject_for_booking(lecture),
         text: __text_for_booking(user,lecture),
     });
 
+    return info;
 };
 
 const __subject_for_booking = (lecture) => `[${lecture.course_name}] ${lecture.datetime} booking confirmation`;
@@ -115,7 +117,7 @@ const __text = (lecture) => `
  */
 const send = async ({to, subject, text}, callback = _=>{}) => {
     const message = {to, subject, text};
-    console.log()
+    console.log("@@@@@@@@@@@@@@@@@@@",message)
     return transport.sendMail(message, callback());
 };
 
