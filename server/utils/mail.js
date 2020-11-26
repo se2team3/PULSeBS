@@ -1,5 +1,8 @@
 const { mail } = require('../config/config');
 const nodemailer = require('nodemailer');
+const userService = require("../services/userService")
+const lectureService = require("../services/lectureService")
+const extendedLectureService = require("../services/extendedLectureService")
 let transport;
 
 const options = {
@@ -29,8 +32,39 @@ const start = (callback = _ => {}) => {
     transport.verify(callback);
 };
 
+const notifyBooking = async (booking,emailTest) => {
+    console.log("booking",booking,emailTest,booking.student_id)
+    const user = await userService.getUser(booking.student_id);
+    const lecture = await extendedLectureService.getLectureById(booking.lecture_id);
+    console.log("user",user)
+    console.log("lecture",lecture)
+    const email = emailTest||user.email;
+    send({
+        to: email,
+        subject: __subject_for_booking(lecture),
+        text: __text_for_booking(user,lecture),
+    });
+
+};
+
+const __subject_for_booking = (lecture) => `[${lecture.course_name}] ${lecture.datetime} booking confirmation`;
+const __text_for_booking = (user,lecture) => `
+    Dear ${user.name} ${user.surname},
+    
+    You have correctly booked the lesson of "${lecture.course_name}". The lecture is scheduled in date ${lecture.datetime} in room "${lecture.room_name}".
+
+    Regards.
+    
+    -----
+    
+    This is an automatic email, please don't answer
+    PULSeBS, 2020
+`;
+
+
+
 const notifyTeachers = async () => {
-    const scheduledLectures = await require('../services/lectureService').getNextDayLectures(2);
+    const scheduledLectures = await lectureService.getNextDayLectures(2);
     console.log(`scheduledLectures`, scheduledLectures);
     scheduledLectures.forEach(lecture => {
         console.log(`email`, lecture);
@@ -81,7 +115,8 @@ const __text = (lecture) => `
  */
 const send = async ({to, subject, text}, callback = _=>{}) => {
     const message = {to, subject, text};
+    console.log()
     return transport.sendMail(message, callback());
 };
 
-module.exports = { start, job, send };
+module.exports = { start, job, send,  notifyBooking,__subject_for_booking,__text_for_booking };

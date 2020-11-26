@@ -53,14 +53,17 @@ exports.insertUser = async function({university_id,email,password,name,surname,r
 }
 //gets the user with the selected id
 exports.retrieveUser = function(id) {
+    console.log(id)
     return new Promise ((resolve,reject) =>{
         const sql = 'SELECT * FROM Users WHERE id = ?'
         db.get(sql, [id], (err, row) => {
             if(err)
                 return reject(err);
-            if (!row)
+            if (!row){
+                console.log("user dao line 63",row)
                 resolve(null);
-            else{
+            }else{
+                console.log("user dao line 67",row)
                 const user = createUser(row);
                 resolve(user);
             }
