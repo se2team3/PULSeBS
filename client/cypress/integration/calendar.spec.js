@@ -110,6 +110,18 @@ describe('Calendar page', () => {
         });
 
         checkboxesTest();
+        /**
+         * Test BOOKED filter works
+         */
+        it('filters BOOKED lectures',()=>{
+            cy.get ("input").eq(0).click();
+            cy.contains("Aula 49").should('exist');
+            cy.contains("Aula 37").should('not.exist');
+            cy.get ("input").eq(0).click();
+            cy.contains("Aula 49").should('exist');
+            cy.contains("Aula 37").should('exist');
+            
+        })
 
     });
 
