@@ -1,7 +1,11 @@
 /// <reference types="cypress" />
 import React from 'react';
 
+
 describe('Calendar page', () => {
+   
+    
+
     let sharedTest =  function(){
         it('has header presence', () => {
             cy.contains("Nov 16 – 22, 2020");
@@ -63,6 +67,8 @@ describe('Calendar page', () => {
 
   describe('calendar student basic interface, real API',()=>{
         before('visit page', () => {
+            
+            cy.task('populate_cypress')
             cy.visit('/');
             cy.contains('Login').should('exist');
             cy.contains('Login').click();
@@ -71,16 +77,19 @@ describe('Calendar page', () => {
             cy.get('#password').should('exist');
             cy.get('.btn').contains('Login').should('exist');
             cy.get('#username').focus().clear()
-            .type('Elvezio86@pulsebs.com');
+            .type('Michele@host.com');
             cy.get('#password').focus().clear()
-            .type('QYJCV0PfU5Ef_er')
+            .type('passw0rd') 
             .type('{enter}');
             
         });
+        after('visit page', ()=>{
+            cy.task('reset_cypress')
+        });
         it('has header presence', () => {
-            cy.contains("Nov 16 – 22, 2020");
+            cy.contains("Nov 23 – 29, 2020");
         })
-       
+       /*
    
         it('has toolbar', () => {
             cy.get(<div class="fc-header-toolbar fc-toolbar fc-toolbar-ltr"></div>)
@@ -175,7 +184,7 @@ describe('Calendar page', () => {
             cy.get ("input").eq(0).click();
             cy.contains("Aula 37").should('exist');
            
-        })
+        }) */
 
         /* it('has lecture page', () => {
             cy.contains("beatae").click()
