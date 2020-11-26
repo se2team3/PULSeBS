@@ -7,8 +7,8 @@ import listPlugin from '@fullcalendar/list';
 import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CalendarModal from './CalendarModal';
+import API from '../api';
 import CourseBadge from "./CourseBadge"
-import API from '../api/API';
 
 class CalendarPage extends React.Component {
   constructor(props) {
@@ -113,7 +113,7 @@ class CalendarPage extends React.Component {
         return { events: [...list] }
       });
     }
-    
+
   }
 
   bookLecture = async (student_id,lecture_id) => {
@@ -138,9 +138,12 @@ class CalendarPage extends React.Component {
             <div style={{'fontSize': '110%', 'textOverflow': 'ellipsis', 'whiteSpace': 'nowrap', 'overflow': 'hidden'}}>
               <b>{eventInfo.event.title}</b><br/>
               <i>{eventInfo.event._def.extendedProps.room}</i><br/>
-              <div style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
-                <b>{eventInfo.event._def.extendedProps.status}</b>
-              </div>
+              {
+                eventInfo.view.type !== "dayGridMonth" &&
+                <div style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
+                  <b>{eventInfo.event._def.extendedProps.stat}</b>
+                </div>
+              }
             </div>
         )
       },
@@ -205,7 +208,7 @@ class CalendarPage extends React.Component {
                     </Badge>
                   <Nav className="px-4 py-4 col-md-12 d-none d-md-block bg-light sidebar">
                     <h2 className="mb-3">Courses</h2>
-                    
+
                     <Form>
                       {
                         this.state.events.map((e) => {
