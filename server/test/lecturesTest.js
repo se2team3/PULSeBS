@@ -52,6 +52,7 @@ describe('Lecture testing', function() {
         });
     });
 
+    // EXAMPLE COMMIT
     describe('Lecture Routes', async function(){
 
         it('should get the list of booking given a lecture', async function() {
