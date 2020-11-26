@@ -77,7 +77,7 @@ describe('Calendar page', () => {
             cy.get('#password').should('exist');
             cy.get('.btn').contains('Login').should('exist');
             cy.get('#username').focus().clear()
-            .type('Michele@host.com');
+            .type('MicheleGialli@pulsebs.com');
             cy.get('#password').focus().clear()
             .type('passw0rd') 
             .type('{enter}');

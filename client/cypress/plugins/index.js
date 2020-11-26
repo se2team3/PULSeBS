@@ -21,7 +21,7 @@ module.exports = (on, config) => {
 
   on('task', {
     'populate_cypress': () => {
-      db.func()
+      db.populate()
       return null
       
     },
