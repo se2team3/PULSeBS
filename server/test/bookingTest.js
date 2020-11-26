@@ -11,7 +11,7 @@ const populateDb = require('../utils/populate')
 
 
 chai.use(chaiHttp);
-/*
+
 describe('Booking routes', function () {
     before('create tables and clear db', async function() {
         await dbUtils.reset();
@@ -45,7 +45,7 @@ describe('Booking routes', function () {
     });
   
 
-});*/
+});
 describe('Assert bookings', function () {
     
     before('create tables and clear db', async function() {
