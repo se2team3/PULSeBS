@@ -41,8 +41,8 @@ describe('Student routes', function () {
     it(`should retrieve an empty array for the student's extended lectures`, async function() {
         const student_id = 2;
         const tmp = `/api/students/${student_id}/lectures`;
-        let start_date = moment("2020-11-27","YYYY-MM-DD").format("YYYY-MM-DD");
-        let end_date = moment("2020-12-28","YYYY-MM-DD").format("YYYY-MM-DD");
+        let start_date = moment("2021-11-27","YYYY-MM-DD").format("YYYY-MM-DD");
+        let end_date = moment("2021-12-28","YYYY-MM-DD").format("YYYY-MM-DD");
     
         let res = await chai.request(server).get(tmp).query({from: start_date, to: end_date});
         res.should.have.status(200);
