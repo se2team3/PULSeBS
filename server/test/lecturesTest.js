@@ -53,6 +53,7 @@ describe('Lecture testing', function() {
     });
 
     // EXAMPLE COMMIT
+    //Example commit 2
     describe('Lecture Routes', async function(){
 
         it('should get the list of booking given a lecture', async function() {
