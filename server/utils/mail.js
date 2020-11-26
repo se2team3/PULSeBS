@@ -39,14 +39,14 @@ const notifyBooking = async (booking,emailTest) => {
     const user = await userService.getUser(booking.student_id);
     const lecture = await extendedLectureService.getLectureById(booking.lecture_id);
     const email = emailTest||user.email;
-    
+    const txt = __text_for_booking(user,lecture);
     const info = await send({
         to: email,
         subject: __subject_for_booking(lecture),
-        text: __text_for_booking(user,lecture),
+        text: txt,
     });
 
-    return info;
+    return {info,txt};
 };
 
 const __subject_for_booking = (lecture) => `[${lecture.course_name}] ${lecture.datetime} booking confirmation`;
@@ -117,7 +117,6 @@ const __text = (lecture) => `
  */
 const send = async ({to, subject, text}, callback = _=>{}) => {
     const message = {to, subject, text};
-    console.log("@@@@@@@@@@@@@@@@@@@",message)
     return transport.sendMail(message, callback());
 };
 

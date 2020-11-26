@@ -8,9 +8,10 @@ const mailserver = require('../utils/mail');
 const chai = require('chai');
 const should = chai.should();
 const mockery = require('mockery');
-const assert = require('assert');
 const nodemailerMock = require('nodemailer-mock');
+const db = require('../utils/db');
 var EmailUtils;
+var dbUtils;
 
 /*describe('Email testing', function() {
     let inbox, mailSlurp;
@@ -49,6 +50,7 @@ const sendError = (err) => {
     should.fail("Error in sending email with nodemailer.. asserting failure");
 };
 */
+
 describe('EmailService', function() {
     describe('Tests EmailService', async () => {
 
@@ -60,7 +62,10 @@ describe('EmailService', function() {
             });
             mockery.registerMock('nodemailer', nodemailerMock);
             EmailUtils = require('../utils/mail');
-            EmailUtils.start()
+            dbUtils = require('../utils/db')
+            EmailUtils.start();
+            await dbUtils.reset();
+            await dbUtils.populate()
 
         });
 
@@ -72,16 +77,29 @@ describe('EmailService', function() {
             // Remove our mocked nodemailer and disable mockery
             mockery.deregisterAll();
             mockery.disable();
+            await dbUtils.reset({create: false});
         });
 
         it('should send a confirmation booking email ', async () => {
             const booking ={lecture_id:1,student_id:1}
-           EmailUtils.notifyBooking(booking).then((res)=>res.should.have.property("response", "nodemailer-mock success")).catch((err)=> console.log(err))          
+            const response = await EmailUtils.notifyBooking(booking);
+            console.log(response)
+            response.info.should.have.property("response", "nodemailer-mock success")          
         });
 
         
         it ("should verify that the confirmation booking email cannot be sent because the to is a nullish value", async()=>{           
               EmailUtils.notifyBooking(null,null).then((res)=>console.log(res)).catch((err)=> err.should.equal("Undefined recipient"))
         });
+
+        it('the email shoul have a name, a course name, a datetime and a room ', async () => {
+            const booking ={lecture_id:1,student_id:1}
+            const response = await EmailUtils.notifyBooking(booking);
+            response.txt.should.match(/Micheal/);
+            response.txt.should.match(/Software Engineering 2/); 
+            response.txt.should.match(/2020-11-27/);
+            response.txt.should.match(/Aula 1/);                 
+        });
+        
     })
 })
