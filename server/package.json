@@ -6,7 +6,6 @@
   "scripts": {
     "start": "nodemon index.js",
     "start:ci": "node index.js",
-    "test": "nyc --reporter=lcov mocha --exit --timeout 100000"
     "test": "nyc --reporter=lcov mocha --exit --timeout 100000",
     "test-cypress": "test"
   },
