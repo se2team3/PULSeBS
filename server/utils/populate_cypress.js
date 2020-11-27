@@ -119,10 +119,10 @@ const populate= async () => {
     return data;
 };
 
-module.exports = { reset, createTables, populate }
- exports.func= function(){
-   
-    
-
-
+const add_student = async (email) => {
+    const user = require('./db').studentObj('s12345');
+    await userDao.insertUser(user);
+    return user;
 };
+
+module.exports = { reset, createTables, populate, add_student }

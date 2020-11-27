@@ -23,13 +23,13 @@ module.exports = (on, config) => {
     'populate_cypress': () => {
       db.populate()
       return null
-      
+
     },
     'reset_cypress':()=> {
       db.reset()
       return null
-      
+
     }
-  }) 
-   
+  })
+
 }

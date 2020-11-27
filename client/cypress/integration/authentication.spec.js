@@ -1,49 +1,61 @@
 /// <reference types="cypress" />
 
-describe('Header tests', () => {
+describe('Login page', () => {
     before('visit the page', () => {
         cy.visit('/');
     });
     before('clear the cookie', () => {
-        cy.clearCookie('token', { log: true });
+        cy.clearCookie('token', {log: true});
+    });
+    beforeEach('alias form input fields', () => {
+        cy.get('input[type=email]').as('email');
+        cy.get('input[type=password]').as('password');
     });
     it('should be unlogged', () => {
         cy.contains('Login').should('exist');
     });
     it('should move to the login page', () => {
         cy.contains('Login').click();
-        cy.url().should('match', '/login');
+        cy.url().should('contains', '/login');
     });
     it('should display login modal', () => {
-        cy.get('#username').should('exist');
-        cy.get('#password').should('exist');
+        cy.get('@email').should('exist');
+        cy.get('@password').should('exist');
         cy.get('.btn').contains('Login').should('exist');
     });
-    it('should be focused on email field', () => {
-        cy.focused().should('have.id', 'username');
-    });
     it('should be in invalid state when the email does not follow the pattern', () => {
-        cy.focused().type('mypartial');
-        cy.get('#password').focus();
-        cy.get('#username:invalid').should('exist');
+        cy.get('@email').focus().type('mypartial');
+        cy.get('@password').focus();
+        cy.get('input[type=email]:invalid').should('exist');
     });
     it('should complete the invalid email', () => {
-        cy.get('#username').focus().type('@email.com');
-        cy.get('#password').focus();
-        cy.get('#username:invalid').should('not.exist');
+        cy.get('@email').focus().type('@email.com');
+        cy.get('@password').focus();
+        cy.get('input[type=email]:invalid').should('not.exist');
     });
     it('should input a non visible password', () => {
         const pass = 'my_password?!';
-        cy.get('#password').focus().type(pass);
+        cy.get('@password').focus().type(pass);
         cy.contains(pass).should('not.exist');
     });
+});
+
+describe('Login with server interaction', () => {
+    before('visit the page', () => {
+        cy.visit('/');
+    });
+    before('clear the cookie', () => {
+        cy.clearCookie('token', {log: true});
+    });
+    before('clear the db', () => {
+        cy.db('clear');
+    });
     it('should properly login with valid credentials', () => {
-        cy.get('#username').focus().clear()
-            .type('valid@email.com');
-        cy.get('#password').focus().clear()
-            .type('valid_password')
-            .type('{enter}');
+        cy.login('student', { clear: false });
         cy.getCookie('token').should('exist');
-        cy.url().should('match', '/');
+    });
+    it('should be able to visit protected page', () => {
+        cy.visit('/calendar');
+        cy.contains('today').should('exist');
     });
 });
