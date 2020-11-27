@@ -1,28 +1,36 @@
 /// <reference types="cypress" />
 import React from 'react';
 
+import moment from 'moment';
+let headerOfCurrentWeek = moment().isoWeekday(1).format('MMM DD'); // 1=Monday -> first monday in this week
+let headerOfPrevWeek = moment().isoWeekday(-6).format('MMM DD'); // ex Nov  27
+let headerOfNextWeek = moment().isoWeekday(8).format('MMM DD'); // 1=Monday +7 = 8 -> next monday
+
 describe('Calendar page', () => {
     let sharedTest =  function(){
         it('has header presence', () => {
-            cy.contains("Nov 16 – 22, 2020");
+            cy.contains(headerOfCurrentWeek);
         })
 
         it('has backward button working', () => {
-            cy.get ("button").eq(1).click();
-            cy.contains("Nov 16 – 22, 2020").should('not.exist');
-            //cy.contains("ROOM4").should('not.exist');
-            cy.get ("button").eq(2).click();
+            cy.get ('button[aria-label="prev"]').click();
+            cy.contains(headerOfPrevWeek).should('exist');
+            cy.contains(headerOfCurrentWeek).should('not.exist');
+            cy.get ('button[aria-label="next"]').click(); // return to current week
         })
 
         it('has forward button working', () => {
             
             // GET LECTURES WEEK BY WEEK TEST
+            let begin = moment().isoWeekday(8).format('YYYY-MM-DD'); // monday of next week
+            let end = moment().isoWeekday(14).format('YYYY-MM-DD'); // sunday of next week
+
             cy.server();
-            cy.route('GET', '/api/students/194/lectures?from=2020-11-30&to=2020-12-06').as('get')
+            cy.route('GET', `/api/students/194/lectures?from=${begin}&to=${end}`).as('get')
             
 
-            cy.get ('button[aria-label="next"]').click();
-            cy.contains("Nov 30 – Dec 6, 2020").should('exist');
+            cy.get ('button[aria-label="next"]').click(); // go to next week
+            cy.contains(headerOfNextWeek).should('exist');
             cy.wait('@get')
             cy.get('@get').then((res)=>{
                 expect(res).to.have.property('status', 200)
@@ -41,7 +49,7 @@ describe('Calendar page', () => {
         it('has list button working', () => {
             
             cy.get ("button").eq(5).click();
-            cy.contains("November 21, 2020").should('exist');
+            cy.contains("November 26, 2020").should('exist');
             cy.get ("button").eq(4).click();
             
         })
@@ -86,7 +94,7 @@ describe('Calendar page', () => {
             
         });
         it('has header presence', () => {
-            cy.contains("Nov 16 – 22, 2020");
+            cy.contains(headerOfCurrentWeek);
         })
        
    
@@ -111,40 +119,19 @@ describe('Calendar page', () => {
         })
 
         it('can book a seat', ()=>{
-            cy.contains("Aula 20 free").click()
+            cy.contains("free").click()
             cy.contains("Book").click()
             //cy.contains().click()    //to be enabled after login
            // cy.contains("Aula 20 free").should('not.exist');
         });
 
+        sharedTest();
         checkboxesTest();
 
     });
 
 
-   describe('calendar student interface with timeframe, real API',()=>{
-        before('visit page', () => {
-            cy.visit('/');
-            cy.get('#username').focus().clear()
-            .type('Elvino32@pulsebs.com');
-            cy.get('#password').focus().clear()
-            .type('z8mwdz9xqWgaLRf')
-            .type('{enter}');
-            
-            
-        });
-
-        it('has toolbar', () => {
-            cy.get(<div class="fc-header-toolbar fc-toolbar fc-toolbar-ltr"></div>)
-            
-        });
-        sharedTest();
-
-        
-
-    }); 
-
-   describe('calendar teacher basic interface, real API',()=>{
+   /* describe('calendar teacher basic interface, real API',()=>{
         before('visit page', () => {
             cy.route2('/api/teachers/1/lectures', { fixture: 'list_of_lectures.json' })
             cy.visit('/');
@@ -161,7 +148,7 @@ describe('Calendar page', () => {
             .type('{enter}');
         });
         it('has header presence', () => {
-            cy.contains("Nov 16 – 22, 2020");
+            cy.contains(headerOfCurrentWeek);
         })
         it('has correct number of lectures', () => {
             const rows = Cypress.$('tbody tr');
