@@ -132,11 +132,6 @@ class App extends React.Component {
             <Route>
               <Redirect to='/login'/>
             </Route>
-
-            // TODO: remove duplicated ?
-            <Route>
-              <Redirect to='/login' />
-            </Route>
             
           </Switch>
 
