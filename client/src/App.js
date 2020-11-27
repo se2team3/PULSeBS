@@ -13,6 +13,7 @@ import { AuthContext } from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
 import CalendarPage from './components/CalendarPage';
 
+// INITIALIZE PULSEBS-7 BRANCH
 class App extends React.Component {
 
 
