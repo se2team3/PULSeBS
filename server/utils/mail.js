@@ -3,6 +3,8 @@ const nodemailer = require('nodemailer');
 const userService = require("../services/userService")
 const lectureService = require("../services/lectureService")
 const extendedLectureService = require("../services/extendedLectureService")
+const mailFormatter = require('./mailFormatter');
+
 let transport;
 
 const options = {
@@ -39,29 +41,16 @@ const notifyBooking = async (booking,emailTest) => {
     const user = await userService.getUser(booking.student_id);
     const lecture = await extendedLectureService.getLectureById(booking.lecture_id);
     const email = emailTest||user.email;
-    const txt = __text_for_booking(user,lecture);
+    const txt = mailFormatter.studentBookingBody(user,lecture);
     const info = await send({
         to: email,
-        subject: __subject_for_booking(lecture),
+        subject: mailFormatter.studentBookingSubject(lecture),
         text: txt,
     });
 
     return {info,txt};
 };
 
-const __subject_for_booking = (lecture) => `[${lecture.course_name}] ${lecture.datetime} booking confirmation`;
-const __text_for_booking = (user,lecture) => `
-    Dear ${user.name} ${user.surname},
-    
-    You have correctly booked the lesson of "${lecture.course_name}". The lecture is scheduled in date ${lecture.datetime} in room "${lecture.room_name}".
-
-    Regards.
-    
-    -----
-    
-    This is an automatic email, please don't answer
-    PULSeBS, 2020
-`;
 
 
 
@@ -72,8 +61,8 @@ const notifyTeachers = async () => {
         console.log(`email`, lecture);
         send({
             to: lecture.teacher.email,
-            subject: __subject(lecture),
-            text: __text(lecture),
+            subject: mailFormatter.teacherLectureRecapSubject(lecture),
+            text: mailFormatter.teacherLectureRecapBody(lecture),
         }, () => console.log(`sent email to ${lecture.teacher.email}`));
     });
 };
@@ -93,19 +82,6 @@ const job = (expression = '00 23 * * Sun-Thu') => {
     return cron.schedule(expression, notifyTeachers, { scheduled: false, timezone: "Europe/Rome" });
 };
 
-const __subject = (lecture) => `[${lecture.course.code}] ${lecture.date} lecture recap`;
-const __text = (lecture) => `
-    Dear ${lecture.teacher.name} ${lecture.teacher.surname},
-    
-    there are ${lecture.bookings} students booked for the "${lecture.course.name} - ${lecture.course.code}" lecture scheduled in date ${lecture.date} in room "${lecture.room}".
-    
-    Regards.
-    
-    -----
-    
-    This is an automatic email, please don't answer
-    PULSeBS, 2020
-`;
 
 /**
  * Send an email to a list of recipients
@@ -120,4 +96,4 @@ const send = async ({to, subject, text}, callback = _=>{}) => {
     return transport.sendMail(message, callback());
 };
 
-module.exports = { start, job, send,  notifyBooking,__subject_for_booking,__text_for_booking };
+module.exports = { start, job, send,  notifyBooking };
