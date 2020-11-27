@@ -13,6 +13,9 @@ describe('Student calendar', () => {
     beforeEach('setup fixtures (following reqs)', function () {
         setupFixtures();
     });
+    before('change date to a suitable one', () => {
+        cy.clock(Date.UTC(2020, 10, 17), ['Date']);
+    });
     before('Clear test db', () => {
         cy.db('clear');
     });
@@ -41,7 +44,7 @@ describe('Student calendar', () => {
             cy.get ('@month').should('exist');
         });
         it('should render headers', () => {
-            const headerOfCurrentWeek = moment().isoWeekday(1).format('MMM DD');
+            const headerOfCurrentWeek = 'Nov 16 – 22, 2020';
             cy.contains(headerOfCurrentWeek).should('exist');
             cy.contains('Courses').should('exist');
         });
