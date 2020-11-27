@@ -34,16 +34,15 @@ const start = (callback = _ => {}) => {
     transport.verify(callback);
 };
 
-const notifyBooking = async (booking,emailTest) => {
+const notifyBooking = async (booking) => {
 
     if (!booking) return new Promise((resolve, reject) => {reject("Undefined recipient")});
     
     const user = await userService.getUser(booking.student_id);
     const lecture = await extendedLectureService.getLectureById(booking.lecture_id);
-    const email = emailTest||user.email;
     const txt = mailFormatter.studentBookingBody(user,lecture);
     const info = await send({
-        to: email,
+        to: user.email,
         subject: mailFormatter.studentBookingSubject(lecture),
         text: txt,
     });
