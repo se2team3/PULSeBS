@@ -18,6 +18,8 @@ const teacherLectureRecapSubject = (lecture) => `[${lecture.course.code}] ${lect
 /**
  * STUDENT email functions
  */
+
+// BOOKING CONFIRMATION
 const studentBookingBody = (user, lecture) =>
     `
     Dear ${user.name} ${user.surname},
@@ -34,4 +36,21 @@ const studentBookingBody = (user, lecture) =>
 
 const studentBookingSubject = (lecture) => `[${lecture.course_name}] ${lecture.datetime} booking confirmation`;
 
-module.exports = {teacherLectureRecapBody, studentBookingBody, studentBookingSubject, teacherLectureRecapSubject}
+// LECTURE CANCELLED
+const studentCancelledLectureBody = (user, lecture) =>
+    `
+    Dear ${user.name} ${user.surname},
+    
+    We inform you that the lecture "${lecture.course_name}", scheduled in date ${lecture.datetime}, in room "${lecture.room_name}" has been cancelled.
+
+    Regards.
+    
+    -----
+    
+    This is an automatic email, please don't answer
+    PULSeBS, 2020`
+;
+
+const studentCancelledLectureSubject = (lecture) => `[${lecture.course_name}] ${lecture.datetime} lecture cancelled`;
+
+module.exports = {teacherLectureRecapBody, studentBookingBody, studentBookingSubject, teacherLectureRecapSubject, studentCancelledLectureBody, studentCancelledLectureSubject}
