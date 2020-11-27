@@ -10,8 +10,11 @@ const should = chai.should();
 const mockery = require('mockery');
 const nodemailerMock = require('nodemailer-mock');
 const db = require('../utils/db');
-var EmailUtils;
-var dbUtils;
+let EmailUtils;
+let dbUtils;
+let userService;
+let lectureService;
+
 
 /*describe('Email testing', function() {
     let inbox, mailSlurp;
@@ -62,10 +65,12 @@ describe('EmailService', function() {
             });
             mockery.registerMock('nodemailer', nodemailerMock);
             EmailUtils = require('../utils/mail');
-            dbUtils = require('../utils/db')
+            dbUtils = require('../utils/db');
+            userService = require("../services/userService");
+            lectureService = require("../services/extendedLectureService");
             EmailUtils.start();
             await dbUtils.reset();
-            await dbUtils.populate()
+            await dbUtils.populate();
 
         });
 
@@ -83,7 +88,6 @@ describe('EmailService', function() {
         it('should send a confirmation booking email ', async () => {
             const booking ={lecture_id:1,student_id:1}
             const response = await EmailUtils.notifyBooking(booking);
-            console.log(response)
             response.info.should.have.property("response", "nodemailer-mock success")          
         });
 
@@ -93,13 +97,23 @@ describe('EmailService', function() {
         });
 
         it('the email shoul have a name, a course name, a datetime and a room ', async () => {
-            const booking ={lecture_id:1,student_id:1}
+            const stud_id = 1;
+            const lect_id = 1;
+            const booking ={lecture_id:lect_id,student_id:stud_id}
             const response = await EmailUtils.notifyBooking(booking);
-            response.txt.should.match(/Micheal/);
-            response.txt.should.match(/Software Engineering 2/); 
-            response.txt.should.match(/2020-11-27/);
-            response.txt.should.match(/Aula 1/);                 
-        });
+            
+            user = await userService.getUser(stud_id);
+            const lecture = await lectureService.getLectureById(lect_id);
+       
+            let regex = new RegExp(user.name + " " + user.surname);
+            response.txt.should.match(regex);
+            regex = new RegExp(lecture.course_name);
+            response.txt.should.match(regex); 
+            regex = new RegExp(lecture.datetime);
+            response.txt.should.match(regex);  
+            regex = new RegExp(lecture.room_name);
+            response.txt.should.match(regex);         
+         });
         
     })
 })
