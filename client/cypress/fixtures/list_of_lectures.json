@@ -12,10 +12,14 @@
     "teacher_surname": "Feynman",
     "room_name": "ROOM4",
     "max_seats": 35,
-    "booking_counter": 30
+    "booking_counter": 30,
+    "booking_updated_at": "2020-11-22T14:23:00+01:00",
+    "booking_waiting": false,
+    "present": false
   },
   {
-    "id": 2,
+    "id"
+    : 2,
     "datetime": "2020-11-17T17:00:00+01:00",
     "datetime_end": "2020-11-17T18:30:00+01:00",
     "course_id": 2,
@@ -27,8 +31,11 @@
     "teacher_surname": "White",
     "room_name": "ROOM5",
     "max_seats": 35,
-    "booking_counter": 35
-  },
+    "booking_counter": 35,
+    "booking_updated_at": "2020-11-22T14:23:00+01:00",
+    "booking_waiting": false,
+    "present": false
+},
   {
     "id": 3,
     "datetime": "2020-11-21T10:00:00+01:00",
@@ -42,8 +49,10 @@
     "teacher_surname": "White",
     "room_name": "ROOM3",
     "max_seats": 42,
-    "booking_counter": 37
-  },
+    "booking_counter": 37,
+    "booking_waiting": false,
+    "present": false
+},
   {
     "id": 4,  
     "datetime": "2020-11-18T10:00:00+01:00",
@@ -57,8 +66,11 @@
     "teacher_surname": "Volta",
     "room_name": "ROOM4",
     "max_seats": 42,
-    "booking_counter": 20
-  },
+    "booking_counter": 20,
+    "booking_updated_at": "2020-11-22T14:23:00+01:00",
+    "booking_waiting": false,
+    "present": false
+},
   {
     "id": 5,  
     "datetime": "2020-11-16T08:30:00+01:00",
@@ -72,5 +84,7 @@
     "teacher_surname": "Lagrange",
     "room_name": "ROOM4",
     "max_seats": 20,
-    "booking_counter": 14
+    "booking_counter": 14,
+    "booking_waiting": false,
+    "present": false
   }]

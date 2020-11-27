@@ -139,7 +139,7 @@ class CalendarPage extends React.Component {
               <i>{eventInfo.event._def.extendedProps.room}</i><br/>
               {
                 eventInfo.view.type !== "dayGridMonth" &&
-                <div style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
+                <div data-cy="booking_status" style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
                   <b>{eventInfo.event._def.extendedProps.status}</b>
                 </div>
               }
@@ -194,7 +194,7 @@ class CalendarPage extends React.Component {
             return (
                 <Container fluid>
                   <Row>
-                    <Col sm={9} className="below-nav" >
+                    <Col sm={9} className="below-nav calendar" >
                       {this.renderCalendar(this.props.authUser?.role)}
                     </Col>
 
