@@ -59,3 +59,23 @@ describe('Login with server interaction', () => {
         cy.contains('today').should('exist');
     });
 });
+
+describe('Login with different roles', () => {
+    before('visit the page', () => {
+        cy.visit('/');
+    });
+    before('clear the cookie', () => {
+        cy.clearCookie('token', {log: true});
+    });
+    beforeEach('clear the db', () => {
+        cy.db('clear');
+    });
+    it('should properly login as a student', () => {
+        cy.login('student', { clear: false });
+        cy.getCookie('token').should('exist');
+    });
+    it('should properly login as a teacher', () => {
+        cy.login('teacher', { clear: false });
+        cy.getCookie('token').should('exist');
+    });
+});
