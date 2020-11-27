@@ -1,6 +1,6 @@
- process.env.NODE_ENV = "cypress";
+process.env.NODE_ENV = "test";
  
- const lectureDao = require('../daos/lecture_dao');
+const lectureDao = require('../daos/lecture_dao');
 const userDao = require('../daos/user_dao');
 const roomDao = require('../daos/room_dao');
 const courseDao = require('../daos/course_dao');
