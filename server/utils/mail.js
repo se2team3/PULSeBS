@@ -1,6 +1,7 @@
 const { mail } = require('../config/config');
 const nodemailer = require('nodemailer');
 const userService = require("../services/userService")
+const bookingService  = require("../services/bookingService")
 const lectureService = require("../services/lectureService")
 const extendedLectureService = require("../services/extendedLectureService")
 const mailFormatter = require('./mailFormatter');
@@ -67,6 +68,20 @@ const notifyTeachers = async () => {
     });
 };
 
+const notifyLectureCancellation = async (lecture) => {
+
+    // create query to get all booked students for a lecture
+    let bookedStudents = await bookingService.retrieveListOfBookedstudents(lecture.id);
+    // console.log(bookedStudents);
+    bookedStudents.forEach((student) => {
+        send({
+            to: student.email,
+            subject: mailFormatter.studentCancelledLectureSubject(lecture),
+            text: mailFormatter.studentCancelledLecturegBody(student,lecture),
+        }, () => console.log(`sent email to ${student.email}`));
+    });
+};
+
 /**
  * Requires a cron job (see {@link https://github.com/node-cron/node-cron|node-cron on Github}) to be
  * executed at a specific time
@@ -96,4 +111,4 @@ const send = async ({to, subject, text}, callback = _=>{}) => {
     return transport.sendMail(message, callback());
 };
 
-module.exports = { start, job, send,  notifyBooking };
+module.exports = { start, job, send,  notifyBooking, notifyLectureCancellation };

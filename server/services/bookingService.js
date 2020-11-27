@@ -42,3 +42,11 @@ exports.assertBooking = async function(student_id,lecture_id){
         return errHandler(error);
     }
 } 
+
+exports.retrieveListOfBookedstudents = async function(lecture_id){
+    try {
+        return bookingDao.retrieveListOfBookedStudents(lecture_id);
+    } catch (error) {
+        return errHandler(error);
+    }
+} 
