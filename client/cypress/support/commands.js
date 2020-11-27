@@ -24,7 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('login', (userType, options = { clear: true }) => {
+Cypress.Commands.add('login', (userType, options = { clear: false }) => {
     // create the user first in the DB
     cy.request('POST', 'http://localhost:3001/api/test/users', { userType, options })
         .its('body')
