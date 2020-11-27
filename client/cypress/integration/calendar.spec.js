@@ -28,7 +28,7 @@ describe('Calendar page', () => {
 
             cy.server();
             cy.route('GET', `/api/students/194/lectures?from=${begin}&to=${end}`).as('get')
-            
+
 
             cy.get ('button[aria-label="next"]').click(); // go to next week
             cy.contains(headerOfNextWeek).should('exist');
@@ -69,7 +69,7 @@ describe('Calendar page', () => {
             cy.get ("input").eq(0).click();
             cy.contains("free").should('not.exist');
             cy.contains("closed").should('not.exist');
-            cy.get ("input").eq(0).click();            
+            cy.get ("input").eq(0).click();
         })
     }
 
@@ -89,6 +89,8 @@ describe('Calendar page', () => {
 
   describe('calendar student basic interface, real API',()=>{
         before('visit page', () => {
+
+            cy.task('populate_cypress')
             cy.visit('/');
             cy.contains('Login').should('exist');
             cy.contains('Login').click();
@@ -97,11 +99,14 @@ describe('Calendar page', () => {
             cy.get('#password').should('exist');
             cy.get('.btn').contains('Login').should('exist');
             cy.get('#username').focus().clear()
-            .type('Elvino32@pulsebs.com');
+            .type('MicheleGialli@pulsebs.com');
             cy.get('#password').focus().clear()
-            .type('z8mwdz9xqWgaLRf')
+            .type('passw0rd')
             .type('{enter}');
             
+        });
+        after('visit page', ()=>{
+            cy.task('reset_cypress')
         });
         it('has header presence', () => {
             cy.contains(headerOfCurrentWeek);
@@ -129,7 +134,7 @@ describe('Calendar page', () => {
         })
 
         it('can book a seat', ()=>{
-            
+
             /* cy.contains("free").click()
             cy.contains("Book").click() */
             //cy.contains().click()    //to be enabled after login
@@ -181,9 +186,24 @@ describe('Calendar page', () => {
             cy.get ("input").eq(0).click();
             cy.contains("Aula 37").should('exist');
            
-        });
+        })
 
-    })
+        /* it('has lecture page', () => {
+            cy.contains("beatae").click()
+            cy.url().should('contain', '/lectures/33');
+            
+        }) */
+    });
+
+     /*   describe('calendar teacher interface with timeframe, mock API',()=>{
+            before('visit page', () => {
+                cy.route2('/api/teachers/1/lectures?from=2020-11-16&to=2020-11-22', { fixture: 'list_of_lectures.json' })
+                cy.visit('/calendar');
+            });
+            sharedTest();
+            
+
+       } );*/
     
     
 })

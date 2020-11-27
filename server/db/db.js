@@ -11,6 +11,9 @@ switch (process.env.NODE_ENV) {
     case 'populate':
         filename = 'PULSeBS.populate';
         break;
+    case 'cypress':
+        filename = 'PULSeBS.cypress'
+        break;
     default:
         filename = 'PULSeBS';
 }
