@@ -38,6 +38,7 @@ describe('Login page', () => {
         cy.get('@password').focus().type(pass);
         cy.contains(pass).should('not.exist');
     });
+    // TODO login with UI
 });
 
 describe('Login with server interaction', () => {
@@ -56,6 +57,9 @@ describe('Login with server interaction', () => {
     it('should be able to visit protected page', () => {
         cy.visit('/calendar');
         cy.contains('today').should('exist');
+        cy.contains('Welcome').should('exist');
+        cy.contains('Logout').should('exist');
+        cy.contains('Login').should('not.exist');
     });
 
     describe('Login with different roles', () => {
@@ -80,3 +84,4 @@ describe('Login with server interaction', () => {
 
 });
 
+// TODO logout
