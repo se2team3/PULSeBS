@@ -12,7 +12,8 @@ const CalendarModal = (props) => {
       }
 
     return (
-        <Modal.Dialog className="z1">
+        <Modal show={props.show} onHide={closeModal} size="lg"
+        aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header >
                 <Modal.Title>{lecture.title}</Modal.Title>
             </Modal.Header>
@@ -27,7 +28,7 @@ const CalendarModal = (props) => {
                 <Button variant="secondary" onClick={closeModal}>Close</Button>
                 
             </Modal.Footer>
-        </Modal.Dialog>
+        </Modal>
 
     );
 }
