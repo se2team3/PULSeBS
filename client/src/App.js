@@ -39,11 +39,6 @@ class App extends React.Component {
         this.setState({ authErr: err.errorObj, authUser: null });
         this.props.history.push("/login");
       }
-
-      /*if (err.status && err.status === 404) {
-        this.setState({ apiError: 404 })
-        this.props.history.push("/");
-      }*/
     }
   }
 

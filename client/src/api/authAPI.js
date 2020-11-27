@@ -40,7 +40,7 @@ async function userLogin(username, password) {
     });
 }
 
-async function userLogout(username, password) {
+async function userLogout() {
     return new Promise((resolve, reject) => {
         fetch(baseURL + '/logout', {
             method: 'POST',

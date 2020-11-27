@@ -40,7 +40,7 @@ Cypress.Commands.add('login', (userType, options = { clear: false }) => {
                     email: body.email,
                     password: body.password,
                 }
-            })
+            });
         });
 })
 

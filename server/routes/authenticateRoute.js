@@ -98,7 +98,10 @@ async function logout(req, res) {
 
 async function logged_in(req, res) {
     const user_id = req.user.sub;
-    return res.json(await userService.getUser(user_id));
+    const user = await userService.getUser(user_id);
+    if (!user)
+        return res.status(404).json();
+    return res.json(user);
 }
 
 module.exports = app;

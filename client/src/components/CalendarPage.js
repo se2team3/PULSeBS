@@ -222,6 +222,7 @@ class CalendarPage extends React.Component {
                                     handleClick = {this.changeDisplayEvent}
                                 />
                               }
+                              return null;
                             })
                           }
                         </Form>

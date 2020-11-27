@@ -41,12 +41,11 @@ describe('Login page', () => {
 });
 
 describe('Login with server interaction', () => {
-    before('visit the page', () => {
-        cy.visit('/');
-    });
-    before('clear the cookie', () => {
-        cy.clearCookie('token', {log: true});
-    });
+    beforeEach(() => {
+        // before each test, we can automatically preserve the
+        // 'token' cookie. this means it will not be cleared before the NEXT test starts.
+        Cypress.Cookies.preserveOnce('token');
+    })
     before('clear the db', () => {
         cy.db('clear');
     });
@@ -58,6 +57,7 @@ describe('Login with server interaction', () => {
         cy.visit('/calendar');
         cy.contains('today').should('exist');
     });
+
     describe('Login with different roles', () => {
         before('visit the page', () => {
             cy.visit('/');
@@ -77,5 +77,6 @@ describe('Login with server interaction', () => {
             cy.getCookie('token').should('exist');
         });
     });
+
 });
 
