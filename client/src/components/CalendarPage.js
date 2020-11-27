@@ -188,51 +188,55 @@ class CalendarPage extends React.Component {
     return (
       <>
         <AuthContext.Consumer>
-          {(context) => (
-            <Container fluid>
-              <Row>
-                <Col sm={9} className="below-nav" >
-                  {this.renderCalendar(this.props.authUser?.role)}
-                </Col>
+          {(context) => {
+            if (!context.authUser)
+              return null;
+            return (
+                <Container fluid>
+                  <Row>
+                    <Col sm={9} className="below-nav" >
+                      {this.renderCalendar(this.props.authUser?.role)}
+                    </Col>
 
-                <Col sm={3} className="sidebar">
-                <Badge className='ml-2'>
-                    <Form.Check type="checkbox"
+                    <Col sm={3} className="sidebar">
+                      <Badge className='ml-2'>
+                        <Form.Check type="checkbox"
 
-                defaultChecked={false}
-                label='Show only booked'
-                style={{fontSize:20}}
-                onClick={(ev) => this.changeDisplayEvent('statusFilter','booked',ev)}
-              />
-                    </Badge>
-                  <Nav className="px-4 py-4 col-md-12 d-none d-md-block bg-light sidebar">
-                    <h2 className="mb-3">Courses</h2>
+                                    defaultChecked={false}
+                                    label='Show only booked'
+                                    style={{fontSize:20}}
+                                    onClick={(ev) => this.changeDisplayEvent('statusFilter','booked',ev)}
+                        />
+                      </Badge>
+                      <Nav className="px-4 py-4 col-md-12 d-none d-md-block bg-light sidebar">
+                        <h2 className="mb-3">Courses</h2>
 
-                    <Form>
-                      {
-                        this.state.events.map((e) => {
-                          if (showArray.indexOf(e.subjectId) === -1) {
-                            showArray.push(e.subjectId)
-                            return <CourseBadge
-                                key = {e.subjectId}
-                                {...e}
-                                handleClick = {this.changeDisplayEvent}
-                            />
+                        <Form>
+                          {
+                            this.state.events.map((e) => {
+                              if (showArray.indexOf(e.subjectId) === -1) {
+                                showArray.push(e.subjectId)
+                                return <CourseBadge
+                                    key = {e.subjectId}
+                                    {...e}
+                                    handleClick = {this.changeDisplayEvent}
+                                />
+                              }
+                            })
                           }
-                        })
-                      }
-                    </Form>
-                  </Nav>
-                </Col>
-              </Row>
-              {this.state.modal ? 
-              <CalendarModal closeModal={this.closeModal} 
-                bookLecture={()=>this.bookLecture(context.authUser?.id ?? 1, this.state.selected.extendedProps.lectureId)}
-                lecture={this.state.selected}/> : <></>}
+                        </Form>
+                      </Nav>
+                    </Col>
+                  </Row>
+                  {this.state.modal ?
+                      <CalendarModal closeModal={this.closeModal}
+                                     bookLecture={()=>this.bookLecture(context.authUser?.id ?? 1, this.state.selected.extendedProps.lectureId)}
+                                     lecture={this.state.selected}/> : <></>}
 
-            </Container>
+                </Container>
 
-          )}
+            )
+          }}
 
 
         </AuthContext.Consumer>

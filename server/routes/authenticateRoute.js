@@ -81,6 +81,7 @@ app.post(`/login`, login);
  *                  description: "Error message"
  */
 app.post(`/logout`, authorize(), logout);
+app.get(`/logged_in`, authorize(), logged_in);
 
 async function login(req, res) {
     const user = await userService.login(req.body);
@@ -93,6 +94,11 @@ async function login(req, res) {
 
 async function logout(req, res) {
     return res.clearCookie('token').end();
+}
+
+async function logged_in(req, res) {
+    const user_id = req.user.sub;
+    return res.json(await userService.getUser(user_id));
 }
 
 module.exports = app;

@@ -23,11 +23,11 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    API.isAuthenticated().then(
-      (user) => {
+    API.isAuthenticated()
+    .then((user) => {
         this.setState({ authUser: user });
-      }
-    ).catch((err) => {
+      })
+    .catch((err) => {
       this.setState({ authErr: err.errorObj });
       this.props.history.push("/login");
     });
@@ -51,15 +51,6 @@ class App extends React.Component {
     // Update state so the next render will show the fallback UI.    
     this.handleErrors(error);
   }
-
-  /*componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service  
-    console.log(error);
-    console.log(errorInfo);
-    this.handleErrors(error);
-  }*/
-
-
 
   // Add a logout method
   logout = () => {
@@ -86,9 +77,6 @@ class App extends React.Component {
   showSidebar = () => {
     this.setState((state) => ({ openMobileMenu: !state.openMobileMenu }));
   }
-
-
-
 
   goToLecturePage = (event) => {
     this.setState({ lecture: event })
