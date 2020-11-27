@@ -72,14 +72,16 @@ const notifyLectureCancellation = async (lecture) => {
 
     // create query to get all booked students for a lecture
     let bookedStudents = await bookingService.retrieveListOfBookedstudents(lecture.id);
-    // console.log(bookedStudents);
-    bookedStudents.forEach((student) => {
+    let successfulMails = [];
+    let promises = Promise.all(bookedStudents.map((student) => {
         send({
             to: student.email,
             subject: mailFormatter.studentCancelledLectureSubject(lecture),
-            text: mailFormatter.studentCancelledLecturegBody(student,lecture),
-        }, () => console.log(`sent email to ${student.email}`));
-    });
+            text: mailFormatter.studentCancelledLectureBody(student,lecture),
+        },()=>successfulMails.push(student.email));
+    }));
+    await promises;
+    return successfulMails;
 };
 
 /**
