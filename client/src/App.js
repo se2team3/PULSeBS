@@ -39,8 +39,8 @@ class App extends React.Component {
           (user) => {
             this.setState({ authUser: user });
           }
-        ).catch((err) => {
-          this.setState({ authErr: err.errorObj, authUser: null });
+        ).catch((err2) => {
+          this.setState({ authErr: err2.errorObj, authUser: null });
           this.props.history.push("/login");
         });
       }

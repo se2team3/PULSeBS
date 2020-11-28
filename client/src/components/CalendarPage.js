@@ -137,9 +137,9 @@ class CalendarPage extends React.Component {
       let startOfWeek = moment().day(1).format("YYYY-MM-DD");
       let endOfWeek = moment().day(7).format("YYYY-MM-DD");
       API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
-          .then((res)=>{
+          .then((res2)=>{
             //this.setState(state=>{return  state.lectures: [...res] });
-            this.setState({lectures:res})
+            this.setState({lectures:res2})
             this.transformIntoEvents();
             
         })
