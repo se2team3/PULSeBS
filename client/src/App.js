@@ -26,9 +26,9 @@ class App extends React.Component {
     API.isAuthenticated()
     .then((user) => {
         this.setState({ authUser: user });
-      })
-    .catch((err) => {
-      this.setState({ authErr: err.errorObj });
+      }
+    ).catch((err) => {
+      this.setState({ authErr: err.errorObj, authUser: null });
       this.props.history.push("/login");
     });
   }
@@ -36,8 +36,14 @@ class App extends React.Component {
   handleErrors(err) {
     if (err) {
       if (err.status && err.status === 401) {
-        this.setState({ authErr: err.errorObj, authUser: null });
-        this.props.history.push("/login");
+        API.isAuthenticated().then(
+          (user) => {
+            this.setState({ authUser: user });
+          }
+        ).catch((err2) => {
+          this.setState({ authErr: err2.errorObj, authUser: null });
+          this.props.history.push("/login");
+        });
       }
     }
   }
@@ -47,11 +53,18 @@ class App extends React.Component {
     this.handleErrors(error);
   }
 
+  /*componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service  
+    console.log(error);
+    console.log(errorInfo);
+    this.handleErrors(error);
+  }*/
+
   // Add a logout method
   logout = () => {
     API.userLogout().then(() => {
       this.setState({ authUser: null, authErr: null });
-      this.props.history.push("/");
+      this.props.history.push("/login");
     });
   }
 
@@ -113,7 +126,7 @@ class App extends React.Component {
             } />
 
             <Route>
-              <Redirect to='/login'/>
+              <Redirect to='/calendar'/>
             </Route>
             
           </Switch>

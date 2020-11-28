@@ -1,5 +1,10 @@
 const { mail } = require('../config/config');
 const nodemailer = require('nodemailer');
+const userService = require("../services/userService")
+const lectureService = require("../services/lectureService")
+const extendedLectureService = require("../services/extendedLectureService")
+const mailFormatter = require('./mailFormatter');
+
 let transport;
 
 const options = {
@@ -29,15 +34,34 @@ const start = (callback = _ => {}) => {
     transport.verify(callback);
 };
 
+const notifyBooking = async (booking) => {
+
+    if (!booking) return new Promise((resolve, reject) => {reject("Undefined recipient")});
+    
+    const user = await userService.getUser(booking.student_id);
+    const lecture = await extendedLectureService.getLectureById(booking.lecture_id);
+    const txt = mailFormatter.studentBookingBody(user,lecture);
+    const info = await send({
+        to: user.email,
+        subject: mailFormatter.studentBookingSubject(lecture),
+        text: txt,
+    });
+
+    return {info,txt};
+};
+
+
+
+
 const notifyTeachers = async () => {
-    const scheduledLectures = await require('../services/lectureService').getNextDayLectures(2);
+    const scheduledLectures = await lectureService.getNextDayLectures(2);
     console.log(`scheduledLectures`, scheduledLectures);
     scheduledLectures.forEach(lecture => {
         console.log(`email`, lecture);
         send({
             to: lecture.teacher.email,
-            subject: __subject(lecture),
-            text: __text(lecture),
+            subject: mailFormatter.teacherLectureRecapSubject(lecture),
+            text: mailFormatter.teacherLectureRecapBody(lecture),
         }, () => console.log(`sent email to ${lecture.teacher.email}`));
     });
 };
@@ -57,19 +81,6 @@ const job = (expression = '00 23 * * Sun-Thu') => {
     return cron.schedule(expression, notifyTeachers, { scheduled: false, timezone: "Europe/Rome" });
 };
 
-const __subject = (lecture) => `[${lecture.course.code}] ${lecture.date} lecture recap`;
-const __text = (lecture) => `
-    Dear ${lecture.teacher.name} ${lecture.teacher.surname},
-    
-    there are ${lecture.bookings} students booked for the "${lecture.course.name} - ${lecture.course.code}" lecture scheduled in date ${lecture.date} in room "${lecture.room}".
-    
-    Regards.
-    
-    -----
-    
-    This is an automatic email, please don't answer
-    PULSeBS, 2020
-`;
 
 /**
  * Send an email to a list of recipients
@@ -84,4 +95,4 @@ const send = async ({to, subject, text}, callback = _=>{}) => {
     return transport.sendMail(message, callback());
 };
 
-module.exports = { start, job, send };
+module.exports = { start, job, send,  notifyBooking };
