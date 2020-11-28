@@ -166,7 +166,7 @@ class CalendarPage extends React.Component {
         eventContent={(eventInfo) => {
           return (
             <div style={{'font-size': '110%', 'text-overflow': 'ellipsis', 'white-space': 'nowrap', 'overflow': 'hidden'}}>
-              <b>{eventInfo.event.title}</b><br/>
+              <b className="title">{eventInfo.event.title}</b><br/>
               <i className="room">{eventInfo.event.extendedProps.room}</i><br/>
               {
                 eventInfo.view.type !== "dayGridMonth" &&

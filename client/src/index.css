@@ -17,12 +17,17 @@ code {
 }
 
 .canceled {
-  filter: brightness(60%);
+  filter: brightness(90%);
+  opacity: 75%;
 }
 
 .canceled .status {
   color: darkred !important;
   font-size: 90%;
+}
+
+.canceled .title {
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .canceled .room {
