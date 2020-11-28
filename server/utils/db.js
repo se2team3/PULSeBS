@@ -85,7 +85,7 @@ const studentObj = (university_id) => ({
 });
 
 const def_options = {
-    n_students: 50,
+    n_students: 5,
     datetime: moment().add(1,'days').format('YYYY-MM-DD'),
 };
 

@@ -18,11 +18,11 @@ describe('Lecture testing', function() {
     });
 
     beforeEach('clear db', async function() {
-        await dbUtils.reset({ create: false });
+       await dbUtils.reset({ create: false });
     });
 
     after('clear db', async function() {
-        await dbUtils.reset({ create: false });
+       await dbUtils.reset({ create: false });
     });
 
     describe('Lecture services', async function() {
@@ -79,5 +79,55 @@ describe('Lecture testing', function() {
         });
 
     })
+ 
 
+    describe('Delete lectures test', async function(){
+        
+    it('should allow teacher to delete a lecture', async function() {
+        
+        const newLecture = { teacher_id: 1, lecture_id: 1};
+       
+        const tmp = `/api/teachers/${newLecture.teacher_id}/lectures/${newLecture.lecture_id}`; await dbUtils.populate();
+        let res1 = await chai.request(server).delete(tmp).send();
+        should.exist(res1);
+        res1.should.have.status(200);
+        res1.body.should.be.an('object');
+      
+    });
+
+    
+
+ it('should not allow teacher to delete a lecture that is already deleted', async function() {
+        const newLecture = { teacher_id: 1, lecture_id: 1};
+        
+        const tmp = `/api/teachers/${newLecture.teacher_id}/lectures/${newLecture.lecture_id}`;
+        let res = await chai.request(server).delete(tmp).send();
+        should.exist(res);
+        res.should.have.status(304);
+        res.body.should.be.an('object');
+      
+    });
+
+    it('should not allow teacher to delete a lecture with wrong parameters', async function() {
+        const newLecture = { teacher_id:undefined, lecture_id: undefined};
+        
+        const tmp = `/api/teachers/${newLecture.teacher_id}/lectures/${newLecture.lecture_id}`;
+        let res = await chai.request(server).delete(tmp).send();
+        should.exist(res);
+        res.should.have.status(304);
+        res.body.should.be.an('object');
+      
+    });
+
+    it('should return an error with wrong path', async function() {
+        const newLecture = { teacher_id:undefined, lecture_id: undefined};
+        
+        const tmp = `/api/teacher/${newLecture.teacher_id}/lectures/${newLecture.lecture_id}`;
+        let res = await chai.request(server).delete(tmp).send();
+        should.exist(res);
+        res.should.have.status(404);
+        res.body.should.be.an('object');
+      
+    });
+})
 });

@@ -1,8 +1,10 @@
 const bookingService = require('../services/bookingService');
 const extendedLectureService = require('../services/extendedLectureService');
+const lectureService = require('../services/lectureService');
 const express = require('express');
 const authorize = require('../services/authorizeService');
 
+const moment = require('moment');
 const router = express.Router();
 
 /**
@@ -205,5 +207,51 @@ router.get('/lectures/:lecture_id', (req, res) => {
   const lectureId = req.params.lecture_id;
   res.status(200).json({ id: 1, course_id: "01SQNOV" });
 });*/
+
+
+
+
+
+ /**
+ * @swagger
+ * /teachers/{teacher_id}/lectures/{lecture_id}:
+ *  delete:
+ *    tags:
+ *      - lectures
+ *    summary: "Delete a lecture"
+ *    description: "Use to request a deletion for a specific lecture"
+ *    consumes:
+ *       - "application/json"
+ *    produces:
+ *       - "application/json"
+ *    responses:
+ *       "200":
+ *         description: "Successful deletion"
+ *       "304":
+ *         description: "The lecture doesn't exist or has been deleted yet"
+ *       "400":
+ *         description: "Invalid status value"
+ *    security:
+ *     - petstore_auth:
+ *       - "write:pets"
+ *       - "read:pets"
+ */
+router.delete('/teachers/:teacher_id/lectures/:lecture_id', async (req,res)=>{
+    const teacher_id= +req.params.teacher_id;
+    const lecture_id= +req.params.lecture_id;
+    const datetime= moment().format('YYYY-MM-DD HH:mm');
+    lecture={datetime:datetime,lecture_id:lecture_id}
+    try{
+        let number = await lectureService.deleteLecture(lecture);
+        if(number===1)
+            return res.status(200).json({});
+        else if (number===0) 
+            return res.status(304).json({});
+    } catch(error){
+        console.log(error)
+        res.status(400).json(error);
+    }
+})
+
 
 module.exports = router;
