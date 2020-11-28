@@ -44,3 +44,12 @@ exports.assertBooking = async function(student_id,lecture_id){
         return errHandler(error);
     }
 } 
+
+exports.deleteBooking = async function(booking) {
+    try {
+        let number = await bookingDao.deleteBooking({...booking});
+        return number;
+    } catch (error) {
+        return errHandler(error);
+    }
+}
