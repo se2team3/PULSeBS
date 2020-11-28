@@ -49,8 +49,8 @@ function LecturePage(props) {
                                     Teacher: {lecture.teacher_surname} {lecture.teacher_name}
                             </Card.Text>
                             {lecture.deleted_at == null && <>
-                                {!lecture.virtual && <Button block variant="warning">Change to distance lecture</Button>}
-                                <Button block variant="danger">Cancel lecture</Button>
+                                {(!lecture.virtual && moment(lecture.datetime).diff(moment(),'minutes') >= 30) && <Button block variant="warning">Change to distance lecture</Button>}
+                                {moment(lecture.datetime).diff(moment(),'hours') >= 1&&<Button block variant="danger">Cancel lecture</Button>}
                             </>}
                         </Card.Body>
                     </Card>
