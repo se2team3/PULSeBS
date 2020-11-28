@@ -133,6 +133,14 @@ describe('EmailService', function() {
             response.should.have.length(studentsLength);
             allstudentsReceived.should.be.true;
          });
+
+         it('check cancellation email sent to students', async () => {
+            const lecture = {id :'dffdfdkkl'}; //invalid lecture id
+
+            const response = await EmailUtils.notifyLectureCancellation(lecture);
+                    
+            response.should.have.property('message','Invalid lecture!');
+         });
         
     })
 })

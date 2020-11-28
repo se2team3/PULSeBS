@@ -1,7 +1,7 @@
 const { mail } = require('../config/config');
 const nodemailer = require('nodemailer');
 const userService = require("../services/userService")
-const bookingService  = require("../services/bookingService")
+const bookingService = require("../services/bookingService")
 const lectureService = require("../services/lectureService")
 const extendedLectureService = require("../services/extendedLectureService")
 const mailFormatter = require('./mailFormatter');
@@ -26,7 +26,7 @@ const defaults = {
  * Starts the mail service
  * @param {function} callback - to be called after the initialization is done
  */
-const start = (callback = _ => {}) => {
+const start = (callback = _ => { }) => {
     // TODO: check if the 'mail' parameters are set
     transport = nodemailer.createTransport(options, defaults);
 
@@ -35,21 +35,21 @@ const start = (callback = _ => {}) => {
     transport.verify(callback);
 };
 
-const notifyBooking = async (booking,emailTest) => {
+const notifyBooking = async (booking, emailTest) => {
 
-    if (!booking) return new Promise((resolve, reject) => {reject("Undefined recipient")});
-    
+    if (!booking) return new Promise((resolve, reject) => { reject("Undefined recipient") });
+
     const user = await userService.getUser(booking.student_id);
     const lecture = await extendedLectureService.getLectureById(booking.lecture_id);
-    const email = emailTest||user.email;
-    const txt = mailFormatter.studentBookingBody(user,lecture);
+    const email = emailTest || user.email;
+    const txt = mailFormatter.studentBookingBody(user, lecture);
     const info = await send({
         to: email,
         subject: mailFormatter.studentBookingSubject(lecture),
         text: txt,
     });
 
-    return {info,txt};
+    return { info, txt };
 };
 
 
@@ -57,7 +57,6 @@ const notifyBooking = async (booking,emailTest) => {
 
 const notifyTeachers = async () => {
     const scheduledLectures = await lectureService.getNextDayLectures(2);
-    console.log(`scheduledLectures`, scheduledLectures);
     scheduledLectures.forEach(lecture => {
         console.log(`email`, lecture);
         send({
@@ -71,17 +70,24 @@ const notifyTeachers = async () => {
 const notifyLectureCancellation = async (lecture) => {
 
     // create query to get all booked students for a lecture
-    let bookedStudents = await bookingService.retrieveListOfBookedstudents(lecture.id);
-    let successfulMails = [];
-    let promises = Promise.all(bookedStudents.map((student) => {
-        send({
-            to: student.email,
-            subject: mailFormatter.studentCancelledLectureSubject(lecture),
-            text: mailFormatter.studentCancelledLectureBody(student,lecture),
-        },()=>successfulMails.push(student.email));
-    }));
-    await promises;
-    return successfulMails;
+    try {
+        let existingLecture = await lectureService.getLecture(lecture.id);
+        if(!existingLecture) throw Error('Invalid lecture!');
+        let bookedStudents = await bookingService.retrieveListOfBookedstudents(lecture.id);
+        let successfulMails = [];
+        let promises = Promise.all(bookedStudents.map((student) => {
+            send({
+                to: student.email,
+                subject: mailFormatter.studentCancelledLectureSubject(lecture),
+                text: mailFormatter.studentCancelledLectureBody(student, lecture),
+            }, () => successfulMails.push(student.email));
+        }));
+        await promises;
+        return successfulMails;
+    } catch (error) {
+        return error;
+    }
+
 };
 
 /**
@@ -108,9 +114,9 @@ const job = (expression = '00 23 * * Sun-Thu') => {
  * @param {function} callback - is executed after the email is sent
  * @returns {Promise<any>}
  */
-const send = async ({to, subject, text}, callback = _=>{}) => {
-    const message = {to, subject, text};
+const send = async ({ to, subject, text }, callback = _ => { }) => {
+    const message = { to, subject, text };
     return transport.sendMail(message, callback());
 };
 
-module.exports = { start, job, send,  notifyBooking, notifyLectureCancellation };
+module.exports = { start, job, send, notifyBooking, notifyLectureCancellation };
