@@ -17,9 +17,10 @@ exports.addLecture = async function(lecture) {
         return errHandler(error);
     }
 }
+
 exports.deleteLecture = async function(lecture){
     try {
-        let response= lectureDao.deleteLecture({...lecture});
+        let response= await lectureDao.deleteLecture({...lecture});
         return response;
 
     } catch (error) {
