@@ -13,7 +13,7 @@ describe('Student calendar', () => {
     beforeEach('setup fixtures (following reqs)', function () {
         setupFixtures();
     });
-    before('change date to a suitable one', () => {
+    beforeEach('change date to a suitable one', () => {
         cy.clock(Date.UTC(2020, 10, 17), ['Date']);
     });
     before('Clear test db', () => {
