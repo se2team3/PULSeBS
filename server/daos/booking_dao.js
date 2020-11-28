@@ -47,8 +47,7 @@ exports.insertBooking = function ({ lecture_id, student_id }) {
             if (err) {
                 const sql = 'UPDATE Bookings SET deleted_at= NULL WHERE lecture_id= ? AND student_id= ? AND deleted_at IS NOT NULL'
                 db.run(sql, [ lecture_id, student_id], function (err) {
-                    if (err) {
-                        console.log(err)
+                    if (err || this.changes===0) {
                         reject(err);
                     }
                     else{
