@@ -12,6 +12,20 @@ code {
     monospace;
 }
 
-.fc-event{
+.clickable {
   cursor: pointer;
+}
+
+.canceled {
+  filter: brightness(60%);
+}
+
+.canceled .status {
+  color: darkred !important;
+  font-size: 90%;
+}
+
+.canceled .room {
+  text-decoration: line-through;
+  font-size: 90%;
 }
