@@ -1,26 +1,33 @@
 /// <reference types="cypress" />
 import moment from 'moment';
 
+const setupIntercept = function () {
+    // lectures info
+    cy.fixture('list_of_lectures').as('lectures').then(function (lectures) {
+        this.lectures = lectures;
+        cy.intercept({ pathname: /\/api\/students\/[0-9]+\/lectures/ }, lectures);
+    });
+    // user info
+    cy.fixture('student1').as('student').then(function (student) {
+        this.student = student;
+        cy.intercept('/api/user', { statusCode: 200, body: student});
+        cy.intercept('/api/login', student);
+    });
+}
+/*
+ TODO:  here it seems that the beforeEach hook is not executed the first time.
+        Try to make it work with a single hook
+*/
+beforeEach('intercept routes', function () {
+    setupIntercept();
+});
+before('intercept routes', function () {
+    setupIntercept();
+});
+
 describe('Student calendar', () => {
-    beforeEach(() => {
-        // before each test, we can automatically preserve the
-        // 'token' cookie. this means it will not be cleared before the NEXT test starts.
-        Cypress.Cookies.preserveOnce('token');
-    });
-    before('setup fixtures (first req)', function () {
-        setupFixtures();
-    });
-    beforeEach('setup fixtures (following reqs)', function () {
-        setupFixtures();
-    });
-    beforeEach('change date to a suitable one', () => {
+    before('change date to a suitable one', () => {
         cy.clock(Date.UTC(2020, 10, 17), ['Date']);
-    });
-    before('Clear test db', () => {
-        cy.db('clear');
-    });
-    before('Login as a student', () => {
-        cy.login('student');
     });
     before('Visit calendar page', () => {
        cy.visit('/calendar');
@@ -98,12 +105,3 @@ describe('Student calendar', () => {
         });
     });
 });
-
-const setupFixtures = function () {
-    cy.fixture('list_of_lectures').as('lectures').then(function (lectures) {
-        this.lectures = lectures;
-        cy.route2({
-            pathname: /\/api\/students\/[0-9]+\/lectures/
-        }, lectures);
-    });
-}
