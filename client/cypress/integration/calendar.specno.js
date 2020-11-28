@@ -58,10 +58,7 @@ describe('Calendar page', () => {
             
         })
 
-        it('has month button working', () => {
-            
-            cy.get ("button").eq(6).click();
-            cy.get(<div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"></div>)
+        it('has month button working', () => {cy.intercept('/api/user', { fixture: 'teacher1.json'}) fc-scrollgrid-sync-inner"></div>)
             cy.get ("button").eq(4).click();
             
         })

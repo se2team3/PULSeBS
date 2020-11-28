@@ -1,18 +1,18 @@
 describe('Calendar modal to book a lecture or cancel a booking',()=>{
     before('visit page', () => {
-        cy.clock(Date.UTC(2020,10,17),['Date'])
         cy.intercept('/api/user', { fixture: 'student1.json'})
         cy.intercept('/api/students/1/lectures', {fixture: 'lecturesCalendarModal.json'})
         cy.visit('/calendar');
     });
+    beforeEach('set date', () => {
+        cy.clock(Date.UTC(2020,10,17),['Date'])
+    });
     describe('book a lecture and then cancel it',()=>{
         it('find a free lecture', () => {
-            cy.clock(Date.UTC(2020,10,17),['Date'])
             cy.contains("free").click();
             cy.contains("available seats");
         })
         it('book a seat', () => {
-            cy.clock(Date.UTC(2020,10,17),['Date'])
             cy.intercept('/api/students/1/lectures', {fixture: 'lecturesCalendarModalBooked.json'}).as('getAfterBooked')
             cy.intercept('/api/students/1/bookings', {
                 statusCode: 201,
@@ -25,7 +25,6 @@ describe('Calendar modal to book a lecture or cancel a booking',()=>{
             cy.contains("Cancel booking");
         })
         it('cancel booking', () => {
-            cy.clock(Date.UTC(2020,10,17),['Date'])
             cy.intercept('/api/students/1/lectures', {fixture: 'lecturesCalendarModal.json'}).as('getAfterCancel')
             cy.intercept('/api/students/1/bookings', {
                 statusCode: 200,
