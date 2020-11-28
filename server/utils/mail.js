@@ -71,16 +71,18 @@ const notifyLectureCancellation = async (lecture) => {
 
     // create query to get all booked students for a lecture
     try {
-        let existingLecture = await lectureService.getLecture(lecture.id);
+        let existingLecture = await extendedLectureService.getLectureById(lecture.id);
         if(!existingLecture) throw Error('Invalid lecture!');
         let bookedStudents = await bookingService.retrieveListOfBookedstudents(lecture.id);
         let successfulMails = [];
         let promises = Promise.all(bookedStudents.map((student) => {
+            let mailText = mailFormatter.studentCancelledLectureBody(student, existingLecture);
+            let mailSubject = mailFormatter.studentCancelledLectureSubject(existingLecture);
             send({
                 to: student.email,
-                subject: mailFormatter.studentCancelledLectureSubject(lecture),
-                text: mailFormatter.studentCancelledLectureBody(student, lecture),
-            }, () => successfulMails.push(student.email));
+                subject: mailSubject,
+                text: mailText,
+            }, () => successfulMails.push({to: student.email, text: mailText}));
         }));
         await promises;
         return successfulMails;

@@ -10,6 +10,7 @@ const should = chai.should();
 const mockery = require('mockery');
 const nodemailerMock = require('nodemailer-mock');
 const db = require('../utils/db');
+const mailFormatter = require('../utils/mailFormatter');
 let EmailUtils;
 let dbUtils;
 let userService;
@@ -117,29 +118,42 @@ describe('EmailService', function() {
             response.txt.should.match(regex);         
          });
 
-         it('check cancellation email sent to students', async () => {
+         it('should send cancellation email sent to students', async () => {
             const lecture = {id :1};
 
             const response = await EmailUtils.notifyLectureCancellation(lecture);
             
             const studentsList = await bookingService.retrieveListOfBookedstudents(lecture.id);
 
-            //const lecture = await lectureService.getLectureById(lect_id);
             let studentsEmails = studentsList.map((s)=>s.email);
 
-            let allstudentsReceived = response.every((email)=>studentsEmails.includes(email)); // everyone received the mail
+            let allstudentsReceived = response.every((email)=>studentsEmails.includes(email.to)); // everyone received the mail
             let studentsLength = studentsList.length; 
             response.should.be.a('array');
             response.should.have.length(studentsLength);
             allstudentsReceived.should.be.true;
          });
 
-         it('check cancellation email sent to students', async () => {
+         it('should fail because of non-existing lecture', async () => {
             const lecture = {id :'dffdfdkkl'}; //invalid lecture id
 
             const response = await EmailUtils.notifyLectureCancellation(lecture);
                     
             response.should.have.property('message','Invalid lecture!');
+         });
+
+         it('should check cancellation email body', async () => {
+            const lecture = {id :1};
+
+            const response = await EmailUtils.notifyLectureCancellation(lecture);
+            const lectureObj = await lectureService.getLectureById(lecture.id);
+            const studentsList = await bookingService.retrieveListOfBookedstudents(lecture.id);
+
+            let firstStudent = studentsList[0];
+            let emailBody = mailFormatter.studentCancelledLectureBody(firstStudent,lectureObj);
+            let firstMail = response[0];
+
+            firstMail.text.should.equal(emailBody);
          });
         
     })
