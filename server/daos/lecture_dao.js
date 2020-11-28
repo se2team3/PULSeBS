@@ -123,16 +123,18 @@ const lectureInfo = (rows) => {
 
 exports.deleteLecture = function ({ datetime, lecture_id}) {
     return new Promise((resolve, reject) => {
-
-        const sql = 'UPDATE Lectures SET deleted_at= ? WHERE id= ? AND deleted_at IS NULL'
-        db.run(sql, [datetime, lecture_id], function (err) {
+        const sql = `UPDATE Lectures SET deleted_at= ? 
+                     WHERE id= ? AND deleted_at IS NULL
+                    AND (julianday(datetime)-julianday(?))*24 >1`
+        db.run(sql, [datetime,lecture_id,datetime], function(err) {
             if (err) {
                 console.log(err)
                 reject(err);
             }
-            else
+            else{
                 resolve(this.changes);
-
-        });
+            }
+        }); 
+      
     })
 }
