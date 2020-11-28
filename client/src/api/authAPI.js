@@ -2,7 +2,7 @@ const baseURL = '/api';
 
 async function isAuthenticated() {
 
-    let url = "/logged_in";
+    let url = "/user";
     const response = await fetch(baseURL + url);
     const userJson = await response.json();
     if (response.ok) {
@@ -11,21 +11,6 @@ async function isAuthenticated() {
         let err = { status: response.status, errObj: userJson };
         throw err;  // An object with the error coming from the server
     }
-
-    /*return new Promise((resolve, reject) => {
-        fetch(baseURL + '/logged_in').then((response) => {
-            if (response.ok) {
-                response.json().then((user) => {
-                    resolve(user);
-                });
-            } else {
-                // analyze the cause of error
-                response.json()
-                    .then((obj) => { reject(obj); }) // error msg in the response body
-                    .catch((err) => { reject({messsage: "Cannot parse server response" })}); // something else
-            }
-        }).catch((err) => { reject({ errors: [{ param: "Server", msg: "Cannot communicate" }] }) }); // connection errors
-    });*/
 }
 
 async function userLogin(username, password) {
