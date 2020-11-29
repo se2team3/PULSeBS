@@ -247,7 +247,6 @@ router.delete('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=
             return res.status(200).json({});
         else if (number===0) 
             return res.status(304).json({});
-            return number;
     } catch(error){
         console.log(error)
         res.status(400).json(error);
