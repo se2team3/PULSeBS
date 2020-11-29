@@ -3,7 +3,7 @@ const extendedLectureService = require('../services/extendedLectureService');
 const lectureService = require('../services/lectureService');
 const express = require('express');
 const authorize = require('../services/authorizeService');
-
+const role = require('../utils/roles');
 const moment = require('moment');
 const router = express.Router();
 
@@ -236,8 +236,8 @@ router.get('/lectures/:lecture_id', (req, res) => {
  *       - "write:pets"
  *       - "read:pets"
  */
-router.delete('/lectures/:lecture_id', async (req,res)=>{
-    const teacher=req.user && req.user.user;
+router.delete('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=>{
+    const teacher=req.user.sub
     const lecture_id= +req.params.lecture_id;
     const datetime= moment().format('YYYY-MM-DD HH:mm');
     lecture={datetime:datetime,lecture_id:lecture_id,teacher:teacher}
@@ -247,6 +247,7 @@ router.delete('/lectures/:lecture_id', async (req,res)=>{
             return res.status(200).json({});
         else if (number===0) 
             return res.status(304).json({});
+            return number;
     } catch(error){
         console.log(error)
         res.status(400).json(error);

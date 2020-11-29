@@ -127,7 +127,7 @@ exports.deleteLecture = function ({ datetime, lecture_id,teacher}) {
                      WHERE id= ? AND deleted_at IS NULL
                     AND (julianday(datetime)-julianday(?))*24 >1
                     AND id in (SELECT L2.id FROM Lectures L2, Courses C, Users U
-                               WHERE  L2.course_id=C.id AND C.teacher_id=U.id AND U.role='teacher' AND U.email=? )`
+                               WHERE  L2.course_id=C.id AND C.teacher_id=U.id AND U.role='teacher' AND U.id=? )`
         db.run(sql, [datetime,lecture_id,datetime,teacher], function(err) {
             if (err) {
                 console.log(err)

@@ -14,11 +14,16 @@ chai.use(chaiHttp);
 
 
 const deletion= async function (lecture_id){
-    const newLecture = { lecture_id: lecture_id};
+
+    const credentials={ email: "email@host.com", password: "passw0rd"}
+    const agent = chai.request.agent(server);
+    res2=await agent.post(`/api/login`).send(credentials);
+   
+
+    const newLecture = { lecture_id: lecture_id };
     const tmp = `/api/lectures/${newLecture.lecture_id}`; 
-    let res = await chai.request(server).delete(tmp).send();
-    should.exist(res);
-    res.body.should.be.an('object');
+    let res = await agent.delete(tmp).send();
+
     return res.status;
 }
 
@@ -28,15 +33,15 @@ const deletion= async function (lecture_id){
 describe('Lecture testing', function() {
     before('create tables and clear db', async function() {
         await dbUtils.reset();
-    });
+    }); 
 
      
 
     after('clear db', async function() {
        await dbUtils.reset({ create: false });
-    });
+    }); 
 
-     describe('Lecture services', async function() {
+      describe('Lecture services', async function() {
          beforeEach('clear db', async function() {
             await dbUtils.reset({ create: false });
          });
@@ -97,16 +102,19 @@ describe('Lecture testing', function() {
             res.body.should.be.an('object');
         });
 
-    })
+    }) 
   
 
     describe('Delete lectures test', async function(){
-        before('create tables and clear db', async function() {
+        before('create tables,clear db and teacher login', async function() {
             await dbUtils.reset();
             await dbUtils.populate();
+           
+           
+            
         })
-
-        it('should not allow deletion because it is a past lecture', async function() {
+       
+         it('should not allow deletion because it is a past lecture', async function() {
             var clock = sinon.useFakeTimers(new Date(2020, 10, 30, 16, 30));
             let res=await deletion(1);
             res.should.be.equal(304);
@@ -116,31 +124,37 @@ describe('Lecture testing', function() {
 
         it('should not allow deletion because it is remaining less than 1h', async function() {
             var clock = sinon.useFakeTimers(new Date(2020, 10, 29, 16, 20));
-            let res=await deletion(1,1);
+            let res=await deletion(1);
             res.should.be.equal(304);
             clock.restore();
         
         });    
 
         it('should allow teacher to delete a lecture', async function() {
+            var clock = sinon.useFakeTimers(new Date(2020, 10, 29, 14, 30));
             let res=await deletion(1);
             res.should.be.equal(200);
+            clock.restore();
         });
 
     
 
         it('should not allow teacher to delete a lecture that is already deleted', async function() {
+            var clock = sinon.useFakeTimers(new Date(2020, 10, 29, 14, 30));
             let res=await deletion(1);
             res.should.be.equal(304);
+            clock.restore();
             
         
         });
 
         it('should not allow teacher to delete a lecture with wrong parameters', async function() {
+            var clock = sinon.useFakeTimers(new Date(2020, 10, 29, 14, 30));
             let res=await deletion(undefined);
             res.should.be.equal(304);
+            clock.restore();
         
-        });
+        }); 
 
         
 
