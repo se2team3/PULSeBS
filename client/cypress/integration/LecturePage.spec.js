@@ -3,9 +3,9 @@
 describe('Lecture page', () => {
     describe('presence lecture with bookings',()=>{
         before('visit page', () => {
-            cy.intercept('/api/user', { fixture: 'teacher1.json'})
-            cy.intercept('/api/lectures/1/bookings', { fixture: 'lecture1bookings.json' })
-            cy.intercept('/api/lectures/1', { fixture: 'lecture1.json' })
+            cy.intercept('GET','/api/user', { fixture: 'teacher1.json'})
+            cy.intercept('GET','/api/lectures/1/bookings', { fixture: 'lecture1bookings.json' })
+            cy.intercept('GET','/api/lectures/1', { fixture: 'lecture1.json' })
             cy.visit('/lectures/1');
         });
         it('has course name', () => {
@@ -19,23 +19,41 @@ describe('Lecture page', () => {
 
     describe('cancel lecture',()=>{
         beforeEach('visit page', () => {
-            cy.intercept('/api/user', { fixture: 'teacher1.json'});
-            cy.intercept('/api/lectures/1/bookings', { fixture: 'lecture1bookings.json' });
-            cy.intercept('/api/lectures/1', { fixture: 'lecture1.json' }).as('getLecture');
+            cy.intercept('GET','/api/user', { fixture: 'teacher1.json'})
+            cy.intercept('GET','/api/lectures/1/bookings', { fixture: 'lecture1bookings.json' })
+            
         });
 
         it('button visible more than one hour before', () => {
+            cy.intercept('GET','/api/lectures/1', { fixture: 'lecture1.json' }).as('getLecture')
             cy.clock(Date.UTC(2020,10,19,6,0),['Date'])
             cy.visit('/lectures/1');
-            cy.wait('@getLecture');
+            cy.wait(['@getLecture']);
             cy.contains("Cancel lecture");
         })
 
+        it('button cancels lecture when clicked more than one hour before', () => {
+            cy.intercept('GET','/api/lectures/1', { fixture: 'lecture1.json' }).as('getLecture')
+            cy.clock(Date.UTC(2020,10,19,6,0),['Date'])
+            cy.visit('/lectures/1');
+            cy.wait(['@getLecture']);
+            cy.intercept('DELETE','/api/lectures/1',{
+                statusCode: 200,
+                body: 'it worked!'
+              }).as('deleteLecture');
+            cy.intercept('GET','/api/lectures/1', { fixture: 'lecture1deleted.json' }).as('getLectureAfterDelete');//FIXME cypress does not like this for some reason
+            cy.contains("Cancel lecture").click();
+            cy.wait(['@deleteLecture']);
+            cy.wait(['@getLectureAfterDelete']);
+            cy.contains('Cancel lecture').should('not.exist')
+        })
+
         it('button is not visible less than one hour before', () => {
+            cy.intercept('GET','/api/lectures/1', { fixture: 'lecture1.json' }).as('getLecture')
             cy.clock(Date.UTC(2020,10,19,7,0),['Date'])
             cy.visit('/lectures/1');
             cy.wait('@getLecture');
-            cy.contains('Cancel lecture').should('not.exist')
+            cy.contains('Cancel lecture').should('not.exist');
         })
     })
     
