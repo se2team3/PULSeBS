@@ -32,6 +32,10 @@ describe('Lecture page', () => {
             cy.contains("Cancel lecture");
         })
 
+        it('has no red alert if not cancelled', () => {
+            cy.contains('This lecture has been cancelled!').should('not.exist');
+        })
+
         it('load lecture not cancelled', () => {
             cy.intercept('GET','/api/lectures/1', {fixture:'lecture1.json'}).as('getLecture')
             cy.clock(Date.UTC(2020,10,19,6,0),['Date'])
