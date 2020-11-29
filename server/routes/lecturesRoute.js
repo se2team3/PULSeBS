@@ -240,7 +240,7 @@ router.delete('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=
     const teacher=req.user.sub
     const lecture_id= +req.params.lecture_id;
     const datetime= moment().format('YYYY-MM-DD HH:mm');
-    lecture={datetime:datetime,lecture_id:lecture_id,teacher:teacher}
+    const lecture={datetime:datetime,lecture_id:lecture_id,teacher:teacher}
     try{
         let number = await lectureService.deleteLecture(lecture);
         if(number===1)

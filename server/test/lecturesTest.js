@@ -15,9 +15,10 @@ chai.use(chaiHttp);
 
 const deletion= async function (lecture_id){
 
-    const credentials={ email: "email@host.com", password: "passw0rd"}
+    const t= dbUtils.teacherObj('1');
+    const credentials={email:t.email, password:t.password}
     const agent = chai.request.agent(server);
-    res2=await agent.post(`/api/login`).send(credentials);
+    await agent.post(`/api/login`).send(credentials);
    
 
     const newLecture = { lecture_id: lecture_id };
