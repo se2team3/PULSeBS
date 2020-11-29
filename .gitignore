@@ -8,3 +8,4 @@
 /server/.nyc_output
 /server/coverage
 /client/coverage
+/node_modules
