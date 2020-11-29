@@ -44,10 +44,10 @@ app.get('/students/:student_id/lectures', authorize(role.Student),timeValidator.
     const student_id = +req.params.student_id;
     const {from, to} = req.query;
     try{
-        let lectures = await studentService.getStudentLecture(student_id);
+        let lectures = await studentService.getStudentLectures(student_id, from, to);
         return res.status(200).json(lectures);
     } catch(error){
-        res.json(error);
+        res.status(400).json(error);
     }
 })
 
@@ -78,12 +78,12 @@ app.get('/students/:student_id/lectures', authorize(role.Student),timeValidator.
  *       - "read:pets"
  */
 
-app.get('/students/:lecture_id/', authorize(role.Student), async(req,res) =>{
-    const lecture_id= + req.params.student_id;
-    const student_id=req.user && req.user.user;
+app.get('/students/:lecture_id/',authorize(role.Student), async(req,res) =>{
+    const lecture_id= req.params.lecture_id;
+    const student_id=req.user && req.user.sub;
     try{
         let bool = await bookingService.assertBooking(lecture_id,student_id);
-        return res.status(201).json(bool);
+        return res.status(200).json(bool);
     } catch(error){
         res.json(error);
     }

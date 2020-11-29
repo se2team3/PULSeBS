@@ -7,8 +7,8 @@ import listPlugin from '@fullcalendar/list';
 import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CalendarModal from './CalendarModal';
-import API from '../api';
 import CourseBadge from "./CourseBadge"
+import API from '../api';
 
 class CalendarPage extends React.Component {
   constructor(props) {

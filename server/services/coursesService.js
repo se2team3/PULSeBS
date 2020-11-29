@@ -1,4 +1,5 @@
 const coursesDao = require('../daos/course_dao');
+const lectureDao = require('../daos/lecture_dao')
 const errHandler = require('./errorHandler');
 
 exports.createCoursesTable = async function() {    
@@ -34,3 +35,11 @@ exports.deleteCourses = async function(){
         return errHandler(error);
     }
 } 
+exports.getLectures = async function(course_id){
+    console.log(course_id)
+    try{
+        return lectureDao.getLectures(course_id);
+    } catch(error){
+        return errHandler(error);
+    }
+}

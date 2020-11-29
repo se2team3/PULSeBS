@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import { Alert, Button, Card, Col, Container, Form, Row, Table } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Container, Row, Table } from 'react-bootstrap';
 import API from '../api';
 
 function LecturePage(props) {
@@ -79,8 +79,8 @@ function LecturePage(props) {
                                 <th>#</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
-                                <th>Waiting list</th>
-                                <th>Present</th>
+                                {/*<th>Waiting list</th>
+                                <th>Present</th>*/}
                             </tr>
                         </thead>
                         <tbody>
@@ -89,8 +89,8 @@ function LecturePage(props) {
                                     <td>{b.student_university_id}</td>
                                     <td>{b.student_name}</td>
                                     <td>{b.student_surname}</td>
-                                    <td>{b.waiting ? "Yes" : "No"}</td>
-                                    <td>{!b.waiting && <Form.Check type="checkbox" checked={b.present} />}</td>
+                                    {/*<td>{b.waiting ? "Yes" : "No"}</td>
+                                    <td>{!b.waiting && <Form.Check type="checkbox" checked={b.present} />}</td>*/}
                                 </tr>
                             )}
                         </tbody>
