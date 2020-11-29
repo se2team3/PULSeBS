@@ -54,6 +54,7 @@ exports.retrieveStudentCourses = function({student_id}) {
             if (!rows)
                 resolve(null);
             else{
+                console.log(rows)
                 resolve(rows);
             }               
         });

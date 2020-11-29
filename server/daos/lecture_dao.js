@@ -118,3 +118,19 @@ const lectureInfo = (rows) => {
         bookings: row.n_booked
     }));
 };
+
+//get the list of all lectures for a course
+exports.getLectures = function(course_id) {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT * FROM Lectures WHERE course_id = ?'
+        db.all(sql, [course_id], (err, rows) => {
+            if(err)
+                return reject(err);
+            if (!rows)
+                resolve(null);
+            else{
+                resolve(rows);
+            }               
+        });
+    })
+};
