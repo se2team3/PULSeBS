@@ -12,7 +12,10 @@
     "teacher_surname": "Feynman",
     "room_name": "ROOM4",
     "max_seats": 35,
-    "booking_counter": 30
+    "booking_counter": 30,
+    "booking_updated_at": "2020-11-22T14:23:00+01:00",
+    "booking_waiting": false,
+    "present": false
   },
   {
     "id": 2,
