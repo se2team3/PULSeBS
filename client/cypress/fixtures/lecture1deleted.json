@@ -1,0 +1,15 @@
+{
+    "id": 1,
+    "datetime": "2020-11-19 08:30:00.000+01:00",
+    "datetime_end": "2020-11-19 11:30:00.000+01:00",
+    "course_id": 42,
+    "room_id": 5,
+    "virtual": false,
+    "deleted_at": "2020-11-19 07:00:00.000+01:00",
+    "course_name": "Physics I",
+    "teacher_name": "Mario",
+    "teacher_surname": "Rossi",
+    "room_name": "1B",
+    "max_seats": 35,
+    "booking_counter": 12
+}

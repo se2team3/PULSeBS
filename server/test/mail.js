@@ -105,7 +105,7 @@ describe('EmailService', function() {
             const booking ={lecture_id:lect_id,student_id:stud_id}
             const response = await EmailUtils.notifyBooking(booking);
             
-            user = await userService.getUser(stud_id);
+            const user = await userService.getUser(stud_id);
             const lecture = await lectureService.getLectureById(lect_id);
        
             let regex = new RegExp(user.name + " " + user.surname);

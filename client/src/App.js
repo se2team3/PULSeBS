@@ -13,6 +13,7 @@ import { AuthContext } from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
 import CalendarPage from './components/CalendarPage';
 
+// INITIALIZE PULSEBS-7 BRANCH
 class App extends React.Component {
 
 
@@ -27,7 +28,7 @@ class App extends React.Component {
         this.setState({ authUser: user });
       }
     ).catch((err) => {
-      this.setState({ authErr: err.errorObj });
+      this.setState({ authErr: err.errorObj, authUser: null });
       this.props.history.push("/login");
     });
   }
@@ -35,8 +36,14 @@ class App extends React.Component {
   handleErrors(err) {
     if (err) {
       if (err.status && err.status === 401) {
-        this.setState({ authErr: err.errorObj, authUser: null });
-        this.props.history.push("/login");
+        API.isAuthenticated().then(
+          (user) => {
+            this.setState({ authUser: user });
+          }
+        ).catch((err2) => {
+          this.setState({ authErr: err2.errorObj, authUser: null });
+          this.props.history.push("/login");
+        });
       }
 
       /*if (err.status && err.status === 404) {
@@ -129,12 +136,7 @@ class App extends React.Component {
             } />
 
             <Route>
-              <Redirect to='/login'/>
-            </Route>
-
-            // TODO: remove duplicated ?
-            <Route>
-              <Redirect to='/login' />
+              <Redirect to='/calendar'/>
             </Route>
             
           </Switch>

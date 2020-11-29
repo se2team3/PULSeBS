@@ -1,6 +1,7 @@
 const bookingDao = require('../daos/booking_dao');
 const bookingExtendedDao = require('../daos/booking_extended_dao');
 const errHandler = require('./errorHandler');
+const mailUtils = require("../utils/mail");
 
 exports.createBookingTable = async function() {    
     try{
@@ -13,6 +14,7 @@ exports.createBookingTable = async function() {
 exports.insertBooking = async function(booking) {
     try {
         let book = await bookingDao.insertBooking({...booking});
+        mailUtils.notifyBooking(book);
         return book;
     } catch (error) {
         return errHandler(error);
@@ -50,3 +52,11 @@ exports.retrieveListOfBookedstudents = async function(lecture_id){
         return errHandler(error);
     }
 } 
+exports.deleteBooking = async function(booking) {
+    try {
+        let number = await bookingDao.deleteBooking({...booking});
+        return number;
+    } catch (error) {
+        return errHandler(error);
+    }
+}

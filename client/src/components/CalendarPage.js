@@ -28,10 +28,14 @@ class CalendarPage extends React.Component {
     let startOfWeek = moment().day(1).format("YYYY-MM-DD");
     let endOfWeek = moment().day(7).format("YYYY-MM-DD");
 
+    if(!this.props.authUser)
+      throw {status: 401, errorObj: "no authUser specified"}
+
     console.log(startOfWeek + ' '+ endOfWeek);
     API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
     .then((res)=>{
       console.log("RES"+res[0].course_id)
+      res[3].deleted_at = "2020-11-19 08:30:00.000+01:00";
       //this.setState(state=>{return  state.lectures: [...res] });
       this.setState({lectures:res})
       this.transformIntoEvents();
@@ -40,8 +44,23 @@ class CalendarPage extends React.Component {
     //this.transformIntoEvents();
   }
 
+  async componentDidUpdate(prevProps, prevState) {
+    let startOfWeek = moment().day(1).format("YYYY-MM-DD");
+    let endOfWeek = moment().day(7).format("YYYY-MM-DD");
+    if(!this.props.authUser)
+      throw {status: 401, errorObj: "no authUser specified"}
+    if(prevProps.authUser!=this.props.authUser)
+      API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
+    .then((res)=>{
+      this.setState({lectures:res})
+      this.transformIntoEvents();
+    })
+    .catch((err)=>console.log(`error`, err));
+  }
 
   getStatus = (l) => {
+    if (l.deleted_at)
+      return "canceled";
     if ((moment(l.datetime).isBefore(moment().format("YYYY-MM-DD"))))
       return "closed"
     if (l.booking_updated_at)
@@ -111,7 +130,33 @@ class CalendarPage extends React.Component {
   bookLecture = (student_id,lecture_id)=> {
     // console.log('hello');
     // console.log(student_id+ ' '+ lecture_id);
+    
     API.bookLecture(student_id,lecture_id)
+    .then((res)=>{
+      // GIVE FEEDBACK TO USER + change status of selected lecture
+      console.log(res);
+      console.log("Do we get here?")
+      // TODO this could be a function to remove duplication
+      let startOfWeek = moment().day(1).format("YYYY-MM-DD");
+      let endOfWeek = moment().day(7).format("YYYY-MM-DD");
+      API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
+          .then((res2)=>{
+            //this.setState(state=>{return  state.lectures: [...res] });
+            this.setState({lectures:res2})
+            this.transformIntoEvents();
+            
+        })
+        .catch((err)=>console.log(`error`, err));
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+    
+    this.setState({ modal: false })
+  }
+
+  cancelBooking = (student_id,lecture_id)=> {
+    API.cancelBooking(student_id,lecture_id)
     .then((res)=>{
       // GIVE FEEDBACK TO USER + change status of selected lecture
       console.log(res);
@@ -157,23 +202,29 @@ class CalendarPage extends React.Component {
         }}
         events={this.state.events}
         eventClick={(info) => {
-          if(role ==='student') this.setState({ modal: true, selected: info.event })
+          if(role ==='student' && info.event.extendedProps.status !== "canceled") this.setState({ modal: true, selected: info.event })
           else if (role ==='teacher') this.props.goToLecturePage(info.event);
         }}
         eventContent={(eventInfo) => {
           return (
             <div style={{'font-size': '110%', 'text-overflow': 'ellipsis', 'white-space': 'nowrap', 'overflow': 'hidden'}}>
-              <b>{eventInfo.event.title}</b><br/>
-              <i>{eventInfo.event._def.extendedProps.room}</i><br/>
+              <b className="title">{eventInfo.event.title}</b><br/>
+              <i className="room">{eventInfo.event.extendedProps.room}</i><br/>
               {
                 eventInfo.view.type !== "dayGridMonth" &&
-                <div style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
-                  <b>{eventInfo.event._def.extendedProps.stat}</b>
+                <div className="status" style={{'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em'}}>
+                  <b>{eventInfo.event.extendedProps.stat}</b>
                 </div>
               }
             </div>
-          )}
-        }
+          )}}
+        eventClassNames={(arg) => {
+          if (arg.event.extendedProps.status === "canceled") {
+            return [ 'canceled' ]
+          } else {
+            return [ 'clickable' ]
+          }
+        }}
         datesSet={(date) => {
           let startDate = moment(date.startStr).format('YYYY-MM-DD');
           let endDate = moment(date.endStr).add(-1, 'days').format('YYYY-MM-DD'); // -1 because it counts up to the next week
@@ -218,10 +269,10 @@ class CalendarPage extends React.Component {
                   </Nav>
                 </Col>
               </Row>
-              {this.state.modal ? 
-              <CalendarModal closeModal={this.closeModal} 
+              <CalendarModal show={this.state.modal} closeModal={this.closeModal} 
                 bookLecture={()=>this.bookLecture(context.authUser?.id ?? 1,this.state.selected.extendedProps.lectureId)}
-                lecture={this.state.selected}/> : <></>}
+                cancelBooking={()=>this.cancelBooking(context.authUser?.id ?? 1,this.state.selected.extendedProps.lectureId)}
+                lecture={this.state.selected}/>
 
             </Container>
 

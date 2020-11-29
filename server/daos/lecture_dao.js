@@ -102,6 +102,8 @@ exports.retrieveNextDayLectures = function({offset}) {
     })
 }
 
+
+
 const lectureInfo = (rows) => {
     return rows.map(row => ({
         teacher: {
@@ -118,3 +120,21 @@ const lectureInfo = (rows) => {
         bookings: row.n_booked
     }));
 };
+
+exports.deleteLecture = function ({ datetime, lecture_id}) {
+    return new Promise((resolve, reject) => {
+        const sql = `UPDATE Lectures SET deleted_at= ? 
+                     WHERE id= ? AND deleted_at IS NULL
+                    AND (julianday(datetime)-julianday(?))*24 >1`
+        db.run(sql, [datetime,lecture_id,datetime], function(err) {
+            if (err) {
+                console.log(err)
+                reject(err);
+            }
+            else{
+                resolve(this.changes);
+            }
+        }); 
+      
+    })
+}
