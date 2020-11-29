@@ -18,6 +18,18 @@ exports.addLecture = async function(lecture) {
     }
 }
 
+exports.deleteLecture = async function(lecture){
+    try {
+        let response= await lectureDao.deleteLecture({...lecture});
+        return response;
+
+    } catch (error) {
+        return errHandler(error);
+    }
+}
+
+
+
 exports.getLecture = async function(lecture_id) {
     try {
         let lecture = await lectureDao.retrieveLecture(lecture_id);

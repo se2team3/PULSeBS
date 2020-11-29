@@ -262,4 +262,26 @@ describe('Client API calls', () => {
             }
         });
     })
+
+    describe('cancelLecture', () => {
+        beforeEach(() => {
+            mock.reset()
+        });
+
+        it('cancel a lecture', async () => {
+            mock.onDelete(base_url+`/lectures/${sample_lecture.id}`).reply(200,{});
+            const hasBeenDeleted = await API.cancelLecture(sample_booking.lecture_id);
+            expect(hasBeenDeleted).toBe(true);
+        });
+
+        it('something went wrong cancelling lecture', async () => {
+            mock.onDelete(base_url+`/lectures/${sample_booking.lecture_id}`).reply(500, "internal server error");
+            try {
+                await API.cancelLecture(sample_booking.lecture_id);
+            }
+            catch (e) {
+                expect(e.status).toBe(500);
+            }
+        });
+    })
 })

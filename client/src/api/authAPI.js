@@ -1,7 +1,6 @@
 const baseURL = '/api';
 
 async function isAuthenticated() {
-
     let url = "/user";
     const response = await fetch(baseURL + url);
     const userJson = await response.json();

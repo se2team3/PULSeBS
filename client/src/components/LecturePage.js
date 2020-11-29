@@ -18,7 +18,19 @@ function LecturePage(props) {
             .then((b) => {
                 setBookings(b);
             }).catch((e) => { setState(() => { throw e; }) })
-    }, []);
+    }, [props.lecture_id]);
+
+    let cancelLecture = async () => {
+        if(lecture){
+            API.cancelLecture(lecture.id)
+            .then((result)=>{
+                API.getLecture(lecture.id)
+                .then((l) => {
+                    setLecture(l);
+                }).catch((e) => { setState(() => { throw e; }) })
+            }).catch((e) => { setState(() => { throw e; }) })
+        }
+    }
 
     let number_of_bookings = 0;
 
@@ -49,8 +61,8 @@ function LecturePage(props) {
                                     Teacher: {lecture.teacher_surname} {lecture.teacher_name}
                             </Card.Text>
                             {lecture.deleted_at == null && <>
-                                {!lecture.virtual && <Button block variant="warning">Change to distance lecture</Button>}
-                                <Button block variant="danger">Cancel lecture</Button>
+                                {(!lecture.virtual && moment(lecture.datetime).diff(moment(),'minutes') >= 30) && <Button block variant="warning">Change to distance lecture</Button>}
+                                {moment(lecture.datetime).diff(moment(),'hours') >= 1&&<Button block variant="danger" onClick={cancelLecture}>Cancel lecture</Button>}
                             </>}
                         </Card.Body>
                     </Card>
@@ -58,7 +70,7 @@ function LecturePage(props) {
                 <Col md={8}>
                     <h4>Bookings</h4>
                     <p>There are {number_of_bookings} bookings out of {lecture.max_seats} available seats.</p>
-                    {number_of_bookings == 0 && <Alert variant="secondary" style={{ textAlign: "center" }}>
+                    {number_of_bookings === 0 && <Alert variant="secondary" style={{ textAlign: "center" }}>
                         No bookings to show for now, come back later...
                         </Alert>}
                     {number_of_bookings > 0 && <Table striped bordered hover>

@@ -9,7 +9,6 @@ const studentsRoutes = require('./routes/studentRoute');
 const authenticateRoutes = require('./routes/authenticateRoute');
 const lectureRoutes = require('./routes/lecturesRoute');
 const teachersRoute = require('./routes/teachersRoute');
-const testRoute = require('./routes/testRoute');
 
 const errorHandler = require('./services/errorHandler');
 const bookingRoute = require('./routes/bookingsRoute');
@@ -20,7 +19,6 @@ const app = new express();
 
 app.use(express.json());
 app.use(cookieParser());
-
 if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('dev'));
 }
@@ -31,9 +29,6 @@ app.use(`/api/`, studentsRoutes);
 app.use(`/api/`, authenticateRoutes);
 app.use(`/api/`, bookingRoute);
 app.use(`/api/`, teachersRoute);
-if (process.env.NODE_ENV === 'test') {
-    app.use(`/api/`, testRoute);
-}
 
 app.use(errorHandler);
 
