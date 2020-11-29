@@ -13,9 +13,9 @@ const sinon= require('sinon');
 chai.use(chaiHttp);
 
 
-const deletion= async function (teacher_id,lecture_id){
-    const newLecture = { teacher_id: teacher_id, lecture_id: lecture_id};
-    const tmp = `/api/teachers/${newLecture.teacher_id}/lectures/${newLecture.lecture_id}`; 
+const deletion= async function (lecture_id){
+    const newLecture = { lecture_id: lecture_id};
+    const tmp = `/api/lectures/${newLecture.lecture_id}`; 
     let res = await chai.request(server).delete(tmp).send();
     should.exist(res);
     res.body.should.be.an('object');
@@ -108,7 +108,7 @@ describe('Lecture testing', function() {
 
         it('should not allow deletion because it is a past lecture', async function() {
             var clock = sinon.useFakeTimers(new Date(2020, 10, 30, 16, 30));
-            let res=await deletion(1,1);
+            let res=await deletion(1);
             res.should.be.equal(304);
             clock.restore();
           
@@ -123,21 +123,21 @@ describe('Lecture testing', function() {
         });    
 
         it('should allow teacher to delete a lecture', async function() {
-            let res=await deletion(1,1);
+            let res=await deletion(1);
             res.should.be.equal(200);
         });
 
     
 
         it('should not allow teacher to delete a lecture that is already deleted', async function() {
-            let res=await deletion(1,1);
+            let res=await deletion(1);
             res.should.be.equal(304);
             
         
         });
 
         it('should not allow teacher to delete a lecture with wrong parameters', async function() {
-            let res=await deletion(undefined,undefined);
+            let res=await deletion(undefined);
             res.should.be.equal(304);
         
         });
