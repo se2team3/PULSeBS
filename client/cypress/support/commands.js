@@ -23,32 +23,3 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-
-Cypress.Commands.add('login', (userType, options = { clear: false }) => {
-    // create the user first in the DB
-    cy.request('POST', 'http://localhost:3001/api/test/users', { userType, options })
-        .its('body')
-        .then((body) => {
-            // assuming the server sends back the user details
-            // including a randomly generated password
-            //
-            // we can now login as this newly created user
-            cy.request({
-                url: 'http://localhost:3001/api/login',
-                method: 'POST',
-                body: {
-                    email: body.email,
-                    password: body.password,
-                }
-            });
-        });
-})
-
-Cypress.Commands.add('db', (param) => {
-    switch (param) {
-        case 'clear':
-            cy.request('POST', 'http://localhost:3001/api/test/clear');
-            break;
-        default:
-    }
-})

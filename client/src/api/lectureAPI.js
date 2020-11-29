@@ -33,9 +33,16 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
             default:
                 throw Error('Invalid role!');
         }
-    }
+    } 
+
  
     const req_params = {from: start_date, to: end_date};
+     /*if (start_date !== undefined || end_date !== undefined) {
+        if (start_date !== undefined)
+            req_params['from'] = moment(start_date).unix();
+        if (end_date !== undefined)
+            req_params['to'] = moment(end_date).unix();
+    } */
     const response = await axios.get(baseURL + url, { params: req_params }).catch(error => {
         if (error.response) {
             let err = { status: error.response.status, errObj: error.response.data };
@@ -84,4 +91,33 @@ async function getLecture(id) {
     }
 }
 
-export  {getLecture, getLectures}
+/**
+ * Cancel a lecture
+ *
+ * @param {*} lecture_id valid lecture id
+ * @returns true on success or throws error
+ */
+async function cancelLecture(lecture_id){
+    let url = `/lectures/${lecture_id}`;
+
+    const response = await axios.delete(baseURL + url).catch(error => {
+        if (error.response) {
+            let err = { status: error.response.status, errObj: error.response.data };
+            throw err;  // An object with the error coming from the server
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+        }
+    });
+    if (response.status === 200) {
+        return true;
+    } else {
+        let err = { status: response.status, errObj: response.data };
+        throw err;  // An object with the error coming from the server
+    }
+}
+
+export  {getLecture, getLectures, cancelLecture}

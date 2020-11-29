@@ -43,7 +43,6 @@ const timeValidator = require('../validators/timeValidator');
 app.get('/students/:student_id/lectures', authorize(role.Student),timeValidator.checkTime, async(req,res) =>{
     const student_id = +req.params.student_id;
     const {from, to} = req.query;
-
     try{
         let lectures = await studentService.getStudentLectures(student_id, from, to);
         return res.status(200).json(lectures);
