@@ -34,8 +34,6 @@ class CalendarPage extends React.Component {
     console.log(startOfWeek + ' '+ endOfWeek);
     API.getLectures(startOfWeek,endOfWeek,this.props.authUser.role,this.props.authUser.id)
     .then((res)=>{
-      console.log("RES"+res[0].course_id)
-      res[3].deleted_at = "2020-11-19 08:30:00.000+01:00";
       //this.setState(state=>{return  state.lectures: [...res] });
       this.setState({lectures:res})
       this.transformIntoEvents();
