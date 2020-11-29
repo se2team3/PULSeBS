@@ -13,7 +13,7 @@ import { AuthContext } from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
 import CalendarPage from './components/CalendarPage';
 
-// INITIALIZE PULSEBS-7 BRANCH
+
 class App extends React.Component {
 
 
@@ -23,8 +23,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    API.isAuthenticated().then(
-      (user) => {
+    API.isAuthenticated()
+    .then((user) => {
         this.setState({ authUser: user });
       }
     ).catch((err) => {
@@ -45,11 +45,6 @@ class App extends React.Component {
           this.props.history.push("/login");
         });
       }
-
-      /*if (err.status && err.status === 404) {
-        this.setState({ apiError: 404 })
-        this.props.history.push("/");
-      }*/
     }
   }
 
@@ -65,13 +60,11 @@ class App extends React.Component {
     this.handleErrors(error);
   }*/
 
-
-
   // Add a logout method
   logout = () => {
     API.userLogout().then(() => {
       this.setState({ authUser: null, authErr: null });
-      this.props.history.push("/");
+      this.props.history.push("/login");
     });
   }
 
@@ -92,9 +85,6 @@ class App extends React.Component {
   showSidebar = () => {
     this.setState((state) => ({ openMobileMenu: !state.openMobileMenu }));
   }
-
-
-
 
   goToLecturePage = (event) => {
     this.setState({ lecture: event })
