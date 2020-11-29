@@ -13,8 +13,8 @@ const sinon= require('sinon');
 chai.use(chaiHttp);
 
 
-const deletion= async function (){
-    const newLecture = { teacher_id: 1, lecture_id: 1};
+const deletion= async function (teacher_id,lecture_id){
+    const newLecture = { teacher_id: teacher_id, lecture_id: lecture_id};
     const tmp = `/api/teachers/${newLecture.teacher_id}/lectures/${newLecture.lecture_id}`; 
     let res = await chai.request(server).delete(tmp).send();
     should.exist(res);
@@ -107,56 +107,42 @@ describe('Lecture testing', function() {
         })
 
         it('should not allow deletion because it is a past lecture', async function() {
-            var clock = sinon.useFakeTimers(new Date(2020, 10, 30, 23, 20));
-            let res=await deletion();
+            var clock = sinon.useFakeTimers(new Date(2020, 10, 30, 16, 30));
+            let res=await deletion(1,1);
             res.should.be.equal(304);
             clock.restore();
           
         });    
 
         it('should not allow deletion because it is remaining less than 1h', async function() {
-            var clock = sinon.useFakeTimers(new Date(2020, 10, 29, 23, 20));
-            let res=await deletion();
+            var clock = sinon.useFakeTimers(new Date(2020, 10, 29, 16, 20));
+            let res=await deletion(1,1);
             res.should.be.equal(304);
             clock.restore();
         
         });    
 
         it('should allow teacher to delete a lecture', async function() {
-            let res=await deletion();
+            let res=await deletion(1,1);
             res.should.be.equal(200);
         });
 
     
 
         it('should not allow teacher to delete a lecture that is already deleted', async function() {
-            let res=await deletion();
+            let res=await deletion(1,1);
             res.should.be.equal(304);
             
         
         });
 
         it('should not allow teacher to delete a lecture with wrong parameters', async function() {
-            const newLecture = { teacher_id:undefined, lecture_id: undefined};
-            
-            const tmp = `/api/teachers/${newLecture.teacher_id}/lectures/${newLecture.lecture_id}`;
-            let res = await chai.request(server).delete(tmp).send();
-            should.exist(res);
-            res.should.have.status(304);
-            res.body.should.be.an('object');
+            let res=await deletion(undefined,undefined);
+            res.should.be.equal(304);
         
         });
 
-        it('should return an error with wrong path', async function() {
-            const newLecture = { teacher_id:undefined, lecture_id: undefined};
-            
-            const tmp = `/api/teacher/${newLecture.teacher_id}/lectures/${newLecture.lecture_id}`;
-            let res = await chai.request(server).delete(tmp).send();
-            should.exist(res);
-            res.should.have.status(404);
-            res.body.should.be.an('object');
         
-        });
 
     
 })
