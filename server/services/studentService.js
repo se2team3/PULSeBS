@@ -1,7 +1,7 @@
 const studentDao  = require('../daos/student_dao');
 const errHandler = require('./errorHandler');
 
-const getStudentLecture = async function(student_id,start_date, end_date) {
+const getStudentLectures = async function(student_id,start_date, end_date) {
     try {
         let lectures;
         if(start_date&&end_date) lectures = await studentDao.retrieveStudentLecturesinTimeFrame(student_id,start_date, end_date);
@@ -12,4 +12,4 @@ const getStudentLecture = async function(student_id,start_date, end_date) {
     }
 }
 
-module.exports = { getStudentLecture };
+module.exports = { getStudentLectures };

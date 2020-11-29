@@ -1,6 +1,7 @@
 const baseURL = '/api';
 
 async function isAuthenticated() {
+
     let url = "/user";
     const response = await fetch(baseURL + url);
     const userJson = await response.json();
@@ -35,7 +36,7 @@ async function userLogin(username, password) {
     });
 }
 
-async function userLogout(username, password) {
+async function userLogout() {
     return new Promise((resolve, reject) => {
         fetch(baseURL + '/logout', {
             method: 'POST',

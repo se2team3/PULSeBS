@@ -23,12 +23,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    API.isAuthenticated().then(
-      (user) => {
+    API.isAuthenticated()
+    .then((user) => {
         this.setState({ authUser: user });
       }
     ).catch((err) => {
-      this.setState({ authErr: err.errorObj });
+      this.setState({ authErr: err.errorObj, authUser: null });
       this.props.history.push("/login");
     });
   }
@@ -36,14 +36,15 @@ class App extends React.Component {
   handleErrors(err) {
     if (err) {
       if (err.status && err.status === 401) {
-        this.setState({ authErr: err.errorObj, authUser: null });
-        this.props.history.push("/login");
+        API.isAuthenticated().then(
+          (user) => {
+            this.setState({ authUser: user });
+          }
+        ).catch((err2) => {
+          this.setState({ authErr: err2.errorObj, authUser: null });
+          this.props.history.push("/login");
+        });
       }
-
-      /*if (err.status && err.status === 404) {
-        this.setState({ apiError: 404 })
-        this.props.history.push("/");
-      }*/
     }
   }
 
@@ -59,13 +60,11 @@ class App extends React.Component {
     this.handleErrors(error);
   }*/
 
-
-
   // Add a logout method
   logout = () => {
     API.userLogout().then(() => {
       this.setState({ authUser: null, authErr: null });
-      this.props.history.push("/");
+      this.props.history.push("/login");
     });
   }
 
@@ -86,9 +85,6 @@ class App extends React.Component {
   showSidebar = () => {
     this.setState((state) => ({ openMobileMenu: !state.openMobileMenu }));
   }
-
-
-
 
   goToLecturePage = (event) => {
     this.setState({ lecture: event })
@@ -130,12 +126,7 @@ class App extends React.Component {
             } />
 
             <Route>
-              <Redirect to='/login'/>
-            </Route>
-
-            // TODO: remove duplicated ?
-            <Route>
-              <Redirect to='/login' />
+              <Redirect to='/calendar'/>
             </Route>
             
           </Switch>

@@ -40,15 +40,15 @@ const timeValidator = require('../validators/timeValidator');
  *       - "read:pets"
  */
 
-app.get('/students/:student_id/lectures', timeValidator.checkTime, async(req,res) =>{
+app.get('/students/:student_id/lectures', authorize(role.Student),timeValidator.checkTime, async(req,res) =>{
     const student_id = +req.params.student_id;
-    const start_date = req.query.from;
-    const end_date = req.query.to;
+    const {from, to} = req.query;
+
     try{
-        let lectures = await studentService.getStudentLecture(student_id,start_date, end_date);
+        let lectures = await studentService.getStudentLectures(student_id, from, to);
         return res.status(200).json(lectures);
     } catch(error){
-        res.json(error);
+        res.status(400).json(error);
     }
 })
 
