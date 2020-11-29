@@ -86,9 +86,7 @@
 - POST `/teachers`
   - Body: Teacher object
   - Response: Response status
--DELETE `/teachers/{teacher_id}/lectures/{lecture_id}`
-  -Param: teacher_id,lecture_id
-  -Response: Response status
+
   
   
 ##### NOTE: Reference resource: https://developers.google.com/gmail/api/reference/rest 

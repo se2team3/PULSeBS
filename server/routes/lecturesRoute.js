@@ -236,11 +236,11 @@ router.get('/lectures/:lecture_id', (req, res) => {
  *       - "write:pets"
  *       - "read:pets"
  */
-router.delete('/teachers/:teacher_id/lectures/:lecture_id', async (req,res)=>{
-    const teacher_id= +req.params.teacher_id;
+router.delete('/lectures/:lecture_id', async (req,res)=>{
+    const teacher=req.user && req.user.user;
     const lecture_id= +req.params.lecture_id;
     const datetime= moment().format('YYYY-MM-DD HH:mm');
-    lecture={datetime:datetime,lecture_id:lecture_id}
+    lecture={datetime:datetime,lecture_id:lecture_id,teacher:teacher}
     try{
         let number = await lectureService.deleteLecture(lecture);
         if(number===1)
