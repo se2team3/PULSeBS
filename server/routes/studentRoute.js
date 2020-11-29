@@ -6,6 +6,7 @@ const bookingService = require('../services/bookingService')
 const authorize = require('../services/authorizeService');
 const role = require('../utils/roles');
 const timeValidator = require('../validators/timeValidator');
+
 /* cannot be used like this, because the authorization rule is then applied
  * to all the following routes (even in other modules)
  *
@@ -42,12 +43,11 @@ const timeValidator = require('../validators/timeValidator');
 app.get('/students/:student_id/lectures', authorize(role.Student),timeValidator.checkTime, async(req,res) =>{
     const student_id = +req.params.student_id;
     const {from, to} = req.query;
-
     try{
-        let lectures = await studentService.getStudentLecture(student_id);
+        let lectures = await studentService.getStudentLectures(student_id, from, to);
         return res.status(200).json(lectures);
     } catch(error){
-        res.json(error);
+        res.status(400).json(error);
     }
 })
 
@@ -78,12 +78,12 @@ app.get('/students/:student_id/lectures', authorize(role.Student),timeValidator.
  *       - "read:pets"
  */
 
-app.get('/students/:lecture_id/', authorize(role.Student), async(req,res) =>{
-    const lecture_id= + req.params.student_id;
-    const student_id=req.user && req.user.user;
+app.get('/students/:lecture_id/',authorize(role.Student), async(req,res) =>{
+    const lecture_id= req.params.lecture_id;
+    const student_id=req.user && req.user.sub;
     try{
         let bool = await bookingService.assertBooking(lecture_id,student_id);
-        return res.status(201).json(bool);
+        return res.status(200).json(bool);
     } catch(error){
         res.json(error);
     }

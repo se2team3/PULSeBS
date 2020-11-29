@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import { Alert, Button, Card, Col, Container, Form, Row, Table } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Container, Row, Table } from 'react-bootstrap';
 import API from '../api';
 
 function LecturePage(props) {
@@ -18,7 +18,19 @@ function LecturePage(props) {
             .then((b) => {
                 setBookings(b);
             }).catch((e) => { setState(() => { throw e; }) })
-    }, []);
+    }, [props.lecture_id]);
+
+    let cancelLecture = async () => {
+        if(lecture){
+            API.cancelLecture(lecture.id)
+            .then((result)=>{
+                API.getLecture(lecture.id)
+                .then((l) => {
+                    setLecture(l);
+                }).catch((e) => { setState(() => { throw e; }) })
+            }).catch((e) => { setState(() => { throw e; }) })
+        }
+    }
 
     let number_of_bookings = 0;
 
@@ -58,7 +70,7 @@ function LecturePage(props) {
                 <Col md={8}>
                     <h4>Bookings</h4>
                     <p>There are {number_of_bookings} bookings out of {lecture.max_seats} available seats.</p>
-                    {number_of_bookings == 0 && <Alert variant="secondary" style={{ textAlign: "center" }}>
+                    {number_of_bookings === 0 && <Alert variant="secondary" style={{ textAlign: "center" }}>
                         No bookings to show for now, come back later...
                         </Alert>}
                     {number_of_bookings > 0 && <Table striped bordered hover>
@@ -67,8 +79,8 @@ function LecturePage(props) {
                                 <th>#</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
-                                <th>Waiting list</th>
-                                <th>Present</th>
+                                {/*<th>Waiting list</th>
+                                <th>Present</th>*/}
                             </tr>
                         </thead>
                         <tbody>
@@ -77,8 +89,8 @@ function LecturePage(props) {
                                     <td>{b.student_university_id}</td>
                                     <td>{b.student_name}</td>
                                     <td>{b.student_surname}</td>
-                                    <td>{b.waiting ? "Yes" : "No"}</td>
-                                    <td>{!b.waiting && <Form.Check type="checkbox" checked={b.present} />}</td>
+                                    {/*<td>{b.waiting ? "Yes" : "No"}</td>
+                                    <td>{!b.waiting && <Form.Check type="checkbox" checked={b.present} />}</td>*/}
                                 </tr>
                             )}
                         </tbody>

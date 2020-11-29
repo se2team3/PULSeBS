@@ -96,33 +96,40 @@ const bookLecture = async ({ lecture_id, student_id }) => {
 }
 
 
-(async () => {
-    const [students, students_id] = await generateUsers({ n: 200, role: "student" });
-    const [teachers, teachers_id] = await generateUsers({ n: 5, role: "teacher" });
-    console.log(`Students: `);
-    students.forEach(s => console.log(`  email: ${s.email}, password: ${s.password}`));
-    console.log(`Teacher: `);
-    teachers.forEach(t => console.log(`  email: ${t.email}, password: ${t.password}`));
+const populate = (async () => {
+    const [students, students_id] = await generateUsers({ n: 10, role: "student" });
+    const [ teachers_id] = await generateUsers({ n: 1, role: "teacher" });
     const [rooms, rooms_id] = await generateRoom({n:10});
-    let count = 0;
+
     for (let teacher_id of teachers_id) {
         const [course, course_id] = await generateCourse({ teacher_id });
-        const n = 50;
-        const selected = students_id.sort(() => 0.5 - Math.random()).slice(0, n);
-        for (let student_id of selected) {
+        const n = 10;
+       // const selected = students_id.sort(() => 0.5 - Math.random()).slice(0, n);
+        for (let student_id of students_id) {
             await assignCourse({course_id, student_id});
         }
         const n_lectures = 10;
         for (let i = 0; i < n_lectures; i++) {
             const room_id = rooms_id[faker.random.number({min:0, max:rooms_id.length - 1})];
             const [lecture, lecture_id] = await generateLecture({ course_id, room_id });
-            const booked = selected.sort(() => 0.5 - Math.random()).slice(0, n_lectures);
-            for (let student_id of booked) {
-                await bookLecture({lecture_id, student_id});
+            //const booked = selected.sort(() => 0.5 - Math.random()).slice(0, n_lectures);
+            
+            const dim = students.length /2 ;
+            if(i<dim){
+                let j=0;
+                for (let student_id of students_id) {       
+                    if(j<dim) {
+                        j++; 
+                        await bookLecture({lecture_id, student_id});
+                    }
+                        
+                }
+            
             }
         }
     }
-})();
-
+    return {students,students_id};
+});
+module.exports = {populate};
 
 

@@ -85,8 +85,10 @@ const studentObj = (university_id) => ({
 });
 
 const def_options = {
-    n_students: 50,
-    datetime: moment().add(1,'days').format('YYYY-MM-DD'),
+    n_students: 5,
+    datetime: moment(new Date(2020,10,29,16,30)).format('YYYY-MM-DD HH:mm'),
+    
+    
 };
 
 /**
@@ -115,7 +117,7 @@ const populate = async ({n_students, datetime} = def_options) => {
     // insert data
     data.teacher_id = await userDao.insertUser(data.teacher);
     data.room_id = await roomDao.insertRoom(data.room);
-    //data.course.teacher_id = data.teacher_id;
+    data.course.teacher_id = data.teacher_id;
     //data.course2.teacher_id=data.teacher_id;
     data.course_id = await courseDao.insertCourse(data.course);
     data.course2_id=await courseDao.insertCourse(data.course2);
@@ -129,8 +131,10 @@ const populate = async ({n_students, datetime} = def_options) => {
     for (let student of data.students) {
         const student_id = await userDao.insertUser(student);
         data.students_id.push(student_id);
-        data.booked++;
-        await bookingDao.insertBooking({ lecture_id: data.lecture_id, student_id });
+        if(data.booked<45){   
+            data.booked++;
+            await bookingDao.insertBooking({ lecture_id: data.lecture_id, student_id });
+        }
     }
         data.assign1.student_id = data.students_id[0]
         data.assign2.student_id = data.students_id[0]
