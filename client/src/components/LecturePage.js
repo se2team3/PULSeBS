@@ -46,6 +46,9 @@ function LecturePage(props) {
                     {lecture.deleted_at != null && <Alert variant="danger">
                         This lecture has been <b>cancelled</b>!
                         </Alert>}
+                    {lecture.virtual && <Alert variant="warning">
+                        <b>REMOTE LECTURE</b>
+                        </Alert>}
                     <Card>
                         <Card.Body>
                             <Card.Title>
@@ -69,10 +72,12 @@ function LecturePage(props) {
                 </Col>
                 <Col md={8}>
                     <h4>Bookings</h4>
-                    <p>There are {number_of_bookings} bookings out of {lecture.max_seats} available seats.</p>
-                    {number_of_bookings === 0 && <Alert variant="secondary" style={{ textAlign: "center" }}>
+
+                    {!lecture.virtual&&<p>There are {number_of_bookings} bookings out of {lecture.max_seats} available seats.</p>}
+                    {(!lecture.virtual&&number_of_bookings === 0) && <Alert variant="secondary" style={{ textAlign: "center" }}>
                         No bookings to show for now, come back later...
                         </Alert>}
+                    {lecture.virtual&&<p>This lecture has been changed from 'presence' to `remote`. There were {number_of_bookings} bookings out of {lecture.max_seats} available seats.</p>}
                     {number_of_bookings > 0 && <Table striped bordered hover>
                         <thead>
                             <tr>
