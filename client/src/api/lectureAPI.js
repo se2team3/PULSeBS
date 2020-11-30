@@ -1,6 +1,6 @@
 import axios from 'axios';
 import LectureExtended from './models/lecture_extended';
-import whatWentWrong from './utils';
+import {whatWentWrong, deleteResource} from './utils';
 
 const baseURL = '/api';
 
@@ -84,18 +84,16 @@ async function getLecture(id) {
  */
 async function cancelLecture(lecture_id){
     let url = `/lectures/${lecture_id}`;
-
-    const response = await axios.delete(baseURL + url).catch(error => {
-        whatWentWrong(error);
-    });
-    if (response.status === 200) {
-        return true;
-    } else {
-        let err = { status: response.status, errObj: response.data };
-        throw err;  // An object with the error coming from the server
-    }
+    return deleteResource(baseURL+url);
 }
 
+/**
+ * Patch some fields in a lecture given its id
+ *
+ * @param {*} lecture_id valid lecture id
+ * @param {*} fields Dictionary of fields belonging to the Lecture model
+ * @returns true if patch succeded, throws error if something goes wrong
+ */
 async function patchLecture(lecture_id, fields){
     let url = `/lectures/${lecture_id}`;
 

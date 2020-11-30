@@ -1,6 +1,7 @@
 import Booking from './models/booking';
 import BookingExtended from './models/booking_extended';
 import axios from 'axios';
+import {whatWentWrong, deleteResource} from './utils';
 
 const baseURL = '/api';
 
@@ -58,16 +59,7 @@ async function bookLecture(student_id, lecture_id){
  */
 async function cancelBooking(student_id, lecture_id){
     let url = `/students/${student_id}/lectures/${lecture_id}`;
-
-    const response = await axios.delete(baseURL + url).catch(error => {
-        whatWentWrong(error);
-    });
-    if (response.status === 200) {
-        return true;
-    } else {
-        let err = { status: response.status, errObj: response.data };
-        throw err;  // An object with the error coming from the server
-    }
+    return deleteResource(baseURL+url);
 }
 
 
