@@ -28,7 +28,7 @@ const deletion= async function (lecture_id){
 }
 
 
-describe('Lecture testing', function() {
+describe('Lecture tests', function() {
     before('create tables and clear db', async function() {
         await dbUtils.reset();
     });
@@ -99,24 +99,7 @@ describe('Lecture testing', function() {
         });
 
         it('should get the list of lectures in a time frame given the student', async function() {
-            const student_id = 1;
-            const start_date = '2020-11-23';
-            const end_date = '2020-11-29';
-
-            const data = await dbUtils.populate();
-
-            const student1 = data.students[0];
-            const credentials = {email: student1.email, password: student1.password }
-            // perform login
-            const agent = chai.request.agent(server);
-            await agent.post('/api/login').send(credentials);
-            
-            const url = `/api/students/${student_id}/lectures`;
-
-            let res = await agent.get(url).query({from: start_date, to: end_date});
-            should.exist(res);
-            res.should.have.status(200);
-            res.body.should.be.an('array');
+            await testTimeFrame(true);
         });
 
         it('should NOT get the list of lectures in a time frame given the student (unauthorized)', async function() {
@@ -134,24 +117,9 @@ describe('Lecture testing', function() {
             res.should.have.status(401);
         });
 
+
         it('should get the list of lectures in a INVALID time frame given the student', async function() {
-            const student_id = 1;
-            const start_date = '2020-11-23';
-            const end_date = '2020-11-33'; // invalid date
-
-            const data = await dbUtils.populate();
-
-            const student1 = data.students[0];
-            const credentials = {email: student1.email, password: student1.password }
-            // perform login
-            const agent = chai.request.agent(server);
-            await agent.post('/api/login').send(credentials);
-            
-            const url = `/api/students/${student_id}/lectures`;
-
-            let res = await agent.get(url).query({from: start_date, to: end_date});
-            should.exist(res);
-            res.should.have.status(400);
+           await testTimeFrame(false);
         });
     })
 
@@ -201,3 +169,24 @@ describe('Lecture testing', function() {
 
         });
 });
+
+let testTimeFrame = async (validTimeFrame) => {
+        const student_id = 1;
+        const start_date = '2020-11-23';
+        const end_date = validTimeFrame? '2020-11-29' /*valid*/: '2020-11-33'; // invalid date
+
+        const data = await dbUtils.populate();
+
+        const student1 = data.students[0];
+        const credentials = {email: student1.email, password: student1.password }
+        // perform login
+        const agent = chai.request.agent(server);
+        await agent.post('/api/login').send(credentials);
+        
+        const url = `/api/students/${student_id}/lectures`;
+
+        let res = await agent.get(url).query({from: start_date, to: end_date});
+        should.exist(res);
+        res.should.have.status(validTimeFrame? 200: 400);
+        if(validTimeFrame) res.body.should.be.an('array');
+}
