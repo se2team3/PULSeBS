@@ -46,21 +46,12 @@ describe('Calendar tests', ()=>{
         cy.get('.calendar').contains(lectures[0].course_name).should('exist');
     }
 
-    const seeCheckedLectures= function(param){
-        //param can be Booked, Remote or both
-        cy.get('.calendar').contains('CANCELED').should('not.exist');
-        cy.get('.calendar').contains('CLOSED').should('not.exist');
-        cy.get('.calendar').contains('FULL').should('not.exist');
-        cy.get('.calendar').contains('FREE').should('not.exist');
-        if(param=='Booked') 
-            cy.get('.calendar').contains('REMOTE').should('not.exist');
-        else if(param=='RemoteStudent') 
-            cy.get('.calendar').contains('BOOKED').should('not.exist');
-        else if (param=='Both'){
-            cy.get('.calendar').contains('REMOTE').should('not.exist');
-            cy.get('.calendar').contains('BOOKED').should('not.exist');
+    const seeCheckedLectures= function(status,role){
+        const list=['CANCELED','REMOTE','CLOSED','FULL','FREE']
+        for (let l of list){
+            if (status!==l) cy.get('.calendar').contains(l).should('not.exist');
         }
-        else if(param=='RemoteTeacher'){}
+        if(status!=="BOOKED" && role==="student") cy.get('.calendar').contains('BOOKED').should('not.exist');
     }
 
     const seeAllLectures= function (param){
@@ -155,7 +146,7 @@ describe('Calendar tests', ()=>{
 
         it('should only show booked lectures', function () {
             cy.contains('Booked').parent().find('[type="checkbox"]').should('exist').check();
-            seeCheckedLectures('Booked')
+            seeCheckedLectures('BOOKED','student')
             cy.get('[data-cy=booking_status]:contains(BOOKED)').should('have.length', 1);
         });
 
@@ -167,7 +158,7 @@ describe('Calendar tests', ()=>{
 
         it('should only show remote lectures', function () {
             cy.contains('Remote').parent().find('[type="checkbox"]').should('exist').check();
-            seeCheckedLectures('RemoteStudent')
+            seeCheckedLectures('REMOTE','student')
             cy.get('[data-cy=booking_status]:contains(REMOTE)').should('have.length', 1);
         });
 
@@ -179,7 +170,7 @@ describe('Calendar tests', ()=>{
         it('should show nothing', function () {
             cy.contains('Booked').parent().find('[type="checkbox"]').should('exist').check();
             cy.contains('Remote').parent().find('[type="checkbox"]').should('exist').check();
-            seeCheckedLectures('both')
+            seeCheckedLectures('REMOTE','student')
         });
         it('should show again all lectures', function () {
             cy.contains('Booked').parent().find('[type="checkbox"]').should('exist').uncheck();
@@ -216,12 +207,23 @@ describe('Calendar tests', ()=>{
 
         it('should only show remote lectures', function () {
             cy.contains('Remote').parent().find('[type="checkbox"]').should('exist').check();
-            seeCheckedLectures('RemoteTeacher')
+            seeCheckedLectures('REMOTE','teacher')
             cy.get('[data-cy=booking_status]:contains(REMOTE)').should('have.length', 1);
         });
 
         it('should show again all lectures after unchecking remote', function () {
             cy.contains('Remote').parent().find('[type="checkbox"]').should('exist').uncheck();
+            seeAllLectures('teacher');
+        });
+
+        it('should only show cancelled lectures', function () {
+            cy.contains('Cancelled').parent().find('[type="checkbox"]').should('exist').check();
+            seeCheckedLectures('CANCELED','teacher')
+            cy.get('[data-cy=booking_status]:contains(CANCELED)').should('have.length', 1);
+        });
+
+        it('should show again all lectures after unchecking cancelled', function () {
+            cy.contains('Cancelled').parent().find('[type="checkbox"]').should('exist').uncheck();
             seeAllLectures('teacher');
         });
 
