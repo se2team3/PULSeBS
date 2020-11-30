@@ -10,24 +10,34 @@ function LecturePage(props) {
     const [bookings, setBookings] = useState(null);
 
     useEffect(() => {
-        API.getLecture(props.lecture_id)
-            .then((l) => {
-                setLecture(l);
-            }).catch((e) => { setState(() => { throw e; }) })
+        getLecture(props.lecture_id);
         API.getBookings(props.lecture_id)
             .then((b) => {
                 setBookings(b);
             }).catch((e) => { setState(() => { throw e; }) })
     }, [props.lecture_id]);
 
+    let getLecture = (lecture_id) => {
+        API.getLecture(lecture_id)
+            .then((l) => {
+                setLecture(l);
+            }).catch((e) => { setState(() => { throw e; }) })
+    }
+
     let cancelLecture = async () => {
         if(lecture){
             API.cancelLecture(lecture.id)
             .then((result)=>{
-                API.getLecture(lecture.id)
-                .then((l) => {
-                    setLecture(l);
-                }).catch((e) => { setState(() => { throw e; }) })
+                getLecture(lecture.id);
+            }).catch((e) => { setState(() => { throw e; }) })
+        }
+    }
+
+    let changeLectureToRemote = async () => {
+        if(lecture){
+            API.patchLecture(lecture.id, {virtual: true})
+            .then((result)=>{
+                getLecture(lecture.id);
             }).catch((e) => { setState(() => { throw e; }) })
         }
     }
@@ -64,7 +74,7 @@ function LecturePage(props) {
                                     Teacher: {lecture.teacher_surname} {lecture.teacher_name}
                             </Card.Text>
                             {lecture.deleted_at == null && <>
-                                {(!lecture.virtual && moment(lecture.datetime).diff(moment(),'minutes') >= 30) && <Button block variant="warning">Change to distance lecture</Button>}
+                                {(!lecture.virtual && moment(lecture.datetime).diff(moment(),'minutes') >= 30) && <Button block variant="warning" onClick={changeLectureToRemote}>Change to distance lecture</Button>}
                                 {moment(lecture.datetime).diff(moment(),'hours') >= 1&&<Button block variant="danger" onClick={cancelLecture}>Cancel lecture</Button>}
                             </>}
                         </Card.Body>
