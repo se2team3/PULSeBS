@@ -225,6 +225,7 @@ class CalendarPage extends React.Component {
                   </Col>
 
                   <Col sm={3} className="sidebar">
+                    {(this.props.authUser?.role === 'student') ?
                     <Badge className='ml-2'>
                       <Form.Check type="checkbox"
 
@@ -234,6 +235,15 @@ class CalendarPage extends React.Component {
                         onClick={(ev) => this.changeDisplayEvent('statusFilter', LectureState.booked, ev)}
                       />
                     </Badge>
+                    :<Badge className='ml-2'>
+                    <Form.Check type="checkbox"
+
+                      defaultChecked={false}
+                      label='Cancelled'
+                      style={{ fontSize: 20 }}
+                      onClick={(ev) => this.changeDisplayEvent('statusFilter', LectureState.canceled, ev)}
+                    />
+                  </Badge>}
                     <br/>
                     <Badge className='ml-2'>
                       <Form.Check type="checkbox"
