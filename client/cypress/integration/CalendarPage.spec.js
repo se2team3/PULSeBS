@@ -2,6 +2,7 @@
 import moment from 'moment';
 import React from 'react'
 
+
 const setupInterceptStudent = function () {
     // lectures info
     cy.fixture('list_of_lectures').as('lectures').then(function (lectures) {
@@ -39,6 +40,13 @@ describe('Calendar tests', ()=>{
  
     // SOME GENERIC FUNCTIONS
 
+    const settings= function(role){
+        if (role==='student')setupInterceptStudent();
+        else setupInterceptTeacher();
+        cy.clock(Date.UTC(2020, 10, 17), ['Date']);
+        cy.visit('/calendar');
+    }
+
     const checkboxCourse_on_off =function (lectures){
         cy.contains('Courses').parent().find('[type="checkbox"]').first().uncheck();
         cy.get('.calendar').contains(lectures[0].course_name).should('not.exist');
@@ -46,7 +54,10 @@ describe('Calendar tests', ()=>{
         cy.get('.calendar').contains(lectures[0].course_name).should('exist');
     }
 
-    const seeCheckedLectures= function(status,role){
+    
+
+    const seeCheckedLectures= function(value,status,role){ 
+        cy.contains(value).parent().find('[type="checkbox"]').should('exist').check();
         const list=['CANCELED','REMOTE','CLOSED','FULL','FREE']
         for (let l of list){
             if (status!==l) cy.get('.calendar').contains(l).should('not.exist');
@@ -54,13 +65,16 @@ describe('Calendar tests', ()=>{
         if(status!=="BOOKED" && role==="student") cy.get('.calendar').contains('BOOKED').should('not.exist');
     }
 
-    const seeAllLectures= function (param){
+
+
+    const seeAllLectures= function (value,role){
+        cy.contains(value).parent().find('[type="checkbox"]').should('exist').uncheck();
         cy.get('[data-cy=booking_status]:contains(CANCELED)').should('have.length', 1);
         cy.get('[data-cy=booking_status]:contains(REMOTE)').should('have.length', 1);
         cy.get('[data-cy=booking_status]:contains(CLOSED)').should('have.length', 1);
         cy.get('[data-cy=booking_status]:contains(FULL)').should('have.length', 1);
         cy.get('[data-cy=booking_status]:contains(FREE)').should('have.length', 2);
-        if (param=='student')cy.get('[data-cy=booking_status]:contains(BOOKED)').should('have.length', 1);
+        if (role=='student')cy.get('[data-cy=booking_status]:contains(BOOKED)').should('have.length', 1);
     }
 
     const styling= function (){
@@ -71,35 +85,26 @@ describe('Calendar tests', ()=>{
 
     // CALENDAR SETUP
     describe('General calendar tests', () => {
-        before('intercept routes', function () {
-            setupInterceptStudent();
+        before('settings', function () {
+            settings('student')
         });
         beforeEach('intercept routes', function () {
             setupInterceptStudent();
-        });
-        before('change date to a suitable one', () => {
-            cy.clock(Date.UTC(2020, 10, 17), ['Date']);
-        });
-
-        before('Visit calendar page', () => {
-            cy.visit('/calendar');
-        });
+        }); 
 
         it('has header presence', () => {
             cy.contains("Nov 16 – 22, 2020");
         })
         it('has backward button working', () => {
             cy.get ("button").eq(1).click();
-            cy.contains("Nov 16 – 22, 2020").should('not.exist');
-            cy.contains("ROOM4").should('not.exist');
+            cy.contains("Nov 9 – 15, 2020").should('exist');
             cy.get ("button").eq(2).click();
         })
 
         it('has forward button working', () => {
 
             cy.get ("button").eq(2).click();
-            cy.contains("Nov 16 – 22, 2020").should('not.exist');
-            cy.contains("ROOM4").should('not.exist');
+            cy.contains("Nov 23 – 29, 2020").should('exist');
             cy.get ("button").eq(1).click();
         })
 
@@ -126,57 +131,29 @@ describe('Calendar tests', ()=>{
 
     // STUDENT CALENDAR INTERFACE
     describe('Student calendar', () => {
-        before('intercept routes', function () {
-            setupInterceptStudent();
+        before('settings', function () {
+            settings('student')
         });
         beforeEach('intercept routes', function () {
-            setupInterceptStudent();
-        });
-        before('change date to a suitable one', () => {
-            cy.clock(Date.UTC(2020, 10, 17), ['Date']);
-        });
-
-        before('Visit calendar page', () => {
-            cy.visit('/calendar');
+            setupInterceptTeacher();
         });
 
         it('should hide course\'s lectures and then restore', function () {
            checkboxCourse_on_off(this.lectures);
         });
 
-        it('should only show booked lectures', function () {
-            cy.contains('Booked').parent().find('[type="checkbox"]').should('exist').check();
-            seeCheckedLectures('BOOKED','student')
+        it('see if booking checkbox works', function () {
+            seeCheckedLectures('Booked','BOOKED','student')
             cy.get('[data-cy=booking_status]:contains(BOOKED)').should('have.length', 1);
+            seeAllLectures('Booked','student')
         });
 
-        it('should show again all lectures after uncheck booked', function () {
-            cy.contains('Booked').parent().find('[type="checkbox"]').should('exist').uncheck();
-            seeAllLectures('student');
-            
-        });
-
-        it('should only show remote lectures', function () {
-            cy.contains('Remote').parent().find('[type="checkbox"]').should('exist').check();
-            seeCheckedLectures('REMOTE','student')
+        it('see if remote checkbox works', function () {
+            seeCheckedLectures('Remote','REMOTE','student')
             cy.get('[data-cy=booking_status]:contains(REMOTE)').should('have.length', 1);
+            seeAllLectures('Remote','student')
         });
 
-        it('should show again all lectures after unchecking remote', function () {
-            cy.contains('Remote').parent().find('[type="checkbox"]').should('exist').uncheck();
-            seeAllLectures('student');
-        });
-
-        it('should show nothing', function () {
-            cy.contains('Booked').parent().find('[type="checkbox"]').should('exist').check();
-            cy.contains('Remote').parent().find('[type="checkbox"]').should('exist').check();
-            seeCheckedLectures('REMOTE','student')
-        });
-        it('should show again all lectures', function () {
-            cy.contains('Booked').parent().find('[type="checkbox"]').should('exist').uncheck();
-            cy.contains('Remote').parent().find('[type="checkbox"]').should('exist').uncheck();
-            seeAllLectures('student');
-        });
         it('has appropriate styling variants', () => {
             styling();
         })
@@ -187,47 +164,30 @@ describe('Calendar tests', ()=>{
 
     // TEACHER CALENDAR INTERFACE
     describe('Teacher calendar', () => {
-        before('intercept routes', function () {
+        before('settingsTeacher', function () {
+            settings('teacher');
+        });
+        beforeEach('intercept routes for teacher', function () {
             setupInterceptTeacher();
         });
-        beforeEach('intercept routes', function () {
-            setupInterceptTeacher();
-        });
-        before('change date to a suitable one', () => {
-            cy.clock(Date.UTC(2020, 10, 17), ['Date']);
-        });
-
-        before('Visit calendar page', () => {
-            cy.visit('/calendar');
-        });
-
-        it('should hide course\'s lectures and then restore', function () {
+       
+        it('should hide course\'s lectures and then restore for teacher', function () {
             checkboxCourse_on_off(this.lectures);
          });
 
-        it('should only show remote lectures', function () {
-            cy.contains('Remote').parent().find('[type="checkbox"]').should('exist').check();
-            seeCheckedLectures('REMOTE','teacher')
+         it('see if remote checkbox works for teacher', function () {
+            seeCheckedLectures('Remote','REMOTE','teacher')
             cy.get('[data-cy=booking_status]:contains(REMOTE)').should('have.length', 1);
+            seeAllLectures('Remote','Teacher')
         });
 
-        it('should show again all lectures after unchecking remote', function () {
-            cy.contains('Remote').parent().find('[type="checkbox"]').should('exist').uncheck();
-            seeAllLectures('teacher');
-        });
-
-        it('should only show cancelled lectures', function () {
-            cy.contains('Cancelled').parent().find('[type="checkbox"]').should('exist').check();
-            seeCheckedLectures('CANCELED','teacher')
+        it('see if cancelled checkbox works for teacher', function () {
+            seeCheckedLectures('Cancelled','CANCELED','teacher')
             cy.get('[data-cy=booking_status]:contains(CANCELED)').should('have.length', 1);
+            seeAllLectures('Cancelled','Teacher')
         });
 
-        it('should show again all lectures after unchecking cancelled', function () {
-            cy.contains('Cancelled').parent().find('[type="checkbox"]').should('exist').uncheck();
-            seeAllLectures('teacher');
-        });
-
-        it('has appropriate styling variants', () => {
+        it('has appropriate styling variants for teacher', () => {
             styling();
         })
     });
