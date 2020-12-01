@@ -81,7 +81,7 @@ describe('Calendar tests', ()=>{
     const styling= function (){
         cy.contains('.canceled',"Circuit Theory")
         cy.contains('.canceled',"Chemistry").should('not.exist');
-        cy.contains('.canceled',"Programming").should('exist');
+        cy.contains('.remote',"Programming").should('exist');
     }
 
     // CALENDAR SETUP

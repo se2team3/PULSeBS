@@ -163,7 +163,7 @@ class CalendarPage extends React.Component {
       onLectureClick: (info) => {
         if (this.role === 'student' && info.event.extendedProps.status !== LectureState.canceled
         && info.event.extendedProps.status !== LectureState.remote) 
-        this.setState({ modal: true, selected: info.event });
+        {this.setState({ modal: true, selected: info.event });}
         else if (this.role === 'teacher') this.props.goToLecturePage(info.event);
       },
       onViewChange: async (date) => {
