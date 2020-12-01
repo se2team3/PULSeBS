@@ -171,11 +171,12 @@ class CalendarPage extends React.Component {
         this.setDates(date);
       },
       setClickable: (arg) => {
-        if (arg.event.extendedProps.status === LectureState.canceled 
-          || arg.event.extendedProps.status === LectureState.remote) {
-          return [ 'canceled' ]
+        if (arg.event.extendedProps.status === LectureState.canceled) {
+          return [ 'canceled' ];
+        } else if (arg.event.extendedProps.status === LectureState.remote) {
+          return [ 'remote' ];
         } else {
-          return [ 'clickable' ]
+          return [ 'clickable' ];
         }
       }
     }
