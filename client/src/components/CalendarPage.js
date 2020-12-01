@@ -49,9 +49,8 @@ class CalendarPage extends React.Component {
   }
 
   getColor = (course_id) => {
-    let colorArray = ["plum", "tomato", "green", "dodgerBlue", "darkOrange", "pink",
-      "mediumOrchid", "coral", "lightBlue", "sandyBrown", "lightSeaGreen",
-      "khaki", "deepSkyBlue", "chocolate", "orange", "rebeccaPurple", "salmon"]
+    let colorArray = ["#31a831", "#ed425c","deepSkyBlue","darkOrange","#e37be3",
+    "peru","salmon","lightBlue", "lightSeaGreen"] 
     let ids = this.state.lectures.map((l) => l.course_id).filter(this.onlyUnique);
     let index = ids.indexOf(course_id);
 
