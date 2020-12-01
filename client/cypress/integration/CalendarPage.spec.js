@@ -1,5 +1,4 @@
 /// <reference types="cypress" />
-import moment from 'moment';
 import React from 'react'
 
 
@@ -68,12 +67,14 @@ describe('Calendar tests', ()=>{
 
 
     const seeAllLectures= function (value,role){
+        const status = ['CANCELED','REMOTE','CLOSED','FULL','FREE']
         cy.contains(value).parent().find('[type="checkbox"]').should('exist').uncheck();
-        cy.get('[data-cy=booking_status]:contains(CANCELED)').should('have.length', 1);
+        status.forEach((stat)=>cy.get(`[data-cy=booking_status]:contains(${stat})`).should('have.length',stat==='FREE'?2:1))
+        /* cy.get('[data-cy=booking_status]:contains(CANCELED)').should('have.length', 1);
         cy.get('[data-cy=booking_status]:contains(REMOTE)').should('have.length', 1);
         cy.get('[data-cy=booking_status]:contains(CLOSED)').should('have.length', 1);
-        cy.get('[data-cy=booking_status]:contains(FULL)').should('have.length', 1);
-        cy.get('[data-cy=booking_status]:contains(FREE)').should('have.length', 2);
+        cy.get('[data-cy=booking_status]:contains(FULL)').should('have.length', 1); */
+        // cy.get('[data-cy=booking_status]:contains(FREE)').should('have.length', 2);
         if (role=='student')cy.get('[data-cy=booking_status]:contains(BOOKED)').should('have.length', 1);
     }
 
@@ -123,6 +124,8 @@ describe('Calendar tests', ()=>{
                 cy.get ("button").eq(4).click();
     
             })
+
+        
     });
     
     
@@ -130,12 +133,12 @@ describe('Calendar tests', ()=>{
 
 
     // STUDENT CALENDAR INTERFACE
-    describe('Student calendar', () => {
+    /* describe('Student calendar', () => {
         before('settings', function () {
             settings('student')
         });
         beforeEach('intercept routes', function () {
-            setupInterceptTeacher();
+            setupInterceptStudent();
         });
 
         it('should hide course\'s lectures and then restore', function () {
@@ -157,13 +160,18 @@ describe('Calendar tests', ()=>{
         it('has appropriate styling variants', () => {
             styling();
         })
-    });
+        
+    }); */
 
-
+    // STUDENT
+    testCalendar('student');
+    
+    // TEACHER
+    testCalendar('teacher');
 
 
     // TEACHER CALENDAR INTERFACE
-    describe('Teacher calendar', () => {
+    /* describe('Teacher calendar', () => {
         before('settingsTeacher', function () {
             settings('teacher');
         });
@@ -190,9 +198,54 @@ describe('Calendar tests', ()=>{
         it('has appropriate styling variants for teacher', () => {
             styling();
         })
-    });
+        
+    }); */
 
+    function testCalendar(role){
+    
+        describe(`${role} calendar`, () => {
+            before('settings', function () {
+                settings(role)
+            });
+            beforeEach('intercept routes', function () {
+                role==='student'? setupInterceptStudent() : setupInterceptTeacher();
+            });
+    
+            it(`should hide course\'s lectures and then restore for ${role}`, function () {
+               checkboxCourse_on_off(this.lectures);
+            });
+    
+            if(role==='student') {
+                it(`see if booking checkbox works for student`, function () {
+                seeCheckedLectures('Booked','BOOKED','student')
+                cy.get('[data-cy=booking_status]:contains(BOOKED)').should('have.length', 1);
+                seeAllLectures('Booked','student')
+            });
+            }
+    
+            it(`see if remote checkbox works for ${role}`, function () {
+                seeCheckedLectures('Remote','REMOTE',role)
+                cy.get('[data-cy=booking_status]:contains(REMOTE)').should('have.length', 1);
+                seeAllLectures('Remote',role)
+            });
+    
+            if(role === 'teacher'){
+                it('see if cancelled checkbox works for teacher', function () {
+                    seeCheckedLectures('Cancelled','CANCELED','teacher')
+                    cy.get('[data-cy=booking_status]:contains(CANCELED)').should('have.length', 1);
+                    seeAllLectures('Cancelled','Teacher')
+                });
+            }
+            it('has appropriate styling variants', () => {
+                styling();
+            })
+            
+        });
+    }   
+
+    
 });
+
 
 
 
