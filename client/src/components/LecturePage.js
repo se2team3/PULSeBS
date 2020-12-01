@@ -100,7 +100,7 @@ function LecturePage(props) {
                         </thead>
                         <tbody>
                             {bookings.map((b) =>
-                                <tr>
+                                <tr key={b.student_university_id}>
                                     <td>{b.student_university_id}</td>
                                     <td>{b.student_name}</td>
                                     <td>{b.student_surname}</td>
