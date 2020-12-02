@@ -13,7 +13,7 @@ let EmailUtils;
 let dbUtils;
 let userService;
 let lectureService;
-let bookingService;
+let bookingDao;
 
 
 /*describe('Email testing', function() {
@@ -68,7 +68,7 @@ describe('EmailService', function() {
             dbUtils = require('../utils/db');
             userService = require("../services/userService");
             lectureService = require("../services/extendedLectureService");
-            bookingService = require("../services/bookingService");
+            bookingDao = require("../daos/booking_dao");
             EmailUtils.start();
             await dbUtils.reset();
             await dbUtils.populate();
@@ -121,7 +121,7 @@ describe('EmailService', function() {
 
             const response = await EmailUtils.notifyLectureCancellation(lecture);
             
-            const studentsList = await bookingService.retrieveListOfBookedstudents(lecture.lecture_id);
+            const studentsList = await bookingDao.retrieveListOfBookedStudents(lecture.lecture_id);
 
             let studentsEmails = studentsList.map((s)=>s.email);
 
@@ -146,7 +146,7 @@ describe('EmailService', function() {
 
             const response = await EmailUtils.notifyLectureCancellation(lecture);
             const lectureObj = await lectureService.getLectureById(lecture.lecture_id);
-            const studentsList = await bookingService.retrieveListOfBookedstudents(lecture.lecture_id);
+            const studentsList = await bookingDao.retrieveListOfBookedStudents(lecture.lecture_id);
 
             let firstStudent = studentsList[0];
             let emailBody = mailFormatter.studentCancelledLectureBody(firstStudent,lectureObj);
