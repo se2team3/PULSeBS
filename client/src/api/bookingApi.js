@@ -1,7 +1,7 @@
 import Booking from './models/booking';
 import BookingExtended from './models/booking_extended';
 import axios from 'axios';
-import {deleteResource} from './common';
+import {whatWentWrong, deleteResource} from './utils';
 
 const baseURL = '/api';
 
@@ -15,16 +15,7 @@ async function getBookings(lecture_id){
     let url = `/lectures/${lecture_id}/bookings`;
 
     const response = await axios.get(baseURL + url).catch(error => {
-        if (error.response) {
-            let err = { status: error.response.status, errObj: error.response.data };
-            throw err;  // An object with the error coming from the server
-        } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
-        }
+        whatWentWrong(error);
     });
     if (response.status === 200) {
         return response.data.map(
@@ -48,16 +39,7 @@ async function bookLecture(student_id, lecture_id){
     const response = await axios.post(baseURL + url, {
         lecture_id: lecture_id
     }).catch(error => {
-        if (error.response) {
-            let err = { status: error.response.status, errObj: error.response.data };
-            throw err;  // An object with the error coming from the server
-        } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
-        }
+        whatWentWrong(error);
     });
     if (response.status === 201) {
         const booking = response.data;
@@ -77,8 +59,7 @@ async function bookLecture(student_id, lecture_id){
  */
 async function cancelBooking(student_id, lecture_id){
     let url = `/students/${student_id}/lectures/${lecture_id}`;
-
-    deleteResource(baseURL+url);
+    return deleteResource(baseURL+url);
 }
 
 

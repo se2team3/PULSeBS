@@ -146,5 +146,59 @@ router.delete('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=
     }
 })
 
+ /**
+ * @swagger
+ * /teachers/{teacher_id}/lectures/{lecture_id}:
+ *  patch:
+ *    tags:
+ *      - lectures
+ *    summary: "Change a lecture from presence to virtual"
+ *    description: "Use to update a lecture turning it in a virtual one"
+ *    parameters:
+ *      - in: path
+ *        name: lecture_id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *          format: int64
+ *      - in: cookie
+ *        name: user
+ *        schema:
+ *          type: object
+ *    consumes:
+ *       - "application/json"
+ *    produces:
+ *       - "application/json"
+ *    responses:
+ *       "200":
+ *         description: "Successful deletion"
+ *       "304":
+ *         description: "The lecture doesn't exist or it has already been set"
+ *       "400":
+ *         description: "Invalid status value"
+ *    security:
+ *     - petstore_auth:
+ *       - "write:pets"
+ *       - "read:pets"
+ */
+
+
+router.patch('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=>{
+  const teacher=req.user.sub
+  const lecture_id= +req.params.lecture_id;
+  const datetime= moment().format('YYYY-MM-DD HH:mm');
+  const lecture={datetime:datetime,lecture_id:lecture_id,teacher:teacher}
+  try{
+      let number = await lectureService.updateLectureVirtual(lecture);
+      if(number===1)
+          return res.status(200).json({});
+      else if (number===0) 
+          return res.status(304).json({});
+  } catch(error){
+      console.log(error)
+      res.status(400).json(error);
+  }
+})
+
 
 module.exports = router;

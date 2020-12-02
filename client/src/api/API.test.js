@@ -284,4 +284,46 @@ describe('Client API calls', () => {
             }
         });
     })
+
+    describe('patchLecture', () => {
+        beforeEach(() => {
+            mock.reset()
+        });
+
+        it('patch a lecture to change it to a remote lecture', async () => {
+            mock.onPatch(base_url+`/lectures/${sample_lecture.id}`,{virtual: true}).reply(200,{});
+            const hasBeenChanged = await API.patchLecture(sample_booking.lecture_id, {virtual:true});
+            expect(hasBeenChanged).toBe(true);
+        });
+
+        it("The lecture doesn't exist or it has already been set", async () => {
+            mock.onPatch(base_url+`/lectures/${sample_lecture.id}`,{virtual: true}).reply(304, "internal server error");
+            try {
+                await API.patchLecture(sample_booking.lecture_id, {virtual:true});
+            }
+            catch (e) {
+                expect(e.status).toBe(304);
+            }
+        });
+
+        it('Invalid status value', async () => {
+            mock.onPatch(base_url+`/lectures/${sample_lecture.id}`,{virtual: true}).reply(400, "internal server error");
+            try {
+                await API.patchLecture(sample_booking.lecture_id, {virtual:true});
+            }
+            catch (e) {
+                expect(e.status).toBe(400);
+            }
+        });
+
+        it('something went wrong changing to remote lecture', async () => {
+            mock.onPatch(base_url+`/lectures/${sample_lecture.id}`,{virtual: true}).reply(500, "internal server error");
+            try {
+                await API.patchLecture(sample_booking.lecture_id, {virtual:true});
+            }
+            catch (e) {
+                expect(e.status).toBe(500);
+            }
+        });
+    })
 })

@@ -35,13 +35,10 @@ describe('Student routes', function () {
         let courses = await coursesLectureService.getStudentCourses({student_id:data.students[0].university_id});
         let lectures = await coursesService.getLectures(courses[0].course_id)
         const datetime = lectures[0].datetime;
-        console.log(datetime) 
-       
-
+      
         const tmp = `/api/students/${data.students[0].university_id}/lectures`;
         let start_date = moment(datetime,"YYYY-MM-DD ").subtract(1,'days').format("YYYY-MM-DD");
         let end_date = moment(datetime,"YYYY-MM-DD ").add(1,'days').format("YYYY-MM-DD");
-        console.log(start_date,end_date)
         
         let res = await agent.get(tmp).query({from: start_date, to: end_date});
         

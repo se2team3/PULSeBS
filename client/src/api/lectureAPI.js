@@ -1,6 +1,6 @@
 import axios from 'axios';
 import LectureExtended from './models/lecture_extended';
-import {deleteResource} from './common';
+import {whatWentWrong, deleteResource} from './utils';
 
 const baseURL = '/api';
 
@@ -45,16 +45,7 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
             req_params['to'] = moment(end_date).unix();
     } */
     const response = await axios.get(baseURL + url, { params: req_params }).catch(error => {
-        if (error.response) {
-            let err = { status: error.response.status, errObj: error.response.data };
-            throw err;  // An object with the error coming from the server
-        } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
-        }
+        whatWentWrong(error);
     });
     if (response.status === 200) {
         return response.data.map(
@@ -74,14 +65,7 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
 async function getLecture(id) {
     const url = "/lectures/" + id
     const response = await axios.get(baseURL + url).catch(error => {
-        if (error.response) {
-            let err = { status: error.response.status, errObj: error.response.data };
-            throw err;  
-        } else if (error.request) {
-            console.log(error.request);
-        } else {
-            console.log('Error', error.message);
-        }
+        whatWentWrong(error);
     });
     if (response.status === 200) {
         const lecture = response.data;
@@ -100,8 +84,28 @@ async function getLecture(id) {
  */
 async function cancelLecture(lecture_id){
     let url = `/lectures/${lecture_id}`;
-
-    deleteResource(baseURL+url);    
+    return deleteResource(baseURL+url);
 }
 
-export  {getLecture, getLectures, cancelLecture}
+/**
+ * Patch some fields in a lecture given its id
+ *
+ * @param {*} lecture_id valid lecture id
+ * @param {*} fields Dictionary of fields belonging to the Lecture model
+ * @returns true if patch succeded, throws error if something goes wrong
+ */
+async function patchLecture(lecture_id, fields){
+    let url = `/lectures/${lecture_id}`;
+
+    const response = await axios.patch(baseURL + url, fields).catch(error => {
+        whatWentWrong(error);
+    });
+    if (response.status === 200) {
+        return true;
+    } else {
+        let err = { status: response.status, errObj: response.data };
+        throw err;  // An object with the error coming from the server
+    }
+}
+
+export  {getLecture, getLectures, cancelLecture, patchLecture}

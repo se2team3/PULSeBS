@@ -10,6 +10,15 @@ import CalendarModal from './CalendarModal';
 import CourseBadge from "./CourseBadge"
 import API from '../api';
 
+const LectureState={
+  canceled: 'canceled',
+  closed: 'closed',
+  booked: 'booked',
+  full: 'full',
+  free: 'free',
+  remote: 'remote'
+}
+
 class CalendarPage extends React.Component {
   constructor(props) {
     super(props);
@@ -31,21 +40,17 @@ class CalendarPage extends React.Component {
   }
 
   getStatus = (l) => {
-    if (l.deleted_at)
-      return "canceled";
-    if ((moment(l.datetime).isBefore(moment().format("YYYY-MM-DD"))))
-      return "closed"
-    if (l.booking_updated_at)
-      return "booked";
-    if (l.max_seats - l.booking_counter <= 0)
-      return "full";
-    return "free";
+    if (l.deleted_at) return LectureState.canceled; // canceled
+    if (l.virtual) return LectureState.remote; // remote Stronger priority
+    if ((moment(l.datetime).isBefore(moment().format("YYYY-MM-DD")))) return LectureState.closed // closed
+    if (l.booking_updated_at) return LectureState.booked; // booked
+    if (l.max_seats - l.booking_counter <= 0) return LectureState.full; // full
+    return LectureState.free; // free
   }
 
   getColor = (course_id) => {
-    let colorArray = ["plum", "tomato", "green", "dodgerBlue", "darkOrange", "pink",
-      "mediumOrchid", "coral", "lightBlue", "sandyBrown", "lightSeaGreen",
-      "khaki", "deepSkyBlue", "chocolate", "orange", "rebeccaPurple", "salmon"]
+    let colorArray = ["#31a831", "#ed425c","deepSkyBlue","darkOrange","#e37be3",
+    "peru","salmon","lightBlue", "lightSeaGreen"] 
     let ids = this.state.lectures.map((l) => l.course_id).filter(this.onlyUnique);
     let index = ids.indexOf(course_id);
 
@@ -149,24 +154,28 @@ class CalendarPage extends React.Component {
             {
               eventInfo.view.type === "timeGridWeek" &&
               <div data-cy="booking_status" className="status" style={{ 'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em' }}>
-                <b>{eventInfo.event._def.extendedProps.status}</b>
+                <b>{eventInfo.event._def.extendedProps.status.toUpperCase()}</b>
               </div>
             }
           </div>
         )
       },
       onLectureClick: (info) => {
-        if (this.role === 'student' && info.event.extendedProps.status !== "canceled") this.setState({ modal: true, selected: info.event });
+        if (this.role === 'student' && info.event.extendedProps.status !== LectureState.canceled
+        && info.event.extendedProps.status !== LectureState.remote) 
+        {this.setState({ modal: true, selected: info.event });}
         else if (this.role === 'teacher') this.props.goToLecturePage(info.event);
       },
       onViewChange: async (date) => {
         this.setDates(date);
       },
       setClickable: (arg) => {
-        if (arg.event.extendedProps.status === "canceled") {
-          return [ 'canceled' ]
+        if (arg.event.extendedProps.status === LectureState.canceled) {
+          return [ 'canceled' ];
+        } else if (arg.event.extendedProps.status === LectureState.remote) {
+          return [ 'remote' ];
         } else {
-          return [ 'clickable' ]
+          return [ 'clickable' ];
         }
       }
     }
@@ -216,13 +225,32 @@ class CalendarPage extends React.Component {
                   </Col>
 
                   <Col sm={3} className="sidebar">
+                    {(this.props.authUser?.role === 'student') ?
                     <Badge className='ml-2'>
                       <Form.Check type="checkbox"
 
                         defaultChecked={false}
-                        label='Show only booked'
+                        label='Booked'
                         style={{ fontSize: 20 }}
-                        onClick={(ev) => this.changeDisplayEvent('statusFilter', 'booked', ev)}
+                        onClick={(ev) => this.changeDisplayEvent('statusFilter', LectureState.booked, ev)}
+                      />
+                    </Badge>
+                    :<Badge className='ml-2'>
+                    <Form.Check type="checkbox"
+
+                      defaultChecked={false}
+                      label='Cancelled'
+                      style={{ fontSize: 20 }}
+                      onClick={(ev) => this.changeDisplayEvent('statusFilter', LectureState.canceled, ev)}
+                    />
+                  </Badge>}
+                    <br/>
+                    <Badge className='ml-2'>
+                      <Form.Check type="checkbox"
+                        defaultChecked={false}
+                        label='Remote'
+                        style={{ fontSize: 20 }}
+                        onClick={(ev) => this.changeDisplayEvent('statusFilter', LectureState.remote, ev)}
                       />
                     </Badge>
                     <Nav className="px-4 py-4 col-md-12 d-none d-md-block bg-light sidebar">
