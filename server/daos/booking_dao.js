@@ -124,6 +124,20 @@ exports.deleteBookingTable = function () {
     })
 }
 
+//gets the students booked for a given lecture
+exports.retrieveListOfBookedStudents = function(lecture_id) {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT U.* FROM Bookings B, Users U WHERE B.lecture_id = ? AND U.id = B.student_id'
+        db.all(sql, [lecture_id], (err, rows) => {
+            if(err)
+                return reject(err);
+            if (!rows)
+                resolve([]);
+            else{
+                resolve(rows);
+            }
+        });
+})}          
 
 //it allows you to delete a booking
 exports.deleteBooking = function ({ datetime, lecture_id, student_id }) {

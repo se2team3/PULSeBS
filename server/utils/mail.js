@@ -1,7 +1,8 @@
 const { mail } = require('../config/config');
 const nodemailer = require('nodemailer');
 const userService = require("../services/userService")
-const lectureService = require("../services/lectureService")
+const bookingDao = require("../daos/booking_dao")
+const lectureDao = require("../daos/lecture_dao")
 const extendedLectureService = require("../services/extendedLectureService")
 const mailFormatter = require('./mailFormatter');
 
@@ -25,7 +26,7 @@ const defaults = {
  * Starts the mail service
  * @param {function} callback - to be called after the initialization is done
  */
-const start = (callback = _ => {}) => {
+const start = (callback = _ => { }) => {
     // TODO: check if the 'mail' parameters are set
     transport = nodemailer.createTransport(options, defaults);
 
@@ -54,8 +55,7 @@ const notifyBooking = async (booking) => {
 
 
 const notifyTeachers = async () => {
-    const scheduledLectures = await lectureService.getNextDayLectures(2);
-    console.log(`scheduledLectures`, scheduledLectures);
+    const scheduledLectures = await lectureDao.retrieveNextDayLectures(2);
     scheduledLectures.forEach(lecture => {
         console.log(`email`, lecture);
         send({
@@ -64,6 +64,31 @@ const notifyTeachers = async () => {
             text: mailFormatter.teacherLectureRecapBody(lecture),
         }, () => console.log(`sent email to ${lecture.teacher.email}`));
     });
+};
+
+const notifyLectureCancellation = async (lecture) => {
+
+    // create query to get all booked students for a lecture
+    try {
+        let existingLecture = await extendedLectureService.getLectureById(lecture.lecture_id);
+        if(!existingLecture) throw Error('Invalid lecture!');
+        let bookedStudents = await bookingDao.retrieveListOfBookedStudents(lecture.lecture_id);
+        let successfulMails = [];
+        let promises = Promise.all(bookedStudents.map((student) => {
+            let mailText = mailFormatter.studentCancelledLectureBody(student, existingLecture);
+            let mailSubject = mailFormatter.studentCancelledLectureSubject(existingLecture);
+            send({
+                to: student.email,
+                subject: mailSubject,
+                text: mailText,
+            }, () => successfulMails.push({to: student.email, text: mailText}));
+        }));
+        await promises;
+        return successfulMails;
+    } catch (error) {
+        return error;
+    }
+
 };
 
 /**
@@ -90,9 +115,9 @@ const job = (expression = '00 23 * * Sun-Thu') => {
  * @param {function} callback - is executed after the email is sent
  * @returns {Promise<any>}
  */
-const send = async ({to, subject, text}, callback = _=>{}) => {
-    const message = {to, subject, text};
+const send = async ({ to, subject, text }, callback = _ => { }) => {
+    const message = { to, subject, text };
     return transport.sendMail(message, callback());
 };
 
-module.exports = { start, job, send,  notifyBooking };
+module.exports = { start, job, send, notifyBooking, notifyLectureCancellation };

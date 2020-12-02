@@ -4,16 +4,16 @@ process.env.NODE_ENV = 'test';
 require('dotenv').config({ path: './config/config.env' });
 
 const { MailSlurp } = require('mailslurp-client');
-const mailserver = require('../utils/mail');
 const chai = require('chai');
 const should = chai.should();
 const mockery = require('mockery');
 const nodemailerMock = require('nodemailer-mock');
-const db = require('../utils/db');
+const mailFormatter = require('../utils/mailFormatter');
 let EmailUtils;
 let dbUtils;
 let userService;
-let lectureService;
+let lectureDao;
+let bookingDao;
 
 
 /*describe('Email testing', function() {
@@ -67,7 +67,8 @@ describe('EmailService', function() {
             EmailUtils = require('../utils/mail');
             dbUtils = require('../utils/db');
             userService = require("../services/userService");
-            lectureService = require("../services/extendedLectureService");
+            lectureDao = require("../daos/extended_lecture_dao");
+            bookingDao = require("../daos/booking_dao");
             EmailUtils.start();
             await dbUtils.reset();
             await dbUtils.populate();
@@ -103,7 +104,7 @@ describe('EmailService', function() {
             const response = await EmailUtils.notifyBooking(booking);
             
             const user = await userService.getUser(stud_id);
-            const lecture = await lectureService.getLectureById(lect_id);
+            const lecture = await lectureDao.getLectureById(lect_id);
        
             let regex = new RegExp(user.name + " " + user.surname);
             response.txt.should.match(regex);
@@ -113,6 +114,44 @@ describe('EmailService', function() {
             response.txt.should.match(regex);  
             regex = new RegExp(lecture.room_name);
             response.txt.should.match(regex);         
+         });
+
+         it('should send cancellation email sent to students', async () => {
+            const lecture = {lecture_id :1};
+
+            const response = await EmailUtils.notifyLectureCancellation(lecture);
+            
+            const studentsList = await bookingDao.retrieveListOfBookedStudents(lecture.lecture_id);
+
+            let studentsEmails = studentsList.map((s)=>s.email);
+
+            let allstudentsReceived = response.every((email)=>studentsEmails.includes(email.to)); // everyone received the mail
+            let studentsLength = studentsList.length; 
+            response.should.be.a('array');
+            response.should.have.length(studentsLength);
+            allstudentsReceived.should.be.true;
+         });
+
+         it('should fail because of non-existing lecture', async () => {
+            const lecture = {id :'dffdfdkkl'}; //invalid lecture id
+
+            const response = await EmailUtils.notifyLectureCancellation(lecture);
+                    
+            response.should.have.property('message','Invalid lecture!');
+         });
+
+         it('should check cancellation email body', async () => {
+            const lecture = {lecture_id :1};
+
+            const response = await EmailUtils.notifyLectureCancellation(lecture);
+            const lectureObj = await lectureDao.getLectureById(lecture.lecture_id);
+            const studentsList = await bookingDao.retrieveListOfBookedStudents(lecture.lecture_id);
+
+            let firstStudent = studentsList[0];
+            let emailBody = mailFormatter.studentCancelledLectureBody(firstStudent,lectureObj);
+            let firstMail = response[0];
+
+            firstMail.text.should.equal(emailBody);
          });
         
     })

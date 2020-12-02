@@ -9,3 +9,6 @@
 /server/coverage
 /client/coverage
 /node_modules
+client/.eslintcache
+client/package-lock.json
+client/package-lock.json
