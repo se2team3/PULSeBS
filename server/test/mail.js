@@ -4,12 +4,10 @@ process.env.NODE_ENV = 'test';
 require('dotenv').config({ path: './config/config.env' });
 
 const { MailSlurp } = require('mailslurp-client');
-const mailserver = require('../utils/mail');
 const chai = require('chai');
 const should = chai.should();
 const mockery = require('mockery');
 const nodemailerMock = require('nodemailer-mock');
-const db = require('../utils/db');
 const mailFormatter = require('../utils/mailFormatter');
 let EmailUtils;
 let dbUtils;
