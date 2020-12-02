@@ -43,7 +43,7 @@ To run automated tests on your machine you could use.
 # in the PULSeBS repository directory
 cd client
 npm test
-npm start:instrumented
+npm run start:instrumented
 npm run cy:run # or npm run cy:open if you want to run cypress tests manually one by one
 cd ../server
 npm test
