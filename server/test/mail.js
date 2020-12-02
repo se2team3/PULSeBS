@@ -119,14 +119,15 @@ describe('EmailService', function() {
          });
 
          it('should send cancellation email sent to students', async () => {
-            const lecture = {id :1};
+            const lecture = {lecture_id :1};
 
             const response = await EmailUtils.notifyLectureCancellation(lecture);
             
-            const studentsList = await bookingService.retrieveListOfBookedstudents(lecture.id);
+            const studentsList = await bookingService.retrieveListOfBookedstudents(lecture.lecture_id);
 
             let studentsEmails = studentsList.map((s)=>s.email);
 
+            //console.log(response);
             let allstudentsReceived = response.every((email)=>studentsEmails.includes(email.to)); // everyone received the mail
             let studentsLength = studentsList.length; 
             response.should.be.a('array');
@@ -135,7 +136,7 @@ describe('EmailService', function() {
          });
 
          it('should fail because of non-existing lecture', async () => {
-            const lecture = {id :'dffdfdkkl'}; //invalid lecture id
+            const lecture = {lecture_id :'dffdfdkkl'}; //invalid lecture id
 
             const response = await EmailUtils.notifyLectureCancellation(lecture);
                     
@@ -143,11 +144,11 @@ describe('EmailService', function() {
          });
 
          it('should check cancellation email body', async () => {
-            const lecture = {id :1};
+            const lecture = {lecture_id :1};
 
             const response = await EmailUtils.notifyLectureCancellation(lecture);
-            const lectureObj = await lectureService.getLectureById(lecture.id);
-            const studentsList = await bookingService.retrieveListOfBookedstudents(lecture.id);
+            const lectureObj = await lectureService.getLectureById(lecture.lecture_id);
+            const studentsList = await bookingService.retrieveListOfBookedstudents(lecture.lecture_id);
 
             let firstStudent = studentsList[0];
             let emailBody = mailFormatter.studentCancelledLectureBody(firstStudent,lectureObj);
