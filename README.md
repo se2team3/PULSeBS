@@ -44,6 +44,7 @@ To run automated tests on your machine you could use.
 cd client
 npm test
 npm run start:instrumented
+# in another terminal
 npm run cy:run # or npm run cy:open if you want to run cypress tests manually one by one
 cd ../server
 npm test
