@@ -84,7 +84,7 @@ exports.retrieveUserByEmail = function(email) {
         });
     })
 }
-
+/*
 exports.deleteUsersTable = function() {
     return new Promise ((resolve,reject) =>{
         const sql = 'DROP TABLE Users '
@@ -96,3 +96,4 @@ exports.deleteUsersTable = function() {
     })
 }
 
+*/

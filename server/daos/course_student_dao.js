@@ -59,6 +59,7 @@ exports.retrieveStudentCourses = function({student_id}) {
         });
     })
 }
+/*
 //gets the students given the course_id
 exports.retrieveEnrolledStudents = function({course_id}) {
     return new Promise ((resolve,reject) =>{
@@ -83,4 +84,4 @@ exports.deleteCourse_StudentTable = function() {
             else resolve(null);
         });
     })
-}
+}*/

@@ -2,11 +2,11 @@
 // import modules
 
 const db = require('../db/db.js');
-const Lecture = require('../models/lecture.js');
+/*const Lecture = require('../models/lecture.js');
 
 const createLecture = function (row){
     return new Lecture(row.id,row.datetime,row.course_id,row.room_id,row.virtual,row.deleted_at);
-}
+}*/
 
 // it creates the lecture table
 exports.createLectureTable = function() {
@@ -48,6 +48,7 @@ exports.insertLecture = function({datetime,datetime_end,course_id,room_id}) {
         });
     })
 }
+/*
 //gets the lecture with the selected id
 exports.retrieveLecture = function(id) {
     return new Promise ((resolve,reject) =>{
@@ -63,7 +64,7 @@ exports.retrieveLecture = function(id) {
             }               
         });
     })
-}
+}  */
 exports.deleteLectureTable = function() {
     return new Promise ((resolve,reject) =>{
         const sql = 'DROP TABLE Lectures '
