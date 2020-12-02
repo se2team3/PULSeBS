@@ -1,8 +1,8 @@
 const { mail } = require('../config/config');
 const nodemailer = require('nodemailer');
 const userService = require("../services/userService")
-const bookingService = require("../services/bookingService")
-const lectureService = require("../services/lectureService")
+const bookingDao = require("../daos/booking_dao")
+const lectureDao = require("../daos/lecture_dao")
 const extendedLectureService = require("../services/extendedLectureService")
 const mailFormatter = require('./mailFormatter');
 
@@ -55,7 +55,7 @@ const notifyBooking = async (booking) => {
 
 
 const notifyTeachers = async () => {
-    const scheduledLectures = await lectureService.getNextDayLectures(2);
+    const scheduledLectures = await lectureDao.retrieveNextDayLectures(2);
     scheduledLectures.forEach(lecture => {
         console.log(`email`, lecture);
         send({
@@ -72,7 +72,7 @@ const notifyLectureCancellation = async (lecture) => {
     try {
         let existingLecture = await extendedLectureService.getLectureById(lecture.lecture_id);
         if(!existingLecture) throw Error('Invalid lecture!');
-        let bookedStudents = await bookingService.retrieveListOfBookedstudents(lecture.lecture_id);
+        let bookedStudents = await bookingDao.retrieveListOfBookedStudents(lecture.lecture_id);
         let successfulMails = [];
         let promises = Promise.all(bookedStudents.map((student) => {
             let mailText = mailFormatter.studentCancelledLectureBody(student, existingLecture);

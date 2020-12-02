@@ -7,7 +7,6 @@ const chai = require('chai');
 const server = require('../index');
 const should = chai.should();
 const chaiHttp = require("chai-http");
-const BookingService = require ("../services/bookingService");
 const populateDb = require('../utils/populate')
 
 
