@@ -30,7 +30,15 @@ exports.deleteLecture = async function(lecture){
         return errHandler(error);
     }
 }
+exports.updateLectureVirtual = async function(lecture){
+    try {
+        let response= await lectureDao.setLectureVirtual({...lecture});
+        return response;
 
+    } catch (error) {
+        return errHandler(error);
+    }
+}
 
 
 exports.getLecture = async function(lecture_id) {

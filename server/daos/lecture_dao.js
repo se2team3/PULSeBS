@@ -121,12 +121,49 @@ const lectureInfo = (rows) => {
     }));
 };
 
-exports.deleteLecture = function ({ datetime, lecture_id}) {
+//get the list of all lectures for a course
+exports.getLectures = function(course_id) {
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT * FROM Lectures WHERE course_id = ?'
+        db.all(sql, [course_id], (err, rows) => {
+            if(err)
+                return reject(err);
+            if (!rows)
+                resolve(null);
+            else{
+                resolve(rows);
+            }               
+        });
+    })
+};
+
+exports.deleteLecture = function ({ datetime, lecture_id,teacher}) {
     return new Promise((resolve, reject) => {
         const sql = `UPDATE Lectures SET deleted_at= ? 
                      WHERE id= ? AND deleted_at IS NULL
-                    AND (julianday(datetime)-julianday(?))*24 >1`
-        db.run(sql, [datetime,lecture_id,datetime], function(err) {
+                    AND (julianday(datetime)-julianday(?))*24 >1
+                    AND id in (SELECT L2.id FROM Lectures L2, Courses C, Users U
+                               WHERE  L2.course_id=C.id AND C.teacher_id=U.id AND U.role='teacher' AND U.id=? )`
+        db.run(sql, [datetime,lecture_id,datetime,teacher], function(err) {
+            if (err) {
+                console.log(err)
+                reject(err);
+            }
+            else{
+                resolve(this.changes);
+            }
+        }); 
+      
+    })
+}
+exports.setLectureVirtual = function ({ datetime, lecture_id,teacher}) {
+    return new Promise((resolve, reject) => {
+        const sql = `UPDATE Lectures SET virtual= 1
+                     WHERE id= ? AND deleted_at IS NULL AND virtual=0
+                     AND (julianday(datetime)-julianday(?))*24*60 >30
+                     AND id in (SELECT L2.id FROM Lectures L2, Courses C, Users U
+                                WHERE  L2.course_id=C.id AND C.teacher_id=U.id AND U.role='teacher' AND U.id=? )`
+        db.run(sql, [lecture_id,datetime,teacher], function(err) {
             if (err) {
                 console.log(err)
                 reject(err);

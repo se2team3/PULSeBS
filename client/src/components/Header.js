@@ -13,15 +13,17 @@ const Header = (props) => {
         <Navbar bg="primary" variant="dark" expand="sm">
         <Navbar.Toggle aria-controls="left-sidebar" aria-expanded="false" aria-label="Toggle sidebar" onClick={props.showSidebar}/>
 
-        <Navbar.Brand href="index.html">
+        <Navbar.Brand href="/">
           PULSeBS
         </Navbar.Brand>
         
         
         <Nav className="mr-auto" >
-        <Nav.Link href="#home">Calendar</Nav.Link>
-        <Nav.Link href="#">Help</Nav.Link>
-        <Nav.Link href="#">PoliTO</Nav.Link>
+        <Nav.Link href="/calendar">Calendar</Nav.Link>
+          {/*
+          <Nav.Link href="#">Help</Nav.Link>
+          <Nav.Link href="#">PoliTO</Nav.Link>
+          */}
         </Nav>
         
 

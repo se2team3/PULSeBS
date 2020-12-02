@@ -12,7 +12,7 @@ const CalendarModal = (props) => {
       }
 
     return (
-        <Modal show={props.show} onHide={closeModal} size="lg"
+        <Modal show={props.show} onHide={closeModal} size="md"
         aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header >
                 <Modal.Title>{lecture.title}</Modal.Title>

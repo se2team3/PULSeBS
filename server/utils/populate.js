@@ -20,8 +20,7 @@ const idPrefix = (role) => {
 };
 
 const generateUsers = async ({ n = 50, role = "student" } = {}) => {
-    const users = [];
-    const users_id = [];
+    const users = []; 
     for (let i = 0; i < n; i++) {
         const user = new function() {
             this.university_id = `${idPrefix(role)}${faker.random.number({ min: 0, max: 3000 })}`;
@@ -32,17 +31,18 @@ const generateUsers = async ({ n = 50, role = "student" } = {}) => {
             this.role = role;
         };
         try {
-            users_id.push(await userDao.insertUser(user));
+            let user_id = await userDao.insertUser(user);
+            user.id = user_id;
             users.push(user);
         }   catch(e) {
         }
     }
-    return [ users, users_id ];
+    return users;
 };
 
 const generateRoom = async ({n}) => {
-    let vector_id=[];
-    let vector_room=[];
+    let vector_id=[]; 
+    // let vector_room=[]; removed code smell, unused field
     for(let i=0;i<n;i++){
         const room = {
             name: `Aula ${faker.random.number(50)}`,
@@ -50,9 +50,9 @@ const generateRoom = async ({n}) => {
         };
         const room_id = await roomDao.insertRoom(room);
         vector_id.push(room_id);
-        vector_room.push(room);
+        //vector_room.push(room);
     }
-    return [vector_room,vector_id];
+    return vector_id;
 };
 
 const generateCourse = async ({ teacher_id }) => {
@@ -62,7 +62,7 @@ const generateCourse = async ({ teacher_id }) => {
         teacher_id: teacher_id
     };
     const course_id = await courseDao.insertCourse(course);
-    return [ course, course_id ];
+    return course_id ;
 };
 
 const startingHour = ["08:30", "10:00", "11:30", "13:00", "14:30", "16:00", "17:30"];
@@ -78,7 +78,7 @@ const generateLecture = async ({ inDays = faker.random.number(20), course_id, ro
         room_id: room_id
     };
     const lecture_id = await lectureDao.insertLecture(lecture);
-    return [ lecture, lecture_id ];
+    return lecture_id;
 };
 
 const assignCourse = async ({course_id,student_id})=>{
@@ -96,33 +96,44 @@ const bookLecture = async ({ lecture_id, student_id }) => {
 }
 
 
-(async () => {
-    const [students, students_id] = await generateUsers({ n: 200, role: "student" });
-    const [teachers, teachers_id] = await generateUsers({ n: 5, role: "teacher" });
-    console.log(`Students: `);
-    students.forEach(s => console.log(`  email: ${s.email}, password: ${s.password}`));
-    console.log(`Teacher: `);
-    teachers.forEach(t => console.log(`  email: ${t.email}, password: ${t.password}`));
-    const [rooms, rooms_id] = await generateRoom({n:10});
-    let count = 0;
+const populate = (async () => {
+    const students = await generateUsers({ n: 10, role: "student" });
+    const teachers = await generateUsers({ n: 1, role: "teacher" });
+    const rooms_id = await generateRoom({n:10});
+
+    let teachers_id = teachers.map((t)=>t.id);
+    let students_id = students.map((s) => s.id);
+
+
     for (let teacher_id of teachers_id) {
-        const [course, course_id] = await generateCourse({ teacher_id });
-        const n = 50;
-        const selected = students_id.sort(() => 0.5 - Math.random()).slice(0, n);
-        for (let student_id of selected) {
+        const course_id = await generateCourse({ teacher_id });
+        const n = 10;
+       // const selected = students_id.sort(() => 0.5 - Math.random()).slice(0, n);
+        for (let student_id of students_id) {
             await assignCourse({course_id, student_id});
         }
         const n_lectures = 10;
         for (let i = 0; i < n_lectures; i++) {
             const room_id = rooms_id[faker.random.number({min:0, max:rooms_id.length - 1})];
-            const [lecture, lecture_id] = await generateLecture({ course_id, room_id });
-            const booked = selected.sort(() => 0.5 - Math.random()).slice(0, n_lectures);
-            for (let student_id of booked) {
-                await bookLecture({lecture_id, student_id});
+            const lecture_id = await generateLecture({ course_id, room_id });
+            //const booked = selected.sort(() => 0.5 - Math.random()).slice(0, n_lectures);
+            
+            const dim = students_id.length /2 ;
+            if(i<dim){
+                let j=0;
+                for (let student_id of students_id) {       
+                    if(j<dim) {
+                        j++; 
+                        await bookLecture({lecture_id, student_id});
+                    }
+                        
+                }
+            
             }
         }
     }
-})();
-
+    return {students,students_id};
+});
+module.exports = {populate};
 
 
