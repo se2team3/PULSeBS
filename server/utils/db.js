@@ -117,7 +117,7 @@ const populate = async ({n_students, datetime} = def_options) => {
     // insert data
     data.teacher_id = await userDao.insertUser(data.teacher);
     data.room_id = await roomDao.insertRoom(data.room);
-    data.course.teacher_id = data.teacher_id;
+    //data.course.teacher_id = data.teacher_id;
     //data.course2.teacher_id=data.teacher_id;
     data.course_id = await courseDao.insertCourse(data.course);
     data.course2_id=await courseDao.insertCourse(data.course2);
