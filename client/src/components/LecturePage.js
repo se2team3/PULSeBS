@@ -53,10 +53,10 @@ function LecturePage(props) {
             </Row>
             <Row>
                 <Col md={4}>
-                    {lecture.deleted_at != null && <Alert variant="danger">
+                    {!!(lecture.deleted_at != null) && <Alert variant="danger">
                         This lecture has been <b>cancelled</b>!
                         </Alert>}
-                    {lecture.virtual && <Alert variant="warning">
+                    {!!(lecture.virtual) && <Alert variant="warning">
                         <b>REMOTE LECTURE</b>
                         </Alert>}
                     <Card>
@@ -69,11 +69,11 @@ function LecturePage(props) {
                                 {moment(lecture.datetime).format('LT')} - {moment(lecture.datetime_end).format('LT')}
                             </Card.Title>
                             <Card.Text>
-                                {lecture.virtual && <><b>VIRTUAL CLASSROOM</b><br /></>}
-                                {!lecture.virtual && <>Room: <b>{lecture.room_name}</b><br /></>}
+                                {!!(lecture.virtual) && <><b>VIRTUAL CLASSROOM</b><br /></>}
+                                {!!(!lecture.virtual) && <>Room: <b>{lecture.room_name}</b><br /></>}
                                     Teacher: {lecture.teacher_surname} {lecture.teacher_name}
                             </Card.Text>
-                            {lecture.deleted_at == null && <>
+                            {!!(lecture.deleted_at == null) && <>
                                 {(!lecture.virtual && moment(lecture.datetime).diff(moment(),'minutes') >= 30) && <Button block variant="warning" onClick={changeLectureToRemote}>Change to distance lecture</Button>}
                                 {moment(lecture.datetime).diff(moment(),'hours') >= 1&&<Button block variant="danger" onClick={cancelLecture}>Cancel lecture</Button>}
                             </>}
@@ -83,12 +83,12 @@ function LecturePage(props) {
                 <Col md={8}>
                     <h4>Bookings</h4>
 
-                    {!lecture.virtual&&<p>There are {number_of_bookings} bookings out of {lecture.max_seats} available seats.</p>}
-                    {(!lecture.virtual&&number_of_bookings === 0) && <Alert variant="secondary" style={{ textAlign: "center" }}>
+                    {!!(!lecture.virtual)&&<p>There are {number_of_bookings} bookings out of {lecture.max_seats} available seats.</p>}
+                    {!!(!lecture.virtual&&number_of_bookings === 0) && <Alert variant="secondary" style={{ textAlign: "center" }}>
                         No bookings to show for now, come back later...
                         </Alert>}
-                    {lecture.virtual&&<p>This lecture has been changed from 'presence' to `remote`. There were {number_of_bookings} bookings out of {lecture.max_seats} available seats.</p>}
-                    {number_of_bookings > 0 && <Table striped bordered hover>
+                    {!!lecture.virtual&&<p>This lecture has been changed from 'presence' to `remote`. There were {number_of_bookings} bookings out of {lecture.max_seats} available seats.</p>}
+                    {!!(number_of_bookings > 0) && <Table striped bordered hover>
                         <thead>
                             <tr>
                                 <th>#</th>

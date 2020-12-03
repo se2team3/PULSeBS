@@ -1,6 +1,6 @@
 const courseStudentDao = require('../daos/course_student_dao');
 const errHandler = require('./errorHandler');
-
+/*
 exports.createCourseStudentTable = async function() {    
     try{
         await courseStudentDao.createCourse_StudentTable();
@@ -25,7 +25,7 @@ exports.getEnrolledStudents = async function(course_id) {
         return errHandler(error);
     }
 }
-
+*/
 exports.getStudentCourses = async function(student_id) {
     try {
         let courses = await courseStudentDao.retrieveStudentCourses(student_id);

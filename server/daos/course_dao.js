@@ -2,12 +2,12 @@
 // import modules
 
 const db = require('../db/db.js');
-const Course = require('../models/course.js');
+/*const Course = require('../models/course.js');
 
 const createCourse = function (row){
     return new Course(row.id,row.code,row.name,row.teacher_id);
 }
-
+*/
 // it creates the course table
 exports.createCourseTable = function() {
     return new Promise ((resolve,reject) => {
@@ -47,6 +47,7 @@ exports.insertCourse = function({code,name,teacher_id}) {
         });
     })
 }
+/*
 //gets the course with the selected id
 exports.retrieveCourse = function(id) {
     return new Promise ((resolve,reject) =>{
@@ -64,6 +65,7 @@ exports.retrieveCourse = function(id) {
         });
     })
 }
+*//*
 exports.deleteCourseTable = function() {
     return new Promise ((resolve,reject) =>{
         const sql = 'DROP TABLE Courses'
@@ -73,4 +75,4 @@ exports.deleteCourseTable = function() {
             else resolve(null);
         });
     })
-}
+}*/

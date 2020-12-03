@@ -2,12 +2,12 @@
 // import modules
 
 const db = require('../db/db.js');
-const Room = require('../models/room.js');
+/*const Room = require('../models/room.js');
 
 const createRoom = function (row){
     return new Room(row.id,row.name,row.seats);
 }
-
+*/
 // it creates the room table
 exports.createRoomsTable = function() {
     return new Promise ((resolve,reject) => {
@@ -46,6 +46,7 @@ exports.insertRoom = function({name,seats}) {
         });
     })
 }
+/*
 //gets the room with the selected id
 exports.retrieveRoom = function(id) {
     return new Promise ((resolve,reject) =>{
@@ -72,4 +73,4 @@ exports.deleteRoomTable = function() {
             else resolve(null);
         });
     })
-}
+}*/

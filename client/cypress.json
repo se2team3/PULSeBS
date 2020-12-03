@@ -1,5 +1,4 @@
 {
-    "experimentalNetworkStubbing": true,
     "testFiles": "**/*.spec.{js,ts,jsx,tsx}",
     "baseUrl": "http://localhost:3000",
     "viewportWidth": 1366,

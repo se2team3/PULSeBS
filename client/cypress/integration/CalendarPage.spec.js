@@ -86,7 +86,7 @@ describe('Calendar tests', ()=>{
 
     // CALENDAR SETUP
     describe('General calendar tests', () => {
-        before('settings', function () {
+        beforeEach('settings', function () {
             settings('student')
         });
         beforeEach('intercept routes', function () {
@@ -110,7 +110,7 @@ describe('Calendar tests', ()=>{
         })
 
         it('has month button working', () => {
-        
+            cy.wait(1000);
             cy.get ("button").eq(6).click();
             cy.get(<div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"></div>)
             cy.get ("button").eq(4).click();
@@ -204,7 +204,7 @@ describe('Calendar tests', ()=>{
     function testCalendar(role){
     
         describe(`${role} calendar`, () => {
-            before('settings', function () {
+            beforeEach('settings', function () {
                 settings(role)
             });
             beforeEach('intercept routes', function () {
@@ -217,10 +217,10 @@ describe('Calendar tests', ()=>{
     
             if(role==='student') {
                 it(`see if booking checkbox works for student`, function () {
-                seeCheckedLectures('Booked','BOOKED','student')
-                cy.get('[data-cy=booking_status]:contains(BOOKED)').should('have.length', 1);
-                seeAllLectures('Booked','student')
-            });
+                    seeCheckedLectures('Booked','BOOKED','student')
+                    cy.get('[data-cy=booking_status]:contains(BOOKED)').should('have.length', 1);
+                    seeAllLectures('Booked','student')
+                });
             }
     
             it(`see if remote checkbox works for ${role}`, function () {

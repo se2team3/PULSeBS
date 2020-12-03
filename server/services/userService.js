@@ -16,7 +16,7 @@ const login = async ({email, password}) => {
 
 /*
     TODO implement the login part using the db
-*/
+*//*
 const createUserTable = async function() {    
     try{
         return userDao.createUsersTable();
@@ -24,7 +24,7 @@ const createUserTable = async function() {
         return errHandler(err);
     }
 }
-
+*/
 const insertUser = async function(user) {
 
     //let {univesity_id,email,password,name,surname,role} = user;
@@ -45,7 +45,7 @@ const getUser = async function(user_id) {
         return errHandler(error);
     }
 }
-
+/*
 const deleteUsers = async function(){
     try {
         return userDao.deleteUsersTable();
@@ -53,5 +53,5 @@ const deleteUsers = async function(){
         return errHandler(error);
     }
 }
-
-module.exports = { login, createUserTable, getUser, insertUser, deleteUsers};
+*/
+module.exports = { login, getUser, insertUser};

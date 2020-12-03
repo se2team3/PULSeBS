@@ -1,6 +1,6 @@
 const roomDao = require('../daos/room_dao');
 const errHandler = require('./errorHandler');
-
+/*
 exports.createRoomsTable = async function() {    
     try{
         return roomDao.createRoomsTable();
@@ -33,4 +33,4 @@ exports.deleteRooms = async function(){
     } catch (error) {
         return errHandler(error);
     }
-} 
+} */

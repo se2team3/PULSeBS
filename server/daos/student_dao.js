@@ -29,6 +29,7 @@ exports.retrieveStudentLecturesinTimeFrame = function(student_id,start_date, end
         });
     })
 }
+/*
 //gets the extendedLecture given the student_id
 exports.retrieveStudentLectures = function(student_id) {
     return new Promise ((resolve,reject) =>{
@@ -53,4 +54,4 @@ exports.retrieveStudentLectures = function(student_id) {
             }               
         });
     })
-}
+}*/

@@ -1,7 +1,7 @@
 const lectureDao = require('../daos/lecture_dao');
 const errHandler = require('./errorHandler');
 const mailUtils = require("../utils/mail");
-
+/*
 exports.createLecturesTable = function() {    
     try{
         return lectureDao.createLectureTable(); 
@@ -17,7 +17,7 @@ exports.addLecture = async function(lecture) {
     } catch (error) {
         return errHandler(error);
     }
-}
+}*/
 
 exports.deleteLecture = async function(lecture){
     try {
@@ -39,7 +39,7 @@ exports.updateLectureVirtual = async function(lecture){
         return errHandler(error);
     }
 }
-
+/*
 
 exports.getLecture = async function(lecture_id) {
     try {
@@ -56,6 +56,6 @@ exports.deleteLectures = async function(){
     } catch (error) {
         return errHandler(error);
     }
-}
+}*/
 
 exports.getNextDayLectures = async (offset = 1) => await lectureDao.retrieveNextDayLectures({offset});

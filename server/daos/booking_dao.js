@@ -63,7 +63,7 @@ exports.insertBooking = function ({ lecture_id, student_id }) {
         });
     })
 }
-
+/*
 //gets the bookings given the student_id
 exports.retrieveStudentBookings = function (student_id) {
     return new Promise((resolve, reject) => {
@@ -94,7 +94,7 @@ exports.retrieveLectureBookings = function (lecture_id) {
             }
         });
     })
-}
+}*/
 
 //assert if a student can book a lecture
 exports.isBookable = function (student_id, lecture_id) {
@@ -112,7 +112,7 @@ exports.isBookable = function (student_id, lecture_id) {
     })
 }
 
-
+/*
 exports.deleteBookingTable = function () {
     return new Promise((resolve, reject) => {
         const sql = 'DROP TABLE Bookings '
@@ -123,7 +123,7 @@ exports.deleteBookingTable = function () {
         });
     })
 }
-
+*/
 //gets the students booked for a given lecture
 exports.retrieveListOfBookedStudents = function(lecture_id) {
     return new Promise ((resolve,reject) =>{
