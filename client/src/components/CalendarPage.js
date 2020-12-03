@@ -153,7 +153,7 @@ class CalendarPage extends React.Component {
               <b className="title">{eventInfo.event.title}</b><br/>
               <i className="room">{eventInfo.event.extendedProps.room}</i><br/>
               {
-                eventInfo.view.type === "timeGridWeek" &&
+                (eventInfo.view.type === "timeGridWeek"&&(this.role==="student"||(this.role==="teacher"&&(eventInfo.event._def.extendedProps.status.toUpperCase()==="CANCELLED"||eventInfo.event._def.extendedProps.status.toUpperCase()==="REMOTE")))) &&
                 <div data-cy="booking_status" className="status" style={{ 'color': 'rgb(255, 248, 220)', 'position': 'absolute', 'bottom': 0, 'left': '0.2em' }}>
                   <b>{eventInfo.event._def.extendedProps.status.toUpperCase()}</b>
                 </div>
