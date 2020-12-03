@@ -110,7 +110,7 @@ describe('Calendar tests', ()=>{
         })
 
         it('has month button working', () => {
-        
+            cy.wait(1000);
             cy.get ("button").eq(6).click();
             cy.get(<div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"></div>)
             cy.get ("button").eq(4).click();
