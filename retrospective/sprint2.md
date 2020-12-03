@@ -58,10 +58,10 @@ We have defined a workflow composed of the following steps:
 1h average per task, standard deviation 1.5h*
 
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
-    - 51.25/61 = 0.84 = 84% correct
-    - That is 16% of error in estimation
+    - 68/67 = 1.015 = 99% correct
+    - That is ~1% of error in estimation
 
-*\* 10 hours were spent for planning, that encompassed the different group sub-activities (story review and selection, estimation, division in sub-tasks, time estimation for each sub-task)*
+*\* 12 hours were spent for planning, that encompassed the different group sub-activities (story selection, division in sub-tasks, time estimation for each sub-task)*
   
 ## QUALITY MEASURES 
 
