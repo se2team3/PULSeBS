@@ -1,7 +1,7 @@
 TEMPLATE FOR RETROSPECTIVE - Team 3
 =====================================
 
-Sprint #2
+Sprint number 2
 
 Table of contents:
 
@@ -47,42 +47,42 @@ We have defined a workflow composed of the following steps:
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 |:------:|:-------:|:------:|:----------:|:------------:|
 | 0      | 21      |        | 40*        | 38           |
-| 4      | 5       | 3      | 10         | 14           |
-| 5      | 7       | 2      | 2          | 4.5          |
-| 6      | 8       | 5      | 7.25       | 9            |
-| 7      | 12      | 3      | 10         | 14           |
-| 8      | 7       | 5      | 2          | 4.5          |
-| 9      | 12      | 5      | 7.25       | 9            |
+| 4      | 5       | 3      | 4          | 4.25         |
+| 5      | 7       | 2      | 3.6        | 3.9          |
+| 6      | 8       | 5      | 4.25       | 3.6          |
+| 7      | 12      | 3      | 6          | 7.4          |
+| 8      | 7       | 5      | 3.6        | 2.9          |
+| 9      | 12      | 5      | 7.33       | 7.4          |
    
 
-1h average per task, standard deviation 1.5h*
+0.9h average per task, standard deviation 1.4h*
 
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
-    - 68/67 = 1.015 = 99% correct
-    - That is ~1% of error in estimation
+    - 68/67 = 1.015 = 98.5% correct
+    - That is ~1.5% of error in estimation
 
 *\* 12 hours were spent for planning, that encompassed the different group sub-activities (story selection, division in sub-tasks, time estimation for each sub-task)*
   
 ## QUALITY MEASURES 
 
 - Unit Testing:
-  - Total hours estimated: 4
-  - Total hours spent: 5h 30m
-  - Nr of automated unit test cases: 25
-  - Coverage: 66% (server) + 21% (client, Cypress is not counted here, the real coverage is higher than this)
-- E2E testing:
-  - Total hours estimated: 
-  - Total hours spent: 
-  - Nr of automated tests: 106
+  - Total hours estimated: 6.8
+  - Total hours spent: 6.5
+  - Nr of automated unit test cases: 59
+  - Coverage: 88.15% (server) + 74.67% (client), 84% (overall)
+- Integration testing:
+  - Total hours estimated: 9
+  - Total hours spent: 9.75
+  - Nr of automated tests: 47
 - Code review 
-  - Total hours estimated: 2.5
-  - Total hours spent: 3
+  - Total hours estimated: 3
+  - Total hours spent: 3.8
 - Technical Debt management:
   - Total hours estimated: 1h 30m
-  - Total hours spent: 1h 15m
-  - Hours estimated for remediation by SonarQube: 2h and it was reduced to 1h
-  - Hours spent on remediation: 1h
-  - debt ratio (as reported by SonarQube under "Measures-Maintainability")
+  - Total hours spent: 3h
+  - Hours estimated for remediation by SonarCloud: 2h and it was reduced to 33m
+  - Hours spent on remediation: 3h
+  - debt ratio (as reported by SonarCloud under "Measures-Maintainability")
       - Technical Debt Ratio: 0.0%
   - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability )
       - Reliability: A
@@ -94,34 +94,25 @@ We have defined a workflow composed of the following steps:
 ## ASSESSMENT
 
 - What caused your errors in estimation (if any)?
-    - Underestimation of the testing part
-    - Some tasks should have been splitted in smaller tasks to better address their complexity
-    - We thought emails tasks would have been more time consuming than they actually were
+    - We underestimated how long it takes to fix code duplication, especially related to automated tests
+    - Merging conflicts took more than expected
 
 - What lessons did you learn (both positive and negative) in this sprint?
-    - Positive: automated testing is very useful to catch regressions
-    - Negative: merges can cause troubles if done too quickly
+    - Positive: working on few stories at a time based on priority, like at most 3 of them, and then moving to other stories improved throughput
+    - Negative: merges with conflicts takes time
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
-    - Conventions and standardization
-        - of the API interface
-        - in naming objects in the code and in the DB
-        - Better code organization, folder structure
-        - Divide our work in feature branches, merge only when ready
-    - Proper automated testing and coverage monitoring, clear definition of done
-    - More coordination, through pair programming and more scrum meetings
+    - Better estimation of time effort for each task, clear division of tasks
+    - Improve sprint planning time management
   
 - Which ones you were not able to achieve? Why?
-    - We still need to improve story and task estimation and tasks division
-        - We thought we had spent already too much time in planning and started working without continuing planning
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
-    - Better estimation for of time effort for each task, clear division of tasks in
-        - code
-        - tests
-        - review
-    - Improve sprint planning time management
-        - Divide it in smaller activities with a clear goal
+    - Code linting: uniform code style and safer practices
+    - Increase code coverage:
+        - Tests failures and edge cases
+    - Simplifications of DB models interfaces
+    - Improve documentation
 
 - One thing you are proud of as a Team!!
-    - We are proud of having implemented and followed a clear work flow that included automated testing, that we previously lacked, without negatively affecting productivity and stories completion.
+    - We're proud of noticing that we're actually getting better in our estimations, and we're improving our team coordination.
