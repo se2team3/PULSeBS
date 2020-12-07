@@ -12,6 +12,7 @@ import { Switch } from 'react-router';
 import { AuthContext } from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
 import CalendarPage from './components/CalendarPage';
+import StatisticsPage from './components/StatisticsPage';
 
 
 class App extends React.Component {
@@ -119,6 +120,10 @@ class App extends React.Component {
 
             <Route path="/calendar">
               <CalendarPage goToLecturePage={this.goToLecturePage} authUser={value.authUser}/>
+            </Route>
+
+            <Route path="/statistics">
+              <StatisticsPage authUser={value.authUser}/>
             </Route>
 
             <Route path="/lectures/:lecture_id" render={(props) =>
