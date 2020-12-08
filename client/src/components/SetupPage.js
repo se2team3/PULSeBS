@@ -38,7 +38,7 @@ function StyledDropzone(props) {
         isDragActive,
         isDragAccept,
         isDragReject
-    } = useDropzone({ accept: '.csv', maxFiles: 1 });
+    } = useDropzone({ accept: 'text/csv,text/plain', maxFiles: 1 });
 
     const style = useMemo(() => ({
         ...baseStyle,
