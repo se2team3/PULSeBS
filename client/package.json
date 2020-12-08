@@ -16,9 +16,11 @@
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.21.0",
     "moment": "^2.29.1",
+    "nyc": "^15.1.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
+    "react-dropzone": "^11.2.4",
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.1"
@@ -49,10 +51,10 @@
     ]
   },
   "devDependencies": {
-    "@cypress/code-coverage": "^3.8.5",
-    "@cypress/instrument-cra": "^1.4.0",
+    "@cypress/code-coverage": "3.8.5",
+    "@cypress/instrument-cra": "1.4.0",
     "axios-mock-adapter": "^1.19.0",
-    "cypress": "^6.0.0",
+    "cypress": "6.0.0",
     "start-server-and-test": "^1.11.6"
   }
 }

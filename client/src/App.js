@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import LoginForm from './components/LoginForm';
 import LecturePage from './components/LecturePage';
+import SetupPage from './components/SetupPage';
 import API from './api';
 import { Redirect, Route} from 'react-router-dom';
 import { Switch } from 'react-router';
@@ -124,6 +125,10 @@ class App extends React.Component {
             <Route path="/lectures/:lecture_id" render={(props) =>
               <LecturePage lecture_id={props.match.params.lecture_id} />
             } />
+
+            <Route path="/setup">
+              <SetupPage/>
+            </Route>
 
             <Route>
               <Redirect to='/calendar'/>
