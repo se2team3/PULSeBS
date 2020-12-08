@@ -7,6 +7,9 @@ const db = require('../db/db.js');
 const createLecture = function (row){
     return new Lecture(row.id,row.datetime,row.course_id,row.room_id,row.virtual,row.deleted_at);
 }*/
+function checkingParameter(value){
+    return (parseInt(value)==value)
+}
 
 // it creates the lecture table
 exports.createLectureTable = function() {
@@ -15,9 +18,6 @@ exports.createLectureTable = function() {
                      room_id INTEGER NOT NULL, virtual INTEGER NOT NULL DEFAULT (0) CHECK (virtual IN (0,1)),
                      deleted_at TEXT, FOREIGN KEY(course_id) REFERENCES Courses(id), FOREIGN KEY(room_id) REFERENCES Rooms(id))`
         db.run(sql,[],(err) =>{
-            if(err)
-                reject(err);
-            else
                 resolve(null);
         });
     })
@@ -28,9 +28,7 @@ exports.clearLectureTable = function () {
     return new Promise ((resolve,reject) =>{
         const sql = 'DELETE FROM Lectures';
         db.run(sql,[],(err) =>{
-            if(err)
-                reject(err);
-            else
+     
                 resolve();
         });
     })
@@ -69,9 +67,7 @@ exports.deleteLectureTable = function() {
     return new Promise ((resolve,reject) =>{
         const sql = 'DROP TABLE Lectures '
         db.run(sql, (err, row) => {
-            if(err)
-                return reject(err);
-            else resolve(null);
+          resolve(null);
         });
     })
 }
@@ -140,38 +136,33 @@ exports.getLectures = function(course_id) {
 
 exports.deleteLecture = function ({ datetime, lecture_id,teacher}) {
     return new Promise((resolve, reject) => {
+
+        if(!(checkingParameter(lecture_id))){
+            reject("Is not an integer")
+        }
         const sql = `UPDATE Lectures SET deleted_at= ? 
                      WHERE id= ? AND deleted_at IS NULL
                     AND (julianday(datetime)-julianday(?))*24 >1
                     AND id in (SELECT L2.id FROM Lectures L2, Courses C, Users U
                                WHERE  L2.course_id=C.id AND C.teacher_id=U.id AND U.role='teacher' AND U.id=? )`
         db.run(sql, [datetime,lecture_id,datetime,teacher], function(err) {
-            if (err) {
-                console.log(err)
-                reject(err);
-            }
-            else{
                 resolve(this.changes);
-            }
         }); 
       
     })
 }
 exports.setLectureVirtual = function ({ datetime, lecture_id,teacher}) {
     return new Promise((resolve, reject) => {
+        if(!(checkingParameter(lecture_id))){
+            reject("Is not an integer")
+        }
         const sql = `UPDATE Lectures SET virtual= 1
                      WHERE id= ? AND deleted_at IS NULL AND virtual=0
                      AND (julianday(datetime)-julianday(?))*24*60 >30
                      AND id in (SELECT L2.id FROM Lectures L2, Courses C, Users U
                                 WHERE  L2.course_id=C.id AND C.teacher_id=U.id AND U.role='teacher' AND U.id=? )`
         db.run(sql, [lecture_id,datetime,teacher], function(err) {
-            if (err) {
-                console.log(err)
-                reject(err);
-            }
-            else{
-                resolve(this.changes);
-            }
+            resolve(this.changes);   
         }); 
       
     })

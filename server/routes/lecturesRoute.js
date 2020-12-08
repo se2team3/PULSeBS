@@ -42,12 +42,12 @@ const router = express.Router();
  */
 
 router.get('/lectures/:lecture_id/bookings', async(req,res) =>{
-  const lecture_id= + req.params.lecture_id;
+  const lecture_id= req.params.lecture_id;
   try{
       let bookings = await bookingService.retrieveBookingsbyLectureId(lecture_id);
       return res.status(200).json(bookings);
   } catch(error){
-      res.json(error);
+      res.status(400).json(error);
   }
 })
 
@@ -90,7 +90,7 @@ router.get('/lectures/:lecture_id', async(req,res) =>{
       let lecture = await extendedLectureService.getLectureById(lecture_id);
       return res.status(200).json(lecture);
   } catch(error){
-      res.json(error);
+      res.status(400).json(error);
   }
 })
 
@@ -141,7 +141,6 @@ router.delete('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=
         else if (number===0) 
             return res.status(304).json({});
     } catch(error){
-        console.log(error)
         res.status(400).json(error);
     }
 })
@@ -195,7 +194,6 @@ router.patch('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=>
       else if (number===0) 
           return res.status(304).json({});
   } catch(error){
-      console.log(error)
       res.status(400).json(error);
   }
 })

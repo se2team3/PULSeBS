@@ -31,7 +31,7 @@ exports.deleteBookings = async function(){
 
 exports.retrieveBookingsbyLectureId = async function(lecture_id){
     try {
-        return bookingExtendedDao.retrieveLectureBookings(lecture_id);
+        return await bookingExtendedDao.retrieveLectureBookings(lecture_id);
     } catch (error) {
         return errHandler(error);
     }

@@ -116,10 +116,10 @@ app.get('/students/:lecture_id/',authorize(role.Student), async(req,res) =>{
     const lecture_id= req.params.lecture_id;
     const student_id=req.user && req.user.sub;
     try{
-        let bool = await bookingService.assertBooking(lecture_id,student_id);
+        let bool = await bookingService.assertBooking(student_id,lecture_id);
         return res.status(200).json(bool);
     } catch(error){
-        res.json(error);
+        res.status(400).json(error);
     }
   })
 
