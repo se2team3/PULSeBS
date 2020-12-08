@@ -55,17 +55,18 @@ describe('Calendar tests', ()=>{
         let whiteList=[]       
         let blackList=[]
         
+        
         if(view==='past'){
             blackList=['Physics','Analysis I'];
-            if(role==='student') blackList.concat['CLOSED']
+            if(role==='student') blackList=blackList.concat(['CLOSED'])
             whiteList=['Chemistry'];
         }
         else if(view==='normal' || view==='future'){
             blackList=['Physics','Analysis I']
-            if(role==='student') blackList.concat['FULL','FREE',blackStatus]
-            if(role==='student' && view==='normal') blackList.concat['CLOSED']
+            if(role==='student') blackList=blackList.concat(['FULL','FREE',blackStatus])
+            if(role==='student' && view==='normal') blackList=blackList.concat(['CLOSED'])
             whiteList=['Chemistry','REMOTE']
-            if(role==='student') whiteList.concat[whiteStatus]
+            if(role==='student') whiteList=whiteList.concat([whiteStatus])
         }
         else if(view==='list' || view==='month'){
             blackList=['Physics','Analysis I']
