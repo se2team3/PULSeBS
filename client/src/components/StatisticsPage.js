@@ -1,11 +1,16 @@
 import React from 'react';
-import {Row, Container, Col, Nav, Form, ListGroup, Image} from 'react-bootstrap';
+import { Row, Container, Col, Nav, Form, ListGroup, Image } from 'react-bootstrap';
 import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CourseBadge from "./CourseBadge"
 import API from '../api';
 import Course from "../api/models/course";
 import Plot from 'react-plotly.js';
+import 'react-dates/initialize';
+import { DateRangePicker } from 'react-dates';
+import 'react-dates/lib/css/_datepicker.css';
+
+
 
 const AggregationLevel = {
     Month: 'Month',
@@ -14,20 +19,6 @@ const AggregationLevel = {
     NotSet: ''
 }
 
-let momentDate = moment().subtract(2, 'months');
-const mockAggregatedList = [];
-for (let i = 0; i < 10; i++) {
-    const startDate = momentDate.startOf('week').format('DD/MM/YYYY');
-    const endDate = momentDate.endOf('week').format('DD/MM/YYYY');
-    mockAggregatedList.push({
-        id: i,
-        startDate,
-        endDate,
-        numberOfLectures: Math.round(Math.random()*20 + 1),
-        selected: false
-    });
-    momentDate.add(1, 'weeks');
-}
 
 class StatisticsPage extends React.Component {
     constructor(props) {
@@ -36,9 +27,12 @@ class StatisticsPage extends React.Component {
         this.state = {
             aggregationLevel: AggregationLevel.NotSet,
             view: {},
-            list: [...mockAggregatedList],
+            list: [],
             bookings: [],
-            courses: []
+            courses: [],
+            startDate: moment(),
+            endDate: moment(),
+            focusedInput: null
         }
     }
 
@@ -51,20 +45,49 @@ class StatisticsPage extends React.Component {
     getBookings = async () => {
         try {
             return await API.getTeacherBookings(this.props.authUser?.id);
-        }   catch(err) {
+        } catch (err) {
             throw err;
         }
     };
 
+    getListElements = () => {
+        let startDate = this.state.startDate;
+        let endDate = this.state.endDate;
+        
+        if(!startDate || !endDate) return [];
+        let endOfWeek;
+        let dates = [];
+
+        // console.log('START: ' + startDate.format('YYYY-MM-DD') + ' END: ' + endDate.format('YYYY-MM-DD'));
+        let i=1;
+
+        do {
+            if (moment(startDate).endOf('week').isAfter(endDate)) { // just one interval
+                dates.push({startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD'), selected: false, id:i, numberOfLectures: Math.round(Math.random()*20 + 1)});
+                break;
+            }
+            endOfWeek = moment(startDate).endOf('week');
+            dates.push({startDate: startDate.format('YYYY-MM-DD'), endDate: endOfWeek.format('YYYY-MM-DD'), selected: false,id: i,numberOfLectures: Math.round(Math.random()*20 + 1)});
+
+            startDate = moment(endOfWeek).add(1,'day'); // go to next week and shift startDate
+            i++;
+            
+        } while (startDate != endDate && startDate < endDate)
+
+        this.setState({list: dates})
+         return dates;
+        // TODO may format in the format required from server
+
+    }
     getCourses = (bookings) => {
         const res = [];
         bookings
-          .map(b => new Course(b.course_id, b.course_code, b.course_name, this.props.authUser?.id))
-          .forEach(c => {
+            .map(b => new Course(b.course_id, b.course_code, b.course_name, this.props.authUser?.id))
+            .forEach(c => {
                 if (!res.find(added_c => added_c.course_id === c.course_id))
                     res.push(c)
             }
-          );
+            );
         return res;
     }
 
@@ -101,16 +124,17 @@ class StatisticsPage extends React.Component {
                 selected: false
             }
         });
-        this.setState({aggregationLevel: value, list: viewList});
+        this.setState({ aggregationLevel: value, list: viewList });
     }
 
     handleAggregatedListClick = (selected) => {
+        console.log(selected);
         this.setState(state => ({
-            view: {...selected},
-            list: [...state.list.map(el => {
+            view: { ...selected },
+            list: this.getListElements().map(el => {
                 el.selected = selected.id === el.id;
                 return el;
-            })]
+            })
         }));
     }
 
@@ -126,8 +150,8 @@ class StatisticsPage extends React.Component {
                                 <Row className='mt-3'>
                                     <Col sm={3}>
                                         <Nav
-                                          className="px-4 py-4 col-md-12 d-none d-md-block sidebar"
-                                          style={{'backgroundColor': 'rgb(240, 240, 240)'}}
+                                            className="px-4 py-4 col-md-12 d-none d-md-block sidebar"
+                                            style={{ 'backgroundColor': 'rgb(240, 240, 240)' }}
                                         >
                                             <Form>
                                                 <fieldset>
@@ -140,6 +164,7 @@ class StatisticsPage extends React.Component {
                                                                 type="radio"
                                                                 label={k}
                                                                 id={k}
+                                                                key={k}
                                                                 name='formAggregationLevel'
                                                                 onClick={() => this.handleAggregationLevelClick(k)}
                                                             />)}
@@ -149,18 +174,28 @@ class StatisticsPage extends React.Component {
                                                     <Form.Label as="legend">
                                                         Time frame:
                                                     </Form.Label>
+                                                    <DateRangePicker
+                                                        startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+                                                        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                                                        endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+                                                        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                                                        onDatesChange={({ startDate, endDate }) => { this.setState({ startDate: startDate, endDate: endDate }, () => this.getListElements()) }} // PropTypes.func.isRequired,
+                                                        focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                                                        onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+
+                                                    />
 
                                                 </Form.Group>
                                                 <h2 className="mb-3">Courses</h2>
                                                 <Form.Group>
                                                     {
                                                         this.state.courses.map(c => (
-                                                          <CourseBadge
-                                                            key={c.id}
-                                                            backgroundColor={this.getColor(c.id)}
-                                                            subjectName={c.name}
-                                                            handleClick={() => null}
-                                                          />
+                                                            <CourseBadge
+                                                                key={c.id}
+                                                                backgroundColor={this.getColor(c.id)}
+                                                                subjectName={c.name}
+                                                                handleClick={() => null}
+                                                            />
                                                         ))
                                                     }
                                                 </Form.Group>
@@ -170,9 +205,9 @@ class StatisticsPage extends React.Component {
                                     </Col>
                                     <Col sm={3}>
                                         <AggregatedList
-                                          handleClick={this.handleAggregatedListClick}
-                                          aggregationLevel={this.state.aggregationLevel}
-                                          elements={this.state.list}
+                                            handleClick={this.handleAggregatedListClick}
+                                            aggregationLevel={this.state.aggregationLevel}
+                                            elements={this.state.list}
                                         />
                                     </Col>
                                     <Col sm>
@@ -193,103 +228,103 @@ class StatisticsPage extends React.Component {
     }
 }
 
-function AggregatedList (props) {
+function AggregatedList(props) {
     const { elements, aggregationLevel, handleClick } = props;
     if (aggregationLevel === AggregationLevel.NotSet)
         return null;
     return (
-      <>
-          <Nav className="px-4 py-4 sidebar bg-light">
-              <ListGroup variant="flush" className='aggregated-list'>
-                  {
-                      elements.map((el, idx) => (
-                        <ListGroup.Item
-                            key={idx}
-                            action
-                            variant='light'
-                            onClick={() => handleClick(el)}
-                            active={el.selected}
-                        >
-                            {aggregationLevel} {el.startDate} - {el.endDate}
-                        </ListGroup.Item>
-                      ))
-                  }
-              </ListGroup>
-          </Nav>
-      </>
+        <>
+            <Nav className="px-4 py-4 sidebar bg-light">
+                <ListGroup variant="flush" className='aggregated-list'>
+                    {
+                        elements.map((el, idx) => (
+                            <ListGroup.Item
+                                key={idx}
+                                action
+                                variant='light'
+                                onClick={() => handleClick(el)}
+                                active={el.selected}
+                            >
+                                {aggregationLevel} {el.startDate} - {el.endDate}
+                            </ListGroup.Item>
+                        ))
+                    }
+                </ListGroup>
+            </Nav>
+        </>
     );
 }
 
-function View (props) {
+function View(props) {
     const { view, aggregationLevel } = props;
     return (
-      <>
-          <Nav className="px-4 py-4 sidebar">
-              <Container>
-                  {
-                      view.startDate &&
-                      <>
-                          <h1>{aggregationLevel} {view.startDate} - {view.endDate}</h1>
-                          <h5 className="mt-1">{view.lectures.length} lectures</h5>
-                          <Row className="justify-content-md-center mt-4">
-                              <Col md="10" className="mx-auto">
+        <>
+            <Nav className="px-4 py-4 sidebar">
+                <Container>
+                    {
+                        view.startDate &&
+                        <>
+                            <h1>{aggregationLevel} {view.startDate} - {view.endDate}</h1>
+                            <h5 className="mt-1">{view.lectures.length} lectures</h5>
+                            <Row className="justify-content-md-center mt-4">
+                                <Col md="10" className="mx-auto">
 
-                                <Plot 
-                                    config={{displayModeBar: false}}
-                                    
-                                    data = {[
-                                        {
-                                        y: [20, 14, 23],
-                                        x: ['course1', 'course2', 'course3'],
-                                        name: 'Bookings',
-                                        marker: {
-                                          color: 'rgb(49,168,49)',
-                                        },
-                                        width:0.6,
-                                        type: 'bar',
-                                        hoverinfo:'y+text+name'
-                                      },
-                                      
-                                      {
-                                        y: [12, 18, 29],
-                                        x: ['course1', 'course2', 'course3'],
-                                        name: 'Free seats',
-                                        marker: {
-                                          color: 'rgb(0,123,255)',
-                                        },
-                                        width:0.6,
-                                        type: 'bar',
-                                        hoverinfo:'y+text+name',
-                                      }]}
-                                      
-                                      
-                                      
-                                    layout = {
-                                        {
-                                        barmode: 'stack',
-                                        width: 800, 
-                                        height: 600,
-                                        title:
+                                    <Plot
+                                        config={{ displayModeBar: false }}
+
+                                        data={[
                                             {
-                                            text: '<b>Bookings statistics</b>',
-                                            font: {size:30},
-                                            x:0.43,
-                                            xanchor:'center'
+                                                y: [20, 14, 23],
+                                                x: ['course1', 'course2', 'course3'],
+                                                name: 'Bookings',
+                                                marker: {
+                                                    color: 'rgb(49,168,49)',
+                                                },
+                                                width: 0.6,
+                                                type: 'bar',
+                                                hoverinfo: 'y+text+name'
                                             },
-                                        legend:{font:{size:16}},
-                                        xaxis:{tickfont:{size:16}},
-                                        yaxis:{tickfont:{size:16}},
+
+                                            {
+                                                y: [12, 18, 29],
+                                                x: ['course1', 'course2', 'course3'],
+                                                name: 'Free seats',
+                                                marker: {
+                                                    color: 'rgb(0,123,255)',
+                                                },
+                                                width: 0.6,
+                                                type: 'bar',
+                                                hoverinfo: 'y+text+name',
+                                            }]}
+
+
+
+                                        layout={
+                                            {
+                                                barmode: 'stack',
+                                                width: 800,
+                                                height: 600,
+                                                title:
+                                                {
+                                                    text: '<b>Bookings statistics</b>',
+                                                    font: { size: 30 },
+                                                    x: 0.43,
+                                                    xanchor: 'center'
+                                                },
+                                                legend: { font: { size: 16 } },
+                                                xaxis: { tickfont: { size: 16 } },
+                                                yaxis: { tickfont: { size: 16 } },
+                                            }
                                         }
-                                    }
-                                      
-                                />
-                              </Col>
-                          </Row>
-                      </>
-                  }
-              </Container>
-          </Nav>
-      </>
+
+                                    />
+                                </Col>
+                            </Row>
+                        </>
+                    }
+                </Container>
+            </Nav>
+        </>
     );
 }
 
