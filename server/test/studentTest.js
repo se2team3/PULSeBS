@@ -85,7 +85,7 @@ describe('Student routes', function () {
         let start_date = moment("2021-11-27","YYYY-MM-DD").format("YYYY-MM-DD");
         let end_date = moment("2021-12-28","YYYY-MM-DD").format("YYYY-MM-DD");      
 
-        const es = await agent.get(tmp).query({from: start_date, to: end_date});
+        const res = await agent.get(tmp).query({from: start_date, to: end_date});
         res.should.have.status(400);
     });
 
