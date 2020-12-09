@@ -5,6 +5,7 @@ import { AuthContext } from '../auth/AuthContext';
 import CourseBadge from "./CourseBadge"
 import API from '../api';
 import Course from "../api/models/course";
+import Plot from 'react-plotly.js';
 
 const AggregationLevel = {
     Month: 'Month',
@@ -232,10 +233,56 @@ function View (props) {
                           <h5 className="mt-1">{view.lectures.length} lectures</h5>
                           <Row className="justify-content-md-center mt-4">
                               <Col md="10" className="mx-auto">
-                                  <Image
-                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Charts_SVG_Example_6_-_Grouped_Bar_Chart.svg/1200px-Charts_SVG_Example_6_-_Grouped_Bar_Chart.svg.png"
-                                    fluid
-                                  />
+
+                                <Plot 
+                                    config={{displayModeBar: false}}
+                                    
+                                    data = {[
+                                        {
+                                        y: [20, 14, 23],
+                                        x: ['course1', 'course2', 'course3'],
+                                        name: 'Bookings',
+                                        marker: {
+                                          color: 'rgb(49,168,49)',
+                                        },
+                                        width:0.6,
+                                        type: 'bar',
+                                        hoverinfo:'y+text+name'
+                                      },
+                                      
+                                      {
+                                        y: [12, 18, 29],
+                                        x: ['course1', 'course2', 'course3'],
+                                        name: 'Free seats',
+                                        marker: {
+                                          color: 'rgb(0,123,255)',
+                                        },
+                                        width:0.6,
+                                        type: 'bar',
+                                        hoverinfo:'y+text+name',
+                                      }]}
+                                      
+                                      
+                                      
+                                    layout = {
+                                        {
+                                        barmode: 'stack',
+                                        width: 800, 
+                                        height: 600,
+                                        title:
+                                            {
+                                            text: '<b>Bookings statistics</b>',
+                                            font: {size:30},
+                                            x:0.43,
+                                            xanchor:'center'
+                                            },
+                                        legend:{font:{size:16}},
+                                        xaxis:{tickfont:{size:16}},
+                                        yaxis:{tickfont:{size:16}},
+                                        }
+                                    }
+                                      
+                                />
                               </Col>
                           </Row>
                       </>
