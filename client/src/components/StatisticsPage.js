@@ -4,6 +4,7 @@ import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CourseBadge from "./CourseBadge"
 import API from '../api';
+import Course from "../api/models/course";
 
 const initialStartDate = moment().add(-1,'month');
 const initialEndDate = moment();
@@ -29,32 +30,6 @@ for (let i = 0; i < 10; i++) {
     momentDate.add(1, 'weeks');
 }
 
-const mockCourses = [
-    {
-        id: 1,
-        subjectName: 'Signal Theory'
-    },
-    {
-        id: 2,
-        subjectName: 'Software Engineering'
-    },
-    {
-        id: 3,
-        subjectName: 'Analysis 1'
-    },
-    {
-        id: 4,
-        subjectName: 'Physics'
-    },
-    {
-        id: 5,
-        subjectName: 'Machine Learning'
-    },
-    {
-        id: 6,
-        subjectName: 'Computer Architectures'
-    }
-];
 class StatisticsPage extends React.Component {
     constructor(props) {
         super(props);
@@ -66,23 +41,42 @@ class StatisticsPage extends React.Component {
             startDate: initialStartDate,
             endDate: initialEndDate,
             view: {},
-            list: [...mockAggregatedList]
+            list: [...mockAggregatedList],
+            bookings: [],
+            courses: []
         }
     }
 
     async componentDidMount() {
+        const bookings = await this.getBookings();
+        const courses = this.getCourses(bookings);
+        this.setState({ bookings, courses });
+    }
+
+    getBookings = async () => {
         try {
-            const bookings = await API.getTeacherBookings(this.props.authUser?.id);
-            console.log(bookings);
+            return await API.getTeacherBookings(this.props.authUser?.id);
         }   catch(err) {
             throw err;
         }
+    };
+
+    getCourses = (bookings) => {
+        const res = [];
+        bookings
+          .map(b => new Course(b.course_id, b.course_code, b.course_name, this.props.authUser?.id))
+          .forEach(c => {
+                if (!res.find(added_c => added_c.course_id === c.course_id))
+                    res.push(c)
+            }
+          );
+        return res;
     }
 
     getColor = (course_id) => {
         let colorArray = ["#31a831", "#ed425c", "deepSkyBlue", "darkOrange", "#e37be3",
             "peru", "salmon", "lightBlue", "lightSeaGreen"]
-        let ids = mockCourses.map((l) => l.id).filter(this.onlyUnique);
+        let ids = this.state.courses.map((c) => c.id).filter(this.onlyUnique);
         let index = ids.indexOf(course_id);
 
         return colorArray[index];
@@ -107,7 +101,6 @@ class StatisticsPage extends React.Component {
     }
 
     render() {
-        let showArray = [];
         return (
             <>
                 <AuthContext.Consumer>
@@ -147,18 +140,14 @@ class StatisticsPage extends React.Component {
                                                 <h2 className="mb-3">Courses</h2>
                                                 <Form.Group>
                                                     {
-                                                        mockCourses.map((e) => {
-                                                            if (showArray.indexOf(e.id) === -1) {
-                                                                showArray.push(e.id)
-                                                                return <CourseBadge
-                                                                    key={e.id}
-                                                                    backgroundColor={this.getColor(e.id)}
-                                                                    subjectName={e.subjectName}
-                                                                    handleClick={() => null}
-                                                                />
-                                                            }
-                                                            return null;
-                                                        })
+                                                        this.state.courses.map(c => (
+                                                          <CourseBadge
+                                                            key={c.id}
+                                                            backgroundColor={this.getColor(c.id)}
+                                                            subjectName={c.name}
+                                                            handleClick={() => null}
+                                                          />
+                                                        ))
                                                     }
                                                 </Form.Group>
                                             </Form>
