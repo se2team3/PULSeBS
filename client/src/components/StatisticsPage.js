@@ -6,8 +6,6 @@ import CourseBadge from "./CourseBadge"
 import API from '../api';
 import Course from "../api/models/course";
 
-const initialStartDate = moment().add(-1,'month');
-const initialEndDate = moment();
 const AggregationLevel = {
     Month: 'Month',
     Week: 'Week',
@@ -83,7 +81,26 @@ class StatisticsPage extends React.Component {
     }
 
     handleAggregationLevelClick = (value) => {
-        this.setState({aggregationLevel: value});
+        console.log(`You want bookings filtered by ${value}`);
+        const list = {};
+        /* only for week grouping */
+        this.state.bookings.forEach(booking => {
+            const isoWeek = moment(booking.lecture_start, "YYYY-MM-DD HH:mm").isoWeek();
+            if (!list.hasOwnProperty(isoWeek))
+                list[isoWeek] = [];
+            list[isoWeek].push(booking);
+        })
+        const viewList = Object.keys(list).map(idx => {
+            const date = moment(list[idx][0].lecture_start);
+            return {
+                id: idx,
+                startDate: date.startOf('week').format('DD/MM/YYYY'),
+                endDate: date.endOf('week').format('DD/MM/YYYY'),
+                lectures: list[idx],
+                selected: false
+            }
+        });
+        this.setState({aggregationLevel: value, list: viewList});
     }
 
     handleAggregatedListClick = (selected) => {
@@ -212,7 +229,7 @@ function View (props) {
                       view.startDate &&
                       <>
                           <h1>{aggregationLevel} {view.startDate} - {view.endDate}</h1>
-                          <h5 className="mt-1">Average of {view.numberOfLectures} lectures</h5>
+                          <h5 className="mt-1">{view.lectures.length} lectures</h5>
                           <Row className="justify-content-md-center mt-4">
                               <Col md="10" className="mx-auto">
                                   <Image
