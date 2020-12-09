@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Container, Col, Nav, Badge, Form, ListGroup, Jumbotron, Image} from 'react-bootstrap';
+import {Row, Container, Col, Nav, Form, ListGroup, Image} from 'react-bootstrap';
 import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CourseBadge from "./CourseBadge"
@@ -35,11 +35,7 @@ class StatisticsPage extends React.Component {
         super(props);
 
         this.state = {
-            lectures: [],
-            courseFilters: [],
             aggregationLevel: AggregationLevel.NotSet,
-            startDate: initialStartDate,
-            endDate: initialEndDate,
             view: {},
             list: [...mockAggregatedList],
             bookings: [],
