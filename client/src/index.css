@@ -42,6 +42,7 @@ code {
 }
 
 .aggregated-list .list-group-item-light.list-group-item-action.active {
-  background-color: rgb(240, 240, 240) !important;
+  background-color: rgb(230, 230, 230) !important;
   color: inherit !important;
+  outline: none;
 }

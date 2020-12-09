@@ -70,16 +70,14 @@ class StatisticsPage extends React.Component {
         }
     }
 
-    /* componentDidMount() {
-        API.getLectures(this.props.authUser?.role, this.props.authUser?.id)
-            .then((l) => {
-                console.log('Got lectures');
-                this.setState({ lectures: l });
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-    } */
+    async componentDidMount() {
+        try {
+            const bookings = await API.getTeacherBookings(this.props.authUser?.id);
+            console.log(bookings);
+        }   catch(err) {
+            throw err;
+        }
+    }
 
     getColor = (course_id) => {
         let colorArray = ["#31a831", "#ed425c", "deepSkyBlue", "darkOrange", "#e37be3",

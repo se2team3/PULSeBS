@@ -27,6 +27,26 @@ async function getBookings(lecture_id){
 }
 
 /**
+ * Get list of bookings for all the teacher's lectures
+ *
+ * @param {*} teacher_id - valid teacher id
+ * @returns [] of Bookings or empty []
+ */
+async function getTeacherBookings(teacher_id){
+    let url = `/bookings`;
+
+    const response = await axios.get(baseURL + url).catch(error => {
+        whatWentWrong(error);
+    });
+    if (response.status === 200) {
+        return response.data;
+    } else {
+        let err = { status: response.status, errObj: response.data };
+        throw err;  // An object with the error coming from the server
+    }
+}
+
+/**
  * Book a seat to a lecture given a student id and lecture id
  *
  * @param {*} student_id a valid student id
@@ -63,4 +83,4 @@ async function cancelBooking(student_id, lecture_id){
 }
 
 
-export {bookLecture, getBookings, cancelBooking}
+export {bookLecture, getBookings, cancelBooking, getTeacherBookings}
