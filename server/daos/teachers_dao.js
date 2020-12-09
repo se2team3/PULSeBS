@@ -5,7 +5,7 @@ exports.getLecturesByTeacherAndTime = function(teacher_id,start_date, end_date) 
 
     return new Promise((resolve,reject) => {
 
-        let value = parseInt(teacher_id) == NaN ? 0 : parseInt(teacher_id)
+        let value = isNaN(teacher_id) ? 0 : parseInt(teacher_id)
 
 
         if(!value){

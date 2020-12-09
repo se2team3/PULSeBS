@@ -11,9 +11,13 @@ const createBookingExtended = function ({lecture_id,student_id,waiting,present,u
 //gets the bookings given the lecture_id
 exports.retrieveLectureBookings = function(lecture_id) {
     return new Promise ((resolve,reject) =>{
-        if(!(parseInt(lecture_id)==lecture_id)){
-            reject("Is not an integer")
+        let value = isNaN(lecture_id) ? 0 : parseInt(lecture_id)
+
+
+        if(!value){
+            reject("wrong parameters")
         }
+
         const sql = `
             SELECT  lecture_id, student_id, waiting, present, updated_at, deleted_at,
                     name as student_name, surname as student_surname, university_id as student_university_id

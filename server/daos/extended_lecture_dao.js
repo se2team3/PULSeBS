@@ -12,7 +12,7 @@ const createExtendedLecture = function (row){
 exports.getLectureById = function(id) {
     return new Promise ((resolve,reject) =>{
         
-        if(!(parseInt(id)==id)){
+        if(parseInt(id)!==id){
             reject("Is not an integer")
         }
         

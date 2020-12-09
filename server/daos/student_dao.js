@@ -1,16 +1,16 @@
 // import database
 // import modules
 
-const { isDate } = require('moment');
+
 const db = require('../db/db.js');
 const LectureExtended = require('../models/lecture_extended');
-const { start } = require('../utils/mail.js');
+
 
 //gets the extendedLecture given the student_id and a time frame
 exports.retrieveStudentLecturesinTimeFrame = function(student_id,start_date, end_date) {
     return new Promise ((resolve,reject) =>{
         
-       if(!(parseInt(student_id)===student_id)){
+       if(parseInt(student_id)!==student_id){
             reject("wrong parameters")
         }
         

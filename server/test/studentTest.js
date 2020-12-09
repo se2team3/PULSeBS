@@ -71,7 +71,7 @@ describe('Student routes', function () {
         const tmp = `/api/students/${data.students[0].id}/lectures`;
         let end_date = moment("2021-12-28","YYYY-MM-DD").format("YYYY-MM-DD");      
 
-        res = await agent.get(tmp).query({from: '11111', to: end_date});
+        const res = await agent.get(tmp).query({from: '11111', to: end_date});
         res.should.have.status(400);
         res.body.should.have.property('errors');
     });

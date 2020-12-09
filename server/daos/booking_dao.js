@@ -96,7 +96,7 @@ exports.retrieveLectureBookings = function (lecture_id) {
 //assert if a student can book a lecture
 exports.isBookable = function (student_id, lecture_id) {
     return new Promise((resolve, reject) => {
-        let value = parseInt(lecture_id) == NaN ? 0 : parseInt(lecture_id)
+        let value = isNaN(lecture_id)  ? 0 : parseInt(lecture_id)
         if(!value){
             reject("wrong parameters")
         }
@@ -127,7 +127,7 @@ exports.deleteBookingTable = function () {
 //gets the students booked for a given lecture
 exports.retrieveListOfBookedStudents = function(lecture_id) {
     return new Promise ((resolve,reject) =>{
-        let value = parseInt(lecture_id) == NaN ? 0 : parseInt(lecture_id)
+        let value = isNaN(lecture_id) ? 0 : parseInt(lecture_id)
 
         if(!value){
             reject("wrong parameters")
@@ -147,7 +147,7 @@ exports.retrieveListOfBookedStudents = function(lecture_id) {
 //it allows you to delete a booking
 exports.deleteBooking = function ({ datetime, lecture_id, student_id }) {
     return new Promise((resolve, reject) => {
-        let value = parseInt(lecture_id) == NaN ? 0 : parseInt(lecture_id)
+        let value = isNaN(lecture_id)? 0 : parseInt(lecture_id)
 
         if(!value){
             reject("wrong parameters")

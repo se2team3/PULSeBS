@@ -40,7 +40,7 @@ describe('Teachers routes', function () {
         let yesterday = moment().add(1,'days').format("YYYY-MM-DD");
         let tomorrow = moment().add(-1,'days').format("YYYY-MM-DD");
 
-        res = await chai.request(server).get(route).query({from: yesterday, to: tomorrow});
+        const res = await chai.request(server).get(route).query({from: yesterday, to: tomorrow});
         res.should.have.status(400);
         
     });

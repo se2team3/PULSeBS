@@ -90,8 +90,8 @@ describe('Lecture tests', function() {
     
 
         it('should get the list of booking given a lecture', async function() {
-            let id = Number(1)
-            const lectureObj = { lecture_id: id};
+
+            const lectureObj = { lecture_id: 1};
             
             const tmp = `/api/lectures/${lectureObj.lecture_id}/bookings`;
             
