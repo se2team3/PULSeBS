@@ -4,13 +4,10 @@ import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CourseBadge from "./CourseBadge"
 import API from '../api';
-import Course from "../api/models/course";
 import Plot from 'react-plotly.js';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
-
-
 
 const AggregationLevel = {
     Month: 'Month',
@@ -18,7 +15,6 @@ const AggregationLevel = {
     Lecture: 'Lecture',
     NotSet: ''
 }
-
 
 class StatisticsPage extends React.Component {
     constructor(props) {
@@ -101,40 +97,33 @@ class StatisticsPage extends React.Component {
 
         lectures.forEach(l => {
             const date = moment(l.datetime, "YYYY-MM-DD HH:mm");
-            let hash, dateRange;
+            let dateRange;
 
-            // FIXME year collision
             switch (level) {
                 case AggregationLevel.Week:
-                    hash = date.isoWeek();
                     dateRange =
                       date.startOf('week').format('DD/MM/YYYY') +
                         ' - ' +
                       date.endOf('week').format('DD/MM/YYYY');
                     break;
                 case AggregationLevel.Month:
-                    hash = date.month();
-                    dateRange = date.format('MMMM');
+                    dateRange = date.format('MMMM YYYY');
                     break;
                 case AggregationLevel.Lecture:  /* fallthrough */
                 default:
-                    hash = l.id;
-                    dateRange = date.format('DD/MM');
+                    dateRange = date.format('DD MMMM YYYY');
             }
 
-            if (!list.hasOwnProperty(hash))
-                list[hash] = { dateRange, lectures: []};
-            list[hash].lectures.push(l);
+            if (!list.hasOwnProperty(dateRange))
+                list[dateRange] = [];
+            list[dateRange].push(l);
         });
 
-        return Object.keys(list).map(idx => {
-            return {
-                id: idx,
-                lectures: list[idx],
-                dateRange: list[idx].dateRange,
-                selected: false
-            }
-        });
+        return Object.keys(list).map(idx => ({
+            lectures: list[idx],
+            dateRange: idx,
+            selected: false
+        }));
     }
 
     handleAggregationLevelClick = (value) => {
@@ -143,14 +132,7 @@ class StatisticsPage extends React.Component {
     }
 
     handleAggregatedListClick = (selected) => {
-        console.log(selected);
-        this.setState(state => ({
-            view: { ...selected },
-            list: this.getListElements().map(el => {
-                el.selected = selected.id === el.id;
-                return el;
-            })
-        }));
+        this.setState({view: { ...selected }});
     }
 
     render() {
@@ -225,12 +207,11 @@ class StatisticsPage extends React.Component {
                                             elements={this.state.list}
                                         />
                                     </Col>
-                                    <Col sm>
+                                    <Col sm={6}>
                                         <View
                                             view={this.state.view}
                                             aggregationLevel={this.state.aggregationLevel}
-                                           lectures={[{course_id:1,course_name:'Analysis I', max_seats:40,booking_counter:20},{course_id:1,course_name:'Analysis I', max_seats:20,booking_counter:17},{course_id:1,course_name:'Analysis I', max_seats:20,booking_counter:16},{course_id:2,course_name:'Analysis II', max_seats:30,booking_counter:20},{course_id:2,course_name:'Analysis II', max_seats:20,booking_counter:10},{course_id:3,course_name:'Chemistry',max_seats:30,booking_counter:10}]}
-                                            //lectures={this.state.view.lectures}
+                                            //lectures={[{course_id:1,course_name:'Analysis I', max_seats:40,booking_counter:20},{course_id:1,course_name:'Analysis I', max_seats:20,booking_counter:17},{course_id:1,course_name:'Analysis I', max_seats:20,booking_counter:16},{course_id:2,course_name:'Analysis II', max_seats:30,booking_counter:20},{course_id:2,course_name:'Analysis II', max_seats:20,booking_counter:10},{course_id:3,course_name:'Chemistry',max_seats:30,booking_counter:10}]}
                                         />
 
                                     </Col>
@@ -274,7 +255,8 @@ function AggregatedList(props) {
 }
 
 function View(props) {
-    const { view, aggregationLevel,lectures } = props;
+    const { view, aggregationLevel } = props;
+    const { dateRange, lectures } = view;
     let list=[];
     if(lectures!==undefined && lectures.length>0){
         for (let el of lectures){
@@ -295,10 +277,10 @@ function View(props) {
             <Nav className="px-4 py-4 sidebar">
                 <Container>
                     {
-                        view.startDate &&
+                        dateRange?.length &&
                         <>
-                            <h1>{aggregationLevel} {view.startDate} - {view.endDate}</h1>
-                            <h5 className="mt-1">{view.lectures.length} lectures</h5>
+                            <h1>{aggregationLevel} {dateRange}</h1>
+                            <h5 className="mt-1">{lectures.length} lectures</h5>
                             <Row className="justify-content-md-center mt-4">
                                 <Col md="10" className="mx-auto">
 
