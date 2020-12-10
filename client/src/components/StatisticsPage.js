@@ -328,7 +328,7 @@ function View(props) {
                                       layout={
                                             {
                                                 barmode: 'stack',
-                                                width: 800,
+                                                width: '100%',
                                                 height: 600,
                                                 title:
                                                 {
@@ -337,7 +337,7 @@ function View(props) {
                                                     x: 0.43,
                                                     xanchor: 'center'
                                                 },
-                                                legend: {font: { size: 16 } },
+                                                legend: {font: { size: 16 },orientation:'h', x:'0.2', y:'-0.17' },
                                                 xaxis: { tickfont: { size: 16 } },
                                                 yaxis: { tickfont: { size: 16 } },
                                             }
