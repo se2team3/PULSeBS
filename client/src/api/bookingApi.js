@@ -1,5 +1,6 @@
 import Booking from './models/booking';
 import BookingExtended from './models/booking_extended';
+import LectureExtended from './models/lecture_extended';
 import axios from 'axios';
 import {whatWentWrong, deleteResource} from './utils';
 
@@ -30,7 +31,7 @@ async function getBookings(lecture_id){
  * Get list of bookings for all the teacher's lectures
  *
  * @param {*} teacher_id - valid teacher id
- * @returns [] of Bookings or empty []
+ * @returns [] of ExtendedLectures or empty []
  */
 async function getTeacherBookings(teacher_id){
     let url = `/bookings`;
@@ -39,7 +40,7 @@ async function getTeacherBookings(teacher_id){
         whatWentWrong(error);
     });
     if (response.status === 200) {
-        return response.data;
+        return response.data.map(res => new LectureExtended(res));
     } else {
         let err = { status: response.status, errObj: response.data };
         throw err;  // An object with the error coming from the server

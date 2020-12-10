@@ -28,7 +28,6 @@ class StatisticsPage extends React.Component {
             aggregationLevel: AggregationLevel.NotSet,
             view: {},
             list: [],
-            bookings: [],
             courses: [],
             startDate: moment(),
             endDate: moment(),
@@ -37,13 +36,17 @@ class StatisticsPage extends React.Component {
     }
 
     async componentDidMount() {
-        const bookings = await this.getBookings();
-        const courses = this.getCourses(bookings);
-        this.setState({ bookings, courses });
+        const lectures = await this.getLectures();
+        const courses = lectures
+          .map(l => l.course_id)
+          .filter(this.onlyUnique)
+          .map(id => lectures.find(l => l.course_id === id));
+        this.setState({ lectures, courses });
     }
 
-    getBookings = async () => {
+    getLectures = async () => {
         try {
+            // TODO consider renaming the API (since we ask for lectures)
             return await API.getTeacherBookings(this.props.authUser?.id);
         } catch (err) {
             throw err;
@@ -79,17 +82,6 @@ class StatisticsPage extends React.Component {
         // TODO may format in the format required from server
 
     }
-    getCourses = (bookings) => {
-        const res = [];
-        bookings
-            .map(b => new Course(b.course_id, b.course_code, b.course_name, this.props.authUser?.id))
-            .forEach(c => {
-                if (!res.find(added_c => added_c.course_id === c.course_id))
-                    res.push(c)
-            }
-            );
-        return res;
-    }
 
     getColor = (course_id) => {
         let colorArray = ["#31a831", "#ed425c", "deepSkyBlue", "darkOrange", "#e37be3",
@@ -104,28 +96,50 @@ class StatisticsPage extends React.Component {
         return self.indexOf(value) === index;
     }
 
-    handleAggregationLevelClick = (value) => {
-        console.log(`You want bookings filtered by ${value}`);
+    getAggregatedLectures = (level, lectures) => {
         const list = {};
-        /* only for week grouping */
-        this.state.bookings.forEach(booking => {
-            const isoWeek = moment(booking.lecture_start, "YYYY-MM-DD HH:mm").isoWeek();
-            if (!list.hasOwnProperty(isoWeek))
-                list[isoWeek] = [];
-            list[isoWeek].push(booking);
-        })
-        const viewList = Object.keys(list).map(idx => {
-            const date = moment(list[idx][0].lecture_start);
+
+        lectures.forEach(l => {
+            const date = moment(l.datetime, "YYYY-MM-DD HH:mm");
+            let hash, dateRange;
+
+            // FIXME year collision
+            switch (level) {
+                case AggregationLevel.Week:
+                    hash = date.isoWeek();
+                    dateRange =
+                      date.startOf('week').format('DD/MM/YYYY') +
+                        ' - ' +
+                      date.endOf('week').format('DD/MM/YYYY');
+                    break;
+                case AggregationLevel.Month:
+                    hash = date.month();
+                    dateRange = date.format('MMMM');
+                    break;
+                case AggregationLevel.Lecture:  /* fallthrough */
+                default:
+                    hash = l.id;
+                    dateRange = date.format('DD/MM');
+            }
+
+            if (!list.hasOwnProperty(hash))
+                list[hash] = { dateRange, lectures: []};
+            list[hash].lectures.push(l);
+        });
+
+        return Object.keys(list).map(idx => {
             return {
                 id: idx,
-                startDate: date.startOf('week').format('DD/MM/YYYY'),
-                endDate: date.endOf('week').format('DD/MM/YYYY'),
                 lectures: list[idx],
+                dateRange: list[idx].dateRange,
                 selected: false
             }
         });
-        this.setState({ aggregationLevel: value, list: viewList });
-         
+    }
+
+    handleAggregationLevelClick = (value) => {
+        const list = this.getAggregatedLectures(value, this.state.lectures);
+        this.setState({ aggregationLevel: value, list });
     }
 
     handleAggregatedListClick = (selected) => {
@@ -194,7 +208,7 @@ class StatisticsPage extends React.Component {
                                                             <CourseBadge
                                                                 key={c.id}
                                                                 backgroundColor={this.getColor(c.id)}
-                                                                subjectName={c.name}
+                                                                subjectName={c.course_name}
                                                                 handleClick={() => null}
                                                             />
                                                         ))
@@ -249,7 +263,7 @@ function AggregatedList(props) {
                                 onClick={() => handleClick(el)}
                                 active={el.selected}
                             >
-                                {aggregationLevel} {el.startDate} - {el.endDate}
+                                {aggregationLevel} {el.dateRange}
                             </ListGroup.Item>
                         ))
                     }

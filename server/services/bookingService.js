@@ -37,14 +37,6 @@ exports.retrieveBookingsbyLectureId = async function(lecture_id){
     }
 }
 
-exports.retrieveBookingsByTeacherId = async function(teacher_id){
-    try {
-        return bookingExtendedDao.retrieveTeacherBookings(teacher_id);
-    } catch (error) {
-        return errHandler(error);
-    }
-}
-
 exports.assertBooking = async function(student_id,lecture_id){
     try {
         return bookingDao.isBookable(student_id,lecture_id);
