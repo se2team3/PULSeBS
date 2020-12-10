@@ -17,6 +17,7 @@
     "axios": "^0.21.0",
     "moment": "^2.29.1",
     "nyc": "^15.1.0",
+    "papaparse": "^5.3.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
