@@ -229,8 +229,8 @@ class StatisticsPage extends React.Component {
                                         <View
                                             view={this.state.view}
                                             aggregationLevel={this.state.aggregationLevel}
-                                           //lectures={[{course_id:1,course_name:'Analysis I', seats:40,bookings:20},{course_id:1,course_name:'Analysis I', seats:20,bookings:10},{course_id:2,course_name:'Analysis II', seats:30,bookings:20},{course_id:2,course_name:'Analysis II', seats:20,bookings:10}]}
-                                            lectures={this.state.view.lectures}
+                                           lectures={[{course_id:1,course_name:'Analysis I', max_seats:40,booking_counter:20},{course_id:1,course_name:'Analysis I', max_seats:20,booking_counter:17},{course_id:1,course_name:'Analysis I', max_seats:20,booking_counter:16},{course_id:2,course_name:'Analysis II', max_seats:30,booking_counter:20},{course_id:2,course_name:'Analysis II', max_seats:20,booking_counter:10},{course_id:3,course_name:'Chemistry',max_seats:30,booking_counter:10}]}
+                                            //lectures={this.state.view.lectures}
                                         />
 
                                     </Col>
@@ -283,11 +283,11 @@ function View(props) {
                 list.push({course_id:el.course_id,course:el.course_name,tot_seats:0,tot_bookings:0,num_lectures:0})
                 index=list.length-1;
         }
-            list[index].tot_seats+= el.seats
-            list[index].tot_bookings+=el.bookings
+            list[index].tot_seats+= el.max_seats
+            list[index].tot_bookings+=el.booking_counter
             list[index].num_lectures++;
         }   
-} 
+    } 
    
 
     return (
@@ -304,11 +304,10 @@ function View(props) {
 
                                     <Plot 
                                         config={{ displayModeBar: false }}
-                                        let testo={ aggregationLevel=='Lecture'?'Bookings':'Bookings(avg)'}
                                         data={[
      
                                             {
-                                            y: list.map(el=>el.tot_bookings/el.num_lectures),
+                                            y:list.map(el=>(el.tot_bookings/el.num_lectures).toFixed(2)),
                                             x: list.map(el=>el.course).map(text => {
                                                 let rxp=new RegExp('.{1,10} ','g')
                                                 return text.replace(rxp, "$&<br>")
@@ -324,7 +323,7 @@ function View(props) {
                                             } ,
                                             
                                             {
-                                                y: list.map(el=>((el.tot_seats-el.tot_bookings)/el.num_lectures)),
+                                                y: list.map(el=>((el.tot_seats-el.tot_bookings)/el.num_lectures).toFixed(2)),
                                                 x:list.map(el=>el.course).map(text => {
                                                     let rxp=new RegExp('.{1,10} ','g')
                                                     return text.replace(rxp, "$&<br>")
