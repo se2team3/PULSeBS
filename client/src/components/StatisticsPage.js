@@ -125,6 +125,7 @@ class StatisticsPage extends React.Component {
             }
         });
         this.setState({ aggregationLevel: value, list: viewList });
+         
     }
 
     handleAggregatedListClick = (selected) => {
@@ -214,7 +215,10 @@ class StatisticsPage extends React.Component {
                                         <View
                                             view={this.state.view}
                                             aggregationLevel={this.state.aggregationLevel}
+                                           //lectures={[{course_id:1,course_name:'Analysis I', seats:40,bookings:20},{course_id:1,course_name:'Analysis I', seats:20,bookings:10},{course_id:2,course_name:'Analysis II', seats:30,bookings:20},{course_id:2,course_name:'Analysis II', seats:20,bookings:10}]}
+                                            lectures={this.state.view.lectures}
                                         />
+
                                     </Col>
                                 </Row>
                             </Container>
@@ -256,24 +260,20 @@ function AggregatedList(props) {
 }
 
 function View(props) {
-    const { view, aggregationLevel } = props;
-    let list=[{course_id:1,course:'Analysis I', tot_seats:330,tot_bookings:200,num_lectures:10},{course_id:2,course:'Analysis II',tot_seats:330,tot_bookings:200,num_lectures:10},{course_id:3,course:'Chemistry',tot_seats:320,tot_bookings:140,num_lectures:10},{course_id:4,course:'Physics',tot_seats:550,tot_bookings:250,num_lectures:10},{course_id:5,course:'Physics of complex Systems',tot_seats:430,tot_bookings:210,num_lectures:10}]
-    
-    /*FOR FUTURE USAGE WHEN WE HAVE ALL DATA
+    const { view, aggregationLevel,lectures } = props;
     let list=[];
-    //lectures will be filled with the actual data
-    let lectures=[{course_id:1,course:'Analysis I', seats:40,bookings:20},{course_id:1,course:'Analysis I', seats:20,bookings:10},{course_id:2,course:'Analysis II', seats:30,bookings:20},{course_id:2,course:'Analysis II', seats:20,bookings:10}]
-    for (let el of lectures){
-       let index=list.map(element=>{return element.course_id}).indexOf(el.course_id)
-       if(index===-1){
-            list.push({course_id:el.course_id,course:el.course,tot_seats:0,tot_bookings:0,num_lectures:0})
-            index=list.length-1;
-       }
-        list[index].tot_seats+= el.seats
-        list[index].tot_bookings+=el.bookings
-        list[index].num_lectures++;
-        
-    } */
+    if(lectures!==undefined && lectures.length>0){
+        for (let el of lectures){
+        let index=list.map(element=>{return element.course_id}).indexOf(el.course_id)
+        if(index===-1){
+                list.push({course_id:el.course_id,course:el.course_name,tot_seats:0,tot_bookings:0,num_lectures:0})
+                index=list.length-1;
+        }
+            list[index].tot_seats+= el.seats
+            list[index].tot_bookings+=el.bookings
+            list[index].num_lectures++;
+        }   
+} 
    
 
     return (
@@ -288,9 +288,9 @@ function View(props) {
                             <Row className="justify-content-md-center mt-4">
                                 <Col md="10" className="mx-auto">
 
-                                    <Plot
+                                    <Plot 
                                         config={{ displayModeBar: false }}
-
+                                        let testo={ aggregationLevel=='Lecture'?'Bookings':'Bookings(avg)'}
                                         data={[
      
                                             {
@@ -300,7 +300,7 @@ function View(props) {
                                                 return text.replace(rxp, "$&<br>")
                                             
                                             }),
-                                            name: 'Bookings',
+                                            name:aggregationLevel==='Lecture'?'Bookings':'Bookings (avg)',
                                             marker: {
                                             color: 'rgb(49,168,49)',
                                             },
@@ -316,7 +316,7 @@ function View(props) {
                                                     return text.replace(rxp, "$&<br>")
                                                 
                                                 }),
-                                                name: 'Free seats',
+                                                name:aggregationLevel==='Lecture'?'Free seats':'Free seats (avg)',
                                                 marker: {
                                                 color: 'rgb(0,123,255)',
                                                 },
@@ -338,7 +338,7 @@ function View(props) {
                                                     x: 0.43,
                                                     xanchor: 'center'
                                                 },
-                                                legend: { font: { size: 16 } },
+                                                legend: {font: { size: 16 } },
                                                 xaxis: { tickfont: { size: 16 } },
                                                 yaxis: { tickfont: { size: 16 } },
                                             }
