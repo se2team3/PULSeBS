@@ -257,7 +257,25 @@ function AggregatedList(props) {
 
 function View(props) {
     const { view, aggregationLevel } = props;
-    let list=[{course:'Analysis I', avg_seats:33,avg_bookings:20},{course:'Analysis II', avg_seats:33,avg_bookings:20},{course:'Chemistry',avg_seats:32,avg_bookings:14},{course:'Physics',avg_seats:55,avg_bookings:25},{course:'Physics of complex Systems',avg_seats:43,avg_bookings:21}]
+    let list=[{course_id:1,course:'Analysis I', tot_seats:330,tot_bookings:200,num_lectures:10},{course_id:2,course:'Analysis II',tot_seats:330,tot_bookings:200,num_lectures:10},{course_id:3,course:'Chemistry',tot_seats:320,tot_bookings:140,num_lectures:10},{course_id:4,course:'Physics',tot_seats:550,tot_bookings:250,num_lectures:10},{course_id:5,course:'Physics of complex Systems',tot_seats:430,tot_bookings:210,num_lectures:10}]
+    
+    /*FOR FUTURE USAGE WHEN WE HAVE ALL DATA
+    let list=[];
+    //lectures will be filled with the actual data
+    let lectures=[{course_id:1,course:'Analysis I', seats:40,bookings:20},{course_id:1,course:'Analysis I', seats:20,bookings:10},{course_id:2,course:'Analysis II', seats:30,bookings:20},{course_id:2,course:'Analysis II', seats:20,bookings:10}]
+    for (let el of lectures){
+       let index=list.map(element=>{return element.course_id}).indexOf(el.course_id)
+       if(index===-1){
+            list.push({course_id:el.course_id,course:el.course,tot_seats:0,tot_bookings:0,num_lectures:0})
+            index=list.length-1;
+       }
+        list[index].tot_seats+= el.seats
+        list[index].tot_bookings+=el.bookings
+        list[index].num_lectures++;
+        
+    } */
+   
+
     return (
         <>
             <Nav className="px-4 py-4 sidebar">
@@ -276,7 +294,7 @@ function View(props) {
                                         data={[
      
                                             {
-                                            y: list.map(el=>el.avg_bookings),
+                                            y: list.map(el=>el.tot_bookings/el.num_lectures),
                                             x: list.map(el=>el.course).map(text => {
                                                 let rxp=new RegExp('.{1,10} ','g')
                                                 return text.replace(rxp, "$&<br>")
@@ -292,7 +310,7 @@ function View(props) {
                                             } ,
                                             
                                             {
-                                                y: list.map(el=>(el.avg_seats-el.avg_bookings)),
+                                                y: list.map(el=>((el.tot_seats-el.tot_bookings)/el.num_lectures)),
                                                 x:list.map(el=>el.course).map(text => {
                                                     let rxp=new RegExp('.{1,10} ','g')
                                                     return text.replace(rxp, "$&<br>")
