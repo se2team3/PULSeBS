@@ -74,7 +74,9 @@ class App extends React.Component {
     API.userLogin(username, password)
       .then((user) => {
         this.setState({ authUser: user, authErr: null });
+        console.log(user);
         user.role === 'officer' ? this.props.history.push("/setup") : this.props.history.push("/calendar");
+        console.log(this.props.history);
       }).catch(
         (errorObj) => {
           const err = errorObj.message;
@@ -128,10 +130,6 @@ class App extends React.Component {
 
             <Route path="/setup">
               <SetupPage/>
-            </Route>
-
-            <Route>
-              <Redirect to='/calendar'/>
             </Route>
             
           </Switch>
