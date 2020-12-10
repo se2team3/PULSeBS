@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Container, Col, Nav, Form, ListGroup, Image } from 'react-bootstrap';
+import { Row, Container, Col, Nav, Form, ListGroup} from 'react-bootstrap';
 import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CourseBadge from "./CourseBadge"
@@ -72,7 +72,7 @@ class StatisticsPage extends React.Component {
             startDate = moment(endOfWeek).add(1,'day'); // go to next week and shift startDate
             i++;
             
-        } while (startDate != endDate && startDate < endDate)
+        } while (startDate !== endDate && startDate < endDate)
 
         this.setState({list: dates})
          return dates;
@@ -257,6 +257,7 @@ function AggregatedList(props) {
 
 function View(props) {
     const { view, aggregationLevel } = props;
+    let list=[{course:'Analysis I', avg_seats:33,avg_bookings:20},{course:'Analysis II', avg_seats:33,avg_bookings:20},{course:'Chemistry',avg_seats:32,avg_bookings:14},{course:'Physics',avg_seats:55,avg_bookings:25},{course:'Physics of complex Systems',avg_seats:43,avg_bookings:21}]
     return (
         <>
             <Nav className="px-4 py-4 sidebar">
@@ -273,33 +274,41 @@ function View(props) {
                                         config={{ displayModeBar: false }}
 
                                         data={[
+     
                                             {
-                                                y: [20, 14, 23],
-                                                x: ['course1', 'course2', 'course3'],
-                                                name: 'Bookings',
-                                                marker: {
-                                                    color: 'rgb(49,168,49)',
-                                                },
-                                                width: 0.6,
-                                                type: 'bar',
-                                                hoverinfo: 'y+text+name'
+                                            y: list.map(el=>el.avg_bookings),
+                                            x: list.map(el=>el.course).map(text => {
+                                                let rxp=new RegExp('.{1,10} ','g')
+                                                return text.replace(rxp, "$&<br>")
+                                            
+                                            }),
+                                            name: 'Bookings',
+                                            marker: {
+                                            color: 'rgb(49,168,49)',
                                             },
-
+                                            width:0.6,
+                                            type: 'bar',
+                                            hoverinfo:'y+text+name'
+                                            } ,
+                                            
                                             {
-                                                y: [12, 18, 29],
-                                                x: ['course1', 'course2', 'course3'],
+                                                y: list.map(el=>(el.avg_seats-el.avg_bookings)),
+                                                x:list.map(el=>el.course).map(text => {
+                                                    let rxp=new RegExp('.{1,10} ','g')
+                                                    return text.replace(rxp, "$&<br>")
+                                                
+                                                }),
                                                 name: 'Free seats',
                                                 marker: {
-                                                    color: 'rgb(0,123,255)',
+                                                color: 'rgb(0,123,255)',
                                                 },
-                                                width: 0.6,
+                                                width:0.6,
                                                 type: 'bar',
-                                                hoverinfo: 'y+text+name',
-                                            }]}
-
-
-
-                                        layout={
+                                                hoverinfo:'y+text+name',
+                                            } 
+                                        ]}
+                                      
+                                      layout={
                                             {
                                                 barmode: 'stack',
                                                 width: 800,
