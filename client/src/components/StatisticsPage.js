@@ -234,7 +234,7 @@ function AggregatedList(props) {
     return (
         <>
             <Nav className="px-4 py-4 sidebar bg-light">
-                <ListGroup variant="flush" className='aggregated-list'>
+                <ListGroup variant="flush" className='aggregated-list w-100'>
                     {
                         elements.map((el, idx) => (
                             <ListGroup.Item
@@ -244,7 +244,7 @@ function AggregatedList(props) {
                                 onClick={() => handleClick(el)}
                                 active={el.selected}
                             >
-                                {aggregationLevel} {el.dateRange}
+                                {aggregationLevel !== AggregationLevel.Month && aggregationLevel} {el.dateRange}
                             </ListGroup.Item>
                         ))
                     }
@@ -280,7 +280,9 @@ function View(props) {
                         dateRange?.length &&
                         <>
                             <h1>{aggregationLevel} {dateRange}</h1>
-                            <h5 className="mt-1">{lectures.length} lectures</h5>
+                            <h5 className="mt-1">
+                                {lectures.length} {lectures.length === 1 ? 'lecture' : 'lectures'}
+                            </h5>
                             <Row className="justify-content-md-center mt-4">
                                 <Col md="10" className="mx-auto">
 
