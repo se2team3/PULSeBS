@@ -40,7 +40,6 @@ exports.clearUserTable = function () {
 //it allows you to insert a new user
 exports.insertUser = async function({university_id,email,password,name,surname,role}) {
     const hash = await bcrypt.hash(password, saltRounds);
-
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
         db.run(sql,[university_id,email,hash,name,surname,role],function(err) {
