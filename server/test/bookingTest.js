@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 require('dotenv').config({ path: './config/config.env' });
 const dbUtils = require('../utils/db');
-const bookingService = require('../daos/booking_dao')
+const bookingService = require('../services/bookingService')
 
 const chai = require('chai');
 const server = require('../index');
@@ -90,17 +90,17 @@ describe('Booking service', function(){
     });
     it('should retrieve the list of booked students', async function() {
         const lecture_id = 1;
-        const bookings = await bookingService.retrieveListOfBookedStudents(lecture_id);
+        const bookings = await bookingService.retrieveListOfBookedstudents(lecture_id);
         bookings.should.not.have.length(0)        
     });
     it('should retrieve an empty list of booked students', async function() {
         const lecture_id = 99;
-        const bookings = await bookingService.retrieveListOfBookedStudents(lecture_id);
+        const bookings = await bookingService.retrieveListOfBookedstudents(lecture_id);
         bookings.should.have.length(0)        
     });
     it('should retrieve an error', async function() {
         const lecture_id = 'error';
-       await bookingService.retrieveListOfBookedStudents(lecture_id).then((res)=>console.log(res)).catch((err)=> err.should.equal("wrong parameters"))
+       await bookingService.retrieveListOfBookedstudents(lecture_id).then((res)=>console.log(res)).catch((err)=> err.should.equal("wrong parameters"))
     });
 })
 
