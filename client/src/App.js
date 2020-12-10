@@ -74,7 +74,7 @@ class App extends React.Component {
     API.userLogin(username, password)
       .then((user) => {
         this.setState({ authUser: user, authErr: null });
-        this.props.history.push("/calendar");
+        user.role === 'officer' ? this.props.history.push("/setup") : this.props.history.push("/calendar");
       }).catch(
         (errorObj) => {
           const err = errorObj.message;
