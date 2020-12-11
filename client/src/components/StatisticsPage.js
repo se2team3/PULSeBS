@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Container, Col, Nav, Form, ListGroup} from 'react-bootstrap';
+import { Row, Container, Col, Nav, Form, ListGroup,ButtonGroup,Button} from 'react-bootstrap';
 import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CourseBadge from "./CourseBadge"
@@ -27,7 +27,8 @@ class StatisticsPage extends React.Component {
             courses: [],
             startDate: moment(),
             endDate: moment(),
-            focusedInput: null
+            focusedInput: null,
+            chart:'bar'
         }
     }
 
@@ -134,6 +135,13 @@ class StatisticsPage extends React.Component {
     handleAggregatedListClick = (selected) => {
         this.setState({view: { ...selected }});
     }
+    
+    switchChart= (value)=>{
+    console.log(value)
+    this.setState(state => {
+        return {chart: value}
+      });
+}
 
     render() {
         return (
@@ -211,7 +219,10 @@ class StatisticsPage extends React.Component {
                                         <View
                                             view={this.state.view}
                                             aggregationLevel={this.state.aggregationLevel}
-                                            //lectures={[{course_id:1,course_name:'Analysis I', max_seats:40,booking_counter:20},{course_id:1,course_name:'Analysis I', max_seats:20,booking_counter:17},{course_id:1,course_name:'Analysis I', max_seats:20,booking_counter:16},{course_id:2,course_name:'Analysis II', max_seats:30,booking_counter:20},{course_id:2,course_name:'Analysis II', max_seats:20,booking_counter:10},{course_id:3,course_name:'Chemistry',max_seats:30,booking_counter:10}]}
+                                           //lectures={[{course_id:1,course_name:'Analysis I', max_seats:40,booking_counter:20},{course_id:1,course_name:'Analysis I', max_seats:20,booking_counter:17},{course_id:1,course_name:'Analysis I', max_seats:20,booking_counter:16},{course_id:2,course_name:'Analysis II', max_seats:30,booking_counter:20},{course_id:2,course_name:'Analysis II', max_seats:20,booking_counter:10},{course_id:3,course_name:'Chemistry',max_seats:30,booking_counter:10}]}
+                                            //lectures={this.state.view.lectures}
+                                            chart={this.state.chart}
+                                            switchChart={this.switchChart}
                                         />
 
                                     </Col>
@@ -254,8 +265,10 @@ function AggregatedList(props) {
     );
 }
 
+
+
 function View(props) {
-    const { view, aggregationLevel } = props;
+    const { view, aggregationLevel,chart,switchChart } = props;
     const { dateRange, lectures } = view;
     let list=[];
     if(lectures!==undefined && lectures.length>0){
@@ -280,12 +293,18 @@ function View(props) {
                         dateRange?.length &&
                         <>
                             <h1>{aggregationLevel} {dateRange}</h1>
-                            <h5 className="mt-1">
-                                {lectures.length} {lectures.length === 1 ? 'lecture' : 'lectures'}
-                            </h5>
+                            <h4 className="mt-1">
+                               You have selected  {lectures.length} {lectures.length === 1 ? 'lecture' : 'lectures'}
+                            </h4>
+                            
+                           
+                            <ButtonGroup className="mb-2" style={{'margin-top':'25px'}}>
+                                <Button onClick={()=>switchChart('bar')}>Bar chart</Button>
+                                <Button onClick={()=>switchChart('scatter')}>Scatter Chart</Button>
+                            </ButtonGroup>
                             <Row className="justify-content-md-center mt-4">
                                 <Col md="10" className="mx-auto">
-
+                                {chart==='bar'?
                                     <Plot 
                                         config={{ displayModeBar: false }}
                                         data={[
@@ -345,6 +364,7 @@ function View(props) {
                                     }}
                                     useResizeHandler={true}
                                     />
+                                    :<div></div>}
                                 </Col>
                             </Row>
                         </>
