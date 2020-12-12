@@ -44,7 +44,7 @@ class StatisticsPage extends React.Component {
     getLectures = async () => {
         try {
             // TODO consider renaming the API (since we ask for lectures)
-            return await API.getTeacherBookings(this.props.authUser?.id);
+            return await API.getTeacherBookings();
         } catch (err) {
             throw err;
         }

@@ -30,12 +30,11 @@ async function getBookings(lecture_id){
 /**
  * Get list of bookings for all the teacher's lectures
  *
- * @param {number} teacher_id - valid teacher id
  * @param {string} [from] - optional starting date
  * @param {string} [to] - optional ending date
  * @returns [] of ExtendedLectures
  */
-async function getTeacherBookings(teacher_id, from, to){
+async function getTeacherBookings(from, to){
     let url = `/bookings`;
 
     const params = { from, to };

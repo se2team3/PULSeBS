@@ -332,12 +332,11 @@ describe('Client API calls', () => {
             mock.reset();
         });
 
-        const id = /*useless*/1;
         const from = "2013-10-07", to = "2013-10-07";
 
         it('returns all the teacher lectures in the db', async () => {
             mock.onGet(base_url+"/bookings").reply(200, sample_lectures);
-            const teacherLectures = await API.getTeacherBookings(id);
+            const teacherLectures = await API.getTeacherBookings();
             for (let i = 0; i < sample_lectures.length; i++)
                 expect({deleted_at: null, ...teacherLectures[i]}).toMatchObject(sample_lectures[i]);
         });
@@ -352,7 +351,7 @@ describe('Client API calls', () => {
 
         it('returns all the teacher lectures in the db but there is no lecture', async () => {
             mock.onGet(base_url+"/bookings").reply(200, []);
-            const teacherLectures = await API.getTeacherBookings(id);
+            const teacherLectures = await API.getTeacherBookings();
             expect(teacherLectures.length).toEqual(0);
         });
 
@@ -366,7 +365,7 @@ describe('Client API calls', () => {
         it('returns all the lectures in the db but something went wrong', async () => {
             mock.onGet(base_url+"/bookings").reply(500, "internal server error");
             try {
-                await API.getTeacherBookings(id);
+                await API.getTeacherBookings();
             }
             catch (e) {
                 expect(e.status).toBe(500);
