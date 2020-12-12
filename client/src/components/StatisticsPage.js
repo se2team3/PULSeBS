@@ -1,5 +1,16 @@
 import React from 'react';
-import { Row, Container, Col, Nav, Form, ListGroup,ButtonGroup,Button} from 'react-bootstrap';
+import {
+    Row,
+    Container,
+    Col,
+    Nav,
+    Form,
+    ListGroup,
+    ButtonGroup,
+    Button,
+    InputGroup,
+    OverlayTrigger, Tooltip
+} from 'react-bootstrap';
 import moment from 'moment';
 import { AuthContext } from '../auth/AuthContext';
 import CourseBadge from "./CourseBadge"
@@ -135,7 +146,27 @@ class StatisticsPage extends React.Component {
     handleAggregatedListClick = (selected) => {
         this.setState({view: { ...selected }});
     }
-    
+
+    handleSearch = (event) => {
+        const search = event.target.value;
+        this.setState({ search });
+    }
+
+    handleFuzzy = () => {
+        this.setState(state => ({ fuzzy: !state.fuzzy }));
+    }
+
+    isCourseSearched = (course) => {
+        if (!this.state.search || !this.state.search.length)
+            return true;
+        let pattern = "";
+        if (this.state.fuzzy)
+            [...this.state.search].forEach(ch => { pattern += `${ch}.*` });
+        else
+            pattern = this.state.search;
+        return (new RegExp(pattern, "i")).test(course.course_name);
+    }
+
     switchChart= (value)=>{
     console.log(value)
     this.setState(state => {
@@ -193,9 +224,14 @@ class StatisticsPage extends React.Component {
 
                                                 </Form.Group>
                                                 <h2 className="mb-3">Courses</h2>
+                                                <SearchBar
+                                                  handleSearch={this.handleSearch}
+                                                  fuzzy={this.state.fuzzy}
+                                                  handleFuzzy={this.handleFuzzy}
+                                                />
                                                 <Form.Group>
                                                     {
-                                                        this.state.courses.map(c => (
+                                                        this.state.courses.filter(this.isCourseSearched).map(c => (
                                                             <CourseBadge
                                                                 key={c.id}
                                                                 backgroundColor={this.getColor(c.id)}
@@ -265,8 +301,6 @@ function AggregatedList(props) {
         </>
     );
 }
-
-
 
 function View(props) {
     const { view, aggregationLevel,chart,switchChart } = props;
@@ -373,6 +407,39 @@ function View(props) {
                 </Container>
             </Nav>
         </>
+    );
+}
+
+function SearchBar(props) {
+    const { handleSearch, handleFuzzy, fuzzy } = props;
+    return (
+      <Form.Group className="mb-3">
+          <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder="Search for course.."
+                onChange={handleSearch}
+              />
+              <InputGroup.Append>
+                  <OverlayTrigger
+                    placement='right'
+                    overlay={
+                        <Tooltip id={1}>
+                            { fuzzy ? 'Disable' : 'Enable'} fuzzy search
+                        </Tooltip>
+                    }
+                  >
+                      <Button
+                        variant='light'
+                        active={fuzzy}
+                        onClick={handleFuzzy}
+                      >
+                          ⛓️️
+                      </Button>
+                  </OverlayTrigger>
+              </InputGroup.Append>
+          </InputGroup>
+      </Form.Group>
     );
 }
 
