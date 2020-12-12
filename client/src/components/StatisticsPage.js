@@ -299,7 +299,7 @@ function View(props) {
                             </h4>
                             
                            
-                            <ButtonGroup className="mb-2" style={{'margin-top':'25px'}}>
+                            <ButtonGroup className="mb-2" style={{'marginTop':'25px'}}>
                                 <Button onClick={()=>switchChart('bar')}>Bar chart</Button>
                                 <Button onClick={()=>switchChart('scatter')}>Scatter Chart</Button>
                             </ButtonGroup>

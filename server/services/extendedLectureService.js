@@ -12,9 +12,10 @@ exports.getLectureById = async function(lecture_id) {
 }
 
 
-exports.getLecturesByTeacherId = async function(teacher_id) {
+exports.getLecturesByTeacherId = async function(teacher_id, from, to) {
+    console.log(`Filtering teacher lectures in range ${from} - ${to}`);
     try {
-        return await extendedLectureDao.getLecturesByTeacherId(teacher_id);
+        return await extendedLectureDao.getLecturesByTeacherId(teacher_id, from, to);
     } catch (error) {
         return errHandler(error);
     }

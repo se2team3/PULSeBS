@@ -34,7 +34,7 @@ exports.getLectureById = function(id) {
 }
 
 //gets the lecture related to the selected teacher id
-exports.getLecturesByTeacherId = function(id) {
+exports.getLecturesByTeacherId = function(id, from_opt, to_opt) {
     return new Promise ((resolve,reject) =>{
         const sql = `
             SELECT L.id,L.datetime,L.datetime_end,L.course_id,L.room_id,L.virtual, L.deleted_at, C.name as course_name,
@@ -43,9 +43,11 @@ exports.getLecturesByTeacherId = function(id) {
             WHERE L.course_id=C.id AND L.room_id=R.id AND C.teacher_id=T.id AND
                 L.id=B.lecture_id AND B.student_id=U.id AND T.role="teacher" AND U.role="student"
                 AND C.teacher_id = ?
+                AND (? IS NULL OR datetime >= ?)
+                AND (? IS NULL OR datetime <= ?)
             GROUP BY B.lecture_id
             ORDER BY datetime`;
-        db.all(sql, [id], (err, rows) => {
+        db.all(sql, [id, from_opt, from_opt, to_opt, to_opt], (err, rows) => {
             if(err)
                 return reject(err);
             resolve(rows.map(createExtendedLecture));

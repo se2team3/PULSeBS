@@ -30,20 +30,23 @@ async function getBookings(lecture_id){
 /**
  * Get list of bookings for all the teacher's lectures
  *
- * @param {*} teacher_id - valid teacher id
- * @returns [] of ExtendedLectures or empty []
+ * @param {string} teacher_id - valid teacher id
+ * @param {string} [from] - optional starting date
+ * @param {string} [to] - optional ending date
+ * @returns [] of ExtendedLectures
  */
-async function getTeacherBookings(teacher_id){
+async function getTeacherBookings(teacher_id, from, to){
     let url = `/bookings`;
 
-    const response = await axios.get(baseURL + url).catch(error => {
+    const params = { from, to };
+
+    const response = await axios.get(baseURL + url, { params }).catch(error => {
         whatWentWrong(error);
     });
     if (response.status === 200) {
         return response.data.map(res => new LectureExtended(res));
     } else {
-        let err = { status: response.status, errObj: response.data };
-        throw err;  // An object with the error coming from the server
+        throw { status: response.status, errObj: response.data };
     }
 }
 
