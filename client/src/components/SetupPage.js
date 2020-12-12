@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Alert, Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
+import setupAPI from '../api/setupAPI';
+import Loader from 'react-loader-spinner'
 
 const baseStyle = {
     flex: 1,
@@ -71,7 +73,7 @@ function StyledDropzone(props) {
 
 function SetupPage(props) {
 
-    const [/* state */, setState] = useState();
+    //const [/* state */, setState] = useState();
 
     const upload_steps = ['Students', 'Teachers', 'Courses', 'Enrollment', 'Schedule'];
     const expected_columns = [
@@ -82,9 +84,14 @@ function SetupPage(props) {
         ["Code", "Room", "Day", "Seats", "Time"]
     ];
 
-    const [parsedData, setParsedData] = useState([undefined, undefined, undefined, undefined, undefined]);
+    const [parsedData, setParsedData] = useState([]);
     const [stepDisabled, setStepDisabled] = useState([false, true, true, true, true]);
     const [stepErrors, setStepErrors] = useState([false, false, false, false, false]);
+
+    const [inProgress, setInProgress] = useState(false);
+    const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+
 
     /*useEffect(() => {
         getLecture(props.lecture_id);
@@ -139,20 +146,30 @@ function SetupPage(props) {
     }
 
     const handleSubmit = () => {
-        console.log(parsedData);
         if(parsedData.length===upload_steps.length&&stepErrors.every((step)=>step===false)){
-            console.log("All good");//TODO: some more checks are required
-            const postBody = {};
-            postBody['students']=parsedData[0].data;
-            postBody['teachers']=parsedData[1].data;
-            postBody['courses']=parsedData[2].data;
-            postBody['enrollment']=parsedData[3].data;
-            postBody['schedule']=parsedData[4].data;
-            console.log(postBody);
+            setShowErrorAlert(false);
+            setInProgress(true);
+            window.scrollTo(0, 0);
+            
+            setupAPI.setup(parsedData[0].data, parsedData[1].data, parsedData[2].data, parsedData[3].data, parsedData[4].data).then(
+                (success)=>{
+                    setInProgress(false);
+                    setShowSuccessAlert(true);
+                    // empty state parsed data
+                    setStepDisabled([false, true, true, true, true]);
+                    setParsedData([]);
+                }
+            ).catch((err)=>{
+                if (err.status && err.status === 401)
+                    throw err;
+                else{
+                    setInProgress(false);
+                    // show error message
+                    console.log(err);
+                    setShowErrorAlert(err.errObj);
+                }
+            })
         }  
-        else
-            console.log("Something went wrong");
-        
     }
 
     return (<>
@@ -169,6 +186,23 @@ function SetupPage(props) {
             <Container>
                 <Row style={{ paddingTop: "10px" }}>
                     <Col>
+                        {inProgress&&<Alert variant="dark" style={{textAlign: "center"}}>
+                            <Loader type="ThreeDots" color={"#000"} height={80} width={80} />
+                            <Alert.Heading>Setup in progress</Alert.Heading>
+                            <p>It could take some seconds...</p>
+                        </Alert>}
+                        {showErrorAlert&&<Alert variant="danger" dismissible>
+                            <Alert.Heading>Something went wrong during server setup!</Alert.Heading>
+                            {showErrorAlert.message!=""&&<p>
+                            Server says: {showErrorAlert.message}
+                            </p>}
+                        </Alert>}
+                        {showSuccessAlert&&<Alert variant="success">
+                            <Alert.Heading>Success!</Alert.Heading>
+                            <p>
+                            The system has been correctly setup.
+                            </p>
+                        </Alert>}
                         <p>
                             This page will guide you through the setup of the PULSeBS server, complete the following steps one after the other.
                         </p>
@@ -190,7 +224,7 @@ function SetupPage(props) {
                 })}
                 <Row>
                     <Col style={{textAlign: 'right', paddingBottom: "30px"}}>
-                        <Button variant="success" size="lg" onClick={handleSubmit} disabled={parsedData.length<upload_steps.length&&!stepErrors.every((step)=>step===false)}>
+                        <Button variant="success" size="lg" onClick={handleSubmit} disabled={parsedData.length<upload_steps.length||stepErrors.some((step)=>step)}>
                             Submit all
                         </Button>
                     </Col>
