@@ -128,8 +128,11 @@ class App extends React.Component {
               <LecturePage lecture_id={props.match.params.lecture_id} />
             } />
 
-            <Route path="/setup">
+            {(value.authUser&&value.authUser.role=="officer")&&<Route path="/setup">
               <SetupPage/>
+            </Route>}
+            <Route>
+              Not found
             </Route>
             
           </Switch>

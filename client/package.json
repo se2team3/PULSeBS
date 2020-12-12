@@ -57,6 +57,7 @@
     "@cypress/instrument-cra": "1.4.0",
     "axios-mock-adapter": "^1.19.0",
     "cypress": "6.0.0",
+    "cypress-file-upload": "^4.1.1",
     "start-server-and-test": "^1.11.6"
   }
 }

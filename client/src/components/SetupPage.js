@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Alert, Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
@@ -149,8 +149,7 @@ function SetupPage(props) {
         if(parsedData.length===upload_steps.length&&stepErrors.every((step)=>step===false)){
             setShowErrorAlert(false);
             setInProgress(true);
-            window.scrollTo(0, 0);
-            
+            window.scrollTo(0, 0);  
             setupAPI.setup(parsedData[0].data, parsedData[1].data, parsedData[2].data, parsedData[3].data, parsedData[4].data).then(
                 (success)=>{
                     setInProgress(false);
@@ -193,7 +192,7 @@ function SetupPage(props) {
                         </Alert>}
                         {showErrorAlert&&<Alert variant="danger" dismissible>
                             <Alert.Heading>Something went wrong during server setup!</Alert.Heading>
-                            {showErrorAlert.message!=""&&<p>
+                            {showErrorAlert.message!==""&&<p>
                             Server says: {showErrorAlert.message}
                             </p>}
                         </Alert>}
@@ -237,7 +236,7 @@ function SetupPage(props) {
 }
 
 function SetupStep(props){
-    return <Row>
+    return <Row data-testid={"setupStep"+props.stepNumber}>
         <Col md={4} style={props.disabled ? { color: "#ccc" } : {}}>
             <h3>{props.stepName}</h3>
             <p>Upload a .csv file containing columns {props.expectedColumns.map((column_name, ind) => {
