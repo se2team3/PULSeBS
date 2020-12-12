@@ -39,6 +39,20 @@ describe('Authentication routes', function () {
         res.should.have.cookie('token');
     });
 
+    it('should allow an existing manager to login', async function() {
+        const newUser = dbUtils.managerObj('m8794');
+        const id = await insertUser(newUser);
+        const credentials = (({email, password}) => ({email, password}))(newUser);
+        const res = await chai.request(server).post(`/api/login`).send(credentials);
+        should.exist(res);
+        res.should.have.status(200);
+        res.body.should.be.an('object');
+        const { university_id,email,name,surname,role } = newUser;
+        const {hash, ...response} = new User(id, university_id, email, "filling hash field", name, surname, role);
+        res.body.should.include(response);
+        res.should.have.cookie('token');
+    });
+
     it('should allow logged user to logout', async function() {
         const newUser = dbUtils.studentObj('S123456');
         await insertUser(newUser);

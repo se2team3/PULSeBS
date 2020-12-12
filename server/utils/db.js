@@ -69,6 +69,19 @@ const teacherObj = (university_id) => ({
     surname: 'Jordan',
     role: 'teacher'
 });
+/**
+ * Generates a manager object, with a fixed email
+ * @param {string} university_id - unique ID
+ * @returns {{password: string, role: string, university_id: string, surname: string, name: string, email: string}}
+ */
+const managerObj = (university_id) => ({
+    university_id,
+    email: 'manager@email.com',
+    password: 'passw0rd',
+    name: 'Francesco',
+    surname: 'Verdi',
+    role: 'manager'
+});
 
 /**
  * Generates a student object, with a pseudo-random email
@@ -111,6 +124,7 @@ const populate = async ({n_students, datetime} = def_options) => {
         assign2:{},
         lecture: { datetime },
         students: [...new Array(n_students)].map(() => studentObj(counter.get())),
+        manager: managerObj(counter.get()),
         booked: 0
     };
 
@@ -143,4 +157,4 @@ const populate = async ({n_students, datetime} = def_options) => {
     return data;
 };
 
-module.exports = { reset, createTables, teacherObj, studentObj, populate }
+module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate }
