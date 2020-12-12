@@ -326,4 +326,53 @@ describe('Client API calls', () => {
             }
         });
     })
+
+    describe('getTeacherLectures', () => {
+        beforeEach(() => {
+            mock.reset();
+        });
+
+        const id = /*useless*/1;
+        const from = "2013-10-07", to = "2013-10-07";
+
+        it('returns all the teacher lectures in the db', async () => {
+            mock.onGet(base_url+"/bookings").reply(200, sample_lectures);
+            const teacherLectures = await API.getTeacherBookings(id);
+            for (let i = 0; i < sample_lectures.length; i++)
+                expect({deleted_at: null, ...teacherLectures[i]}).toMatchObject(sample_lectures[i]);
+        });
+
+        it('returns all the teacher lectures in a given time frame', async () => {
+            mock.onGet(base_url+"/bookings", { params: { from, to } })
+              .reply(200, sample_lectures);
+            const teacherLectures = await API.getTeacherBookings(id, from, to);
+            for (let i = 0; i < sample_lectures.length; i++)
+                expect({deleted_at: null, ...teacherLectures[i]}).toMatchObject(sample_lectures[i]);
+        });
+
+        it('returns all the teacher lectures in the db but there is no lecture', async () => {
+            mock.onGet(base_url+"/bookings").reply(200, []);
+            const teacherLectures = await API.getTeacherBookings(id);
+            expect(teacherLectures.length).toEqual(0);
+        });
+
+        it('returns no teacher lectures in a given time frame', async () => {
+            mock.onGet(base_url+"/bookings", { params: { from, to } })
+              .reply(200, []);
+            const teacherLectures = await API.getTeacherBookings(id, from, to);
+            expect(teacherLectures.length).toEqual(0);
+        });
+
+        it('returns all the lectures in the db but something went wrong', async () => {
+            mock.onGet(base_url+"/bookings").reply(500, "internal server error");
+            try {
+                await API.getTeacherBookings(id);
+            }
+            catch (e) {
+                expect(e.status).toBe(500);
+            }
+        });
+
+
+    })
 })
