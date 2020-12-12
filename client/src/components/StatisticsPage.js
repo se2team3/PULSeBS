@@ -187,7 +187,8 @@ class StatisticsPage extends React.Component {
                                                         onDatesChange={({ startDate, endDate }) => { this.setState({ startDate: startDate, endDate: endDate }, () => this.getListElements()) }} // PropTypes.func.isRequired,
                                                         focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
                                                         onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
-
+                                                        // isOutsideRange={(date)=>moment(date).isAfter(moment())} to disable future dates
+                                                        isOutsideRange={(date)=>false}
                                                     />
 
                                                 </Form.Group>
