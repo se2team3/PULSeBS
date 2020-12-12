@@ -184,7 +184,7 @@ function SetupPage(props) {
         <Row style={{ background: "#fff" }}>
             <Container>
                 <Row style={{ paddingTop: "10px" }}>
-                    <Col>
+                    <Col data-testid={"alertsCol"}>
                         {inProgress&&<Alert variant="dark" style={{textAlign: "center"}}>
                             <Loader type="ThreeDots" color={"#000"} height={80} width={80} />
                             <Alert.Heading>Setup in progress</Alert.Heading>
@@ -223,7 +223,7 @@ function SetupPage(props) {
                 })}
                 <Row>
                     <Col style={{textAlign: 'right', paddingBottom: "30px"}}>
-                        <Button variant="success" size="lg" onClick={handleSubmit} disabled={parsedData.length<upload_steps.length||stepErrors.some((step)=>step)}>
+                        <Button data-testid={"submitAll"} variant="success" size="lg" onClick={handleSubmit} disabled={parsedData.length<upload_steps.length||stepErrors.some((step)=>step)}>
                             Submit all
                         </Button>
                     </Col>
