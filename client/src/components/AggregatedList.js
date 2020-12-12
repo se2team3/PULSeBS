@@ -1,10 +1,47 @@
 import React from 'react';
 import { Nav, ListGroup } from 'react-bootstrap';
 import {AggregationLevel} from './common';
-
+import moment from 'moment';
 
 const AggregatedList = (props) => {
-    const { elements, aggregationLevel, handleClick } = props;
+    const { aggregationLevel, handleClick } = {...props};
+
+    const getAggregatedLectures = ()=> {
+
+        const list = {};
+    
+        props.lectures.forEach(l => {
+            const date = moment(l.datetime, "YYYY-MM-DD HH:mm");
+            let dateRange;
+    
+            switch (aggregationLevel) {
+                case AggregationLevel.Week:
+                    dateRange =
+                        date.startOf('week').format('DD/MM/YYYY') +
+                        ' - ' +
+                        date.endOf('week').format('DD/MM/YYYY');
+                    break;
+                case AggregationLevel.Month:
+                    dateRange = date.format('MMMM YYYY');
+                    break;
+                case AggregationLevel.Lecture:  /* fallthrough */
+                default:
+                    dateRange = date.format('DD MMMM YYYY');
+            }
+    
+            if (!list.hasOwnProperty(dateRange))
+                list[dateRange] = [];
+            list[dateRange].push(l);
+        });
+    
+        return Object.keys(list).map(idx => ({
+            lectures: list[idx],
+            dateRange: idx,
+            selected: false
+        }));
+    }
+    
+
     if (aggregationLevel === AggregationLevel.NotSet)
         return null;
     return (
@@ -12,7 +49,7 @@ const AggregatedList = (props) => {
             <Nav className="px-4 py-4 sidebar bg-light">
                 <ListGroup variant="flush" className='aggregated-list w-100'>
                     {
-                        elements.map((el, idx) => (
+                        getAggregatedLectures().map((el, idx) => (
                             <ListGroup.Item
                                 key={idx}
                                 action
@@ -29,5 +66,7 @@ const AggregatedList = (props) => {
         </>
     );
 }
+
+
 
 export default AggregatedList;
