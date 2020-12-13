@@ -99,10 +99,12 @@ class StatisticsPage extends React.Component {
                         return (
                             <Container fluid>
                                 <Row className='mt-3'>
-                                    <StatisticsSidebar startDate={this.state.startDate} endDate={this.state.endDate}
-                                        handleAggregationLevelClick={this.handleAggregationLevelClick} onDatesChange={this.onDatesChange}
-                                        onFocusChange={this.onFocusChange} getColor={this.getColor} focusedInput={this.state.focusedInput}
-                                        courses={this.state.courses} />
+                                    <Col sm={3}>
+                                        <StatisticsSidebar startDate={this.state.startDate} endDate={this.state.endDate}
+                                            handleAggregationLevelClick={this.handleAggregationLevelClick} onDatesChange={this.onDatesChange}
+                                            onFocusChange={this.onFocusChange} getColor={this.getColor} focusedInput={this.state.focusedInput}
+                                            courses={this.state.courses} />
+                                    </Col>
                                     <Col sm={3}>
                                         <AggregatedList
                                             lectures={this.state.lectures}
