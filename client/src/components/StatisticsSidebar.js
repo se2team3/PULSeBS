@@ -7,8 +7,7 @@ import { AggregationLevel } from './common'
 
 const StatisticsSidebar = (props) => {
 
-
-    const { startDate, endDate, focusedInput, courses } = { ...props }
+    const{startDate, endDate, focusedInput, courses, onCheckboxChange} = {...props}
 
     return (
         <Nav style={{ height: "100%" }}>
@@ -57,7 +56,7 @@ const StatisticsSidebar = (props) => {
                                 key={c.id}
                                 backgroundColor={props.getColor(c.id)}
                                 subjectName={c.course_name}
-                                handleClick={() => null}
+                                handleClick={() => onCheckboxChange(c)}
                             />
                         ))
                     }
