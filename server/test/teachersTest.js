@@ -28,9 +28,21 @@ describe('Teachers routes', function () {
         res.body.should.be.an('array');
         res.body.should.have.length(0);
 
-        res = await chai.request(server).get(route).query({start_date: '11111', end_date: tomorrow});
+        res = await chai.request(server).get(route).query({from: '11111', to: tomorrow});
         res.should.have.status(400);
         res.body.should.have.property('errors');
+    });
+
+    it('should retrieve an error if the parameter is wrong', async function() {
+        const teacher_id = 'error';
+        const route = `/api/teachers/${teacher_id}/lectures`;
+
+        let yesterday = moment().add(1,'days').format("YYYY-MM-DD");
+        let tomorrow = moment().add(-1,'days').format("YYYY-MM-DD");
+
+        const res = await chai.request(server).get(route).query({from: yesterday, to: tomorrow});
+        res.should.have.status(400);
+        
     });
 
     before('create tables and clear db', async function() {

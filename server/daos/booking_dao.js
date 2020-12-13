@@ -17,9 +17,6 @@ exports.createBookingTable = function () {
                      updated_at TEXT DEFAULT(datetime('now','localtime')),deleted_at TEXT, PRIMARY KEY(lecture_id,student_id),
                      FOREIGN KEY(lecture_id) REFERENCES Lectures(id), FOREIGN KEY(student_id) REFERENCES Users(id))`
         db.run(sql, [], (err) => {
-            if (err)
-                reject(err);
-            else
                 resolve(null);
         });
     })
@@ -99,11 +96,14 @@ exports.retrieveLectureBookings = function (lecture_id) {
 //assert if a student can book a lecture
 exports.isBookable = function (student_id, lecture_id) {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM Bookings B WHERE student_id = ? AND lecture_id=?'
-        db.all(sql, [student_id, lecture_id], (err, rows) => {
-            if (err)
-                return reject(err);
-            if (!rows.length)
+        let value = isNaN(lecture_id)  ? 0 : parseInt(lecture_id)
+        if(!value){
+            reject("wrong parameters")
+        }
+        const sql = 'SELECT lecture_id FROM Bookings WHERE student_id = ? AND lecture_id=?'
+        
+        db.all(sql, [student_id, lecture_id], (err, rows) => {    
+           if (!rows.length)
                 resolve({ bookable: true });
             else {
                 resolve({ bookable: false });
@@ -127,6 +127,11 @@ exports.deleteBookingTable = function () {
 //gets the students booked for a given lecture
 exports.retrieveListOfBookedStudents = function(lecture_id) {
     return new Promise ((resolve,reject) =>{
+        let value = isNaN(lecture_id) ? 0 : parseInt(lecture_id)
+
+        if(!value){
+            reject("wrong parameters")
+        }
         const sql = 'SELECT U.* FROM Bookings B, Users U WHERE B.lecture_id = ? AND U.id = B.student_id'
         db.all(sql, [lecture_id], (err, rows) => {
             if(err)
@@ -142,6 +147,11 @@ exports.retrieveListOfBookedStudents = function(lecture_id) {
 //it allows you to delete a booking
 exports.deleteBooking = function ({ datetime, lecture_id, student_id }) {
     return new Promise((resolve, reject) => {
+        let value = isNaN(lecture_id)? 0 : parseInt(lecture_id)
+
+        if(!value){
+            reject("wrong parameters")
+        }
 
         const sql = 'UPDATE Bookings SET deleted_at= ? WHERE lecture_id= ? AND student_id= ? AND deleted_at IS NULL'
         db.run(sql, [datetime, lecture_id, student_id], function (err) {

@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon index.js",
     "start:ci": "NODE_ENV=test node index.js",
-    "test": "nyc --reporter=lcov mocha --exit --timeout 100000"
+    "test": "nyc --reporter=lcov mocha --exit --timeout 100000",
+    "cov": "nyc --reporter=text npm run test"
   },
   "license": "ISC",
   "dependencies": {

@@ -81,6 +81,8 @@ class App extends React.Component {
         (errorObj) => {
           const err = errorObj.message;
           this.setState({ authErr: err });
+          this.props.history.push("/login");
+
         }
       );
   }
