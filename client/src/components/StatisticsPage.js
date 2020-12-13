@@ -97,22 +97,22 @@ class StatisticsPage extends React.Component {
                         if (!context.authUser)
                             return null;
                         return (
-                            <Container fluid>
-                                <Row className='mt-3'>
-                                    <Col sm={3}>
+                            <Container fluid style={{flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0}}>
+                                <Row className="flex-nowrap" style={{height: "100%", overflowX: "auto"}}>
+                                    <Col sm={2} style={{ 'backgroundColor': 'rgb(240, 240, 240)' }}>
                                         <StatisticsSidebar startDate={this.state.startDate} endDate={this.state.endDate}
                                             handleAggregationLevelClick={this.handleAggregationLevelClick} onDatesChange={this.onDatesChange}
                                             onFocusChange={this.onFocusChange} getColor={this.getColor} focusedInput={this.state.focusedInput}
                                             courses={this.state.courses} onAllTimeClick={()=>this.onDatesChange({startDate:null,endDate:null})}/>
                                     </Col>
-                                    <Col sm={3}>
+                                    <Col sm={2} className="bg-light" style={{flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0}}>
                                         <AggregatedList
                                             lectures={this.state.lectures}
                                             handleClick={this.handleAggregatedListClick}
                                             aggregationLevel={this.state.aggregationLevel}
                                         />
                                     </Col>
-                                    <Col sm={6}>
+                                    <Col style={{flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0}}>
                                         <GraphView
                                             view={this.state.view}
                                             aggregationLevel={this.state.aggregationLevel}

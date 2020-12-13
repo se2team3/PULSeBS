@@ -1,22 +1,19 @@
 import React from 'react';
-import { Col, Nav, Form, Button} from 'react-bootstrap';
+import { Col, Nav, Form, Button } from 'react-bootstrap';
 import { DateRangePicker } from 'react-dates';
 import CourseBadge from "./CourseBadge";
-import {AggregationLevel} from './common'
+import { AggregationLevel } from './common'
 
 
 const StatisticsSidebar = (props) => {
 
 
-    const{startDate, endDate, focusedInput, courses} = {...props}
+    const { startDate, endDate, focusedInput, courses } = { ...props }
 
     return (
-        <Nav
-            className="px-4 py-4 col-md-12 d-none d-md-block sidebar"
-            style={{ 'backgroundColor': 'rgb(240, 240, 240)' }}
-        >
-            <Form>
-            <Form.Group >
+        <Nav style={{ height: "100%" }}>
+            <Form style={{ display: "flex", flexDirection: "column", maxHeight: "100%" }}>
+                <Form.Group >
                     <Form.Label as="legend">
                         Time frame:
                                                 </Form.Label>
@@ -25,7 +22,7 @@ const StatisticsSidebar = (props) => {
                         startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
                         endDate={endDate} // momentPropTypes.momentObj or null,
                         endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                        onDatesChange={({ startDate, endDate }) => props.onDatesChange({startDate,endDate})} // PropTypes.func.isRequired,
+                        onDatesChange={({ startDate, endDate }) => props.onDatesChange({ startDate, endDate })} // PropTypes.func.isRequired,
                         focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
                         onFocusChange={focusedInput => props.onFocusChange(focusedInput)} // PropTypes.func.isRequired,
                         // isOutsideRange={(date)=>moment(date).isAfter(moment())} to disable future dates
@@ -40,7 +37,7 @@ const StatisticsSidebar = (props) => {
                         <Form.Label as="legend">
                             Aggregation level:
                                                 </Form.Label>
-                        {Object.keys(AggregationLevel).filter((k)=> k !== 'NotSet').map((k) =>
+                        {Object.keys(AggregationLevel).filter((k) => k !== 'NotSet').map((k) =>
                             <Form.Check
                                 type="radio"
                                 label={k}
@@ -51,9 +48,9 @@ const StatisticsSidebar = (props) => {
                             />)}
                     </Form.Group>
                 </fieldset>
-                
+
                 <h2 className="mb-3">Courses</h2>
-                <Form.Group>
+                <Form.Group style={{ flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0 }}>
                     {
                         courses.map(c => (
                             <CourseBadge
