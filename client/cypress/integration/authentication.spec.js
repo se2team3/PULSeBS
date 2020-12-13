@@ -79,3 +79,23 @@ describe('Logout from the system', function () {
         cy.contains('Login').should('exist');
     });
 });
+
+describe('Login an officer', function () {
+    before('visit the page', () => {
+        cy.visit('/login');
+        cy.intercept('/api/user', {fixture: "officer1.json"});
+        cy.intercept('/api/login', {fixture: "officer1.json"});
+    });
+    it('should complete login', function () {
+        cy.get('input[type=email]').focus().type(`officer966@pulsebs.com`);
+        cy.get('input[type=password]').focus().type('password');
+        cy.get('form').submit();
+    });
+    it('should redirect to setup?', () => {
+        cy.url().should('include', '/setup'); //FIXME should we redirect to setup?
+        cy.contains("Setup");
+    });
+    it('should show the proper first name in the header', function () {
+        cy.contains("Matteo").should('exist');
+    });
+});
