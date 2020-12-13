@@ -38,8 +38,8 @@ class StatisticsPage extends React.Component {
     getLecturesAndBookings = async () => {
         try {
             // TODO consider renaming the API (since we ask for lectures)
-            let startDate = moment(this.state.startDate).format('YYYY-MM-DD')
-            let endDate = moment(this.state.endDate).format('YYYY-MM-DD')
+            let startDate = this.state.startDate && moment(this.state.startDate).format('YYYY-MM-DD')
+            let endDate = this.state.endDate && moment(this.state.endDate).format('YYYY-MM-DD')
             const lectures = await API.getTeacherBookings(startDate, endDate);
             const courses = lectures
                 .map(l => l.course_id)
@@ -82,7 +82,7 @@ class StatisticsPage extends React.Component {
     }
 
     onDatesChange = ({ startDate, endDate }) => {
-        this.setState({ startDate: startDate, endDate: endDate },()=>this.getLecturesAndBookings());
+        this.setState({ startDate: startDate, endDate: endDate, view: {} },()=>this.getLecturesAndBookings());
     }
 
     onFocusChange = (focusedInput) => {
@@ -103,7 +103,7 @@ class StatisticsPage extends React.Component {
                                         <StatisticsSidebar startDate={this.state.startDate} endDate={this.state.endDate}
                                             handleAggregationLevelClick={this.handleAggregationLevelClick} onDatesChange={this.onDatesChange}
                                             onFocusChange={this.onFocusChange} getColor={this.getColor} focusedInput={this.state.focusedInput}
-                                            courses={this.state.courses} />
+                                            courses={this.state.courses} onAllTimeClick={()=>this.onDatesChange({startDate:null,endDate:null})}/>
                                     </Col>
                                     <Col sm={3}>
                                         <AggregatedList

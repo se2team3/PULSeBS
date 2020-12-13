@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Nav, Form} from 'react-bootstrap';
+import { Col, Nav, Form, Button} from 'react-bootstrap';
 import { DateRangePicker } from 'react-dates';
 import CourseBadge from "./CourseBadge";
 import {AggregationLevel} from './common'
@@ -16,6 +16,25 @@ const StatisticsSidebar = (props) => {
             style={{ 'backgroundColor': 'rgb(240, 240, 240)' }}
         >
             <Form>
+            <Form.Group >
+                    <Form.Label as="legend">
+                        Time frame:
+                                                </Form.Label>
+                    <DateRangePicker
+                        startDate={startDate} // momentPropTypes.momentObj or null,
+                        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                        endDate={endDate} // momentPropTypes.momentObj or null,
+                        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                        onDatesChange={({ startDate, endDate }) => props.onDatesChange({startDate,endDate})} // PropTypes.func.isRequired,
+                        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                        onFocusChange={focusedInput => props.onFocusChange(focusedInput)} // PropTypes.func.isRequired,
+                        // isOutsideRange={(date)=>moment(date).isAfter(moment())} to disable future dates
+                        isOutsideRange={(date) => false}
+                        displayFormat='DD/MM/YYYY'
+                    />
+                    <Button variant='primary' className='mt-3' onClick={props.onAllTimeClick}>All-time</Button>
+
+                </Form.Group>
                 <fieldset>
                     <Form.Group >
                         <Form.Label as="legend">
@@ -32,23 +51,7 @@ const StatisticsSidebar = (props) => {
                             />)}
                     </Form.Group>
                 </fieldset>
-                <Form.Group >
-                    <Form.Label as="legend">
-                        Time frame:
-                                                </Form.Label>
-                    <DateRangePicker
-                        startDate={startDate} // momentPropTypes.momentObj or null,
-                        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                        endDate={endDate} // momentPropTypes.momentObj or null,
-                        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                        onDatesChange={({ startDate, endDate }) => props.onDatesChange({startDate,endDate})} // PropTypes.func.isRequired,
-                        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                        onFocusChange={focusedInput => props.onFocusChange(focusedInput)} // PropTypes.func.isRequired,
-                        // isOutsideRange={(date)=>moment(date).isAfter(moment())} to disable future dates
-                        isOutsideRange={(date) => false}
-                    />
-
-                </Form.Group>
+                
                 <h2 className="mb-3">Courses</h2>
                 <Form.Group>
                     {
