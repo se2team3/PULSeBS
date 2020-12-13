@@ -41,9 +41,9 @@ describe('Header tests', () => {
     });
     it('should properly login with valid credentials', () => {
         cy.get('#username').focus().clear()
-            .type('Guelfo.Rossi@pulsebs.com');
+            .type('email@host.com');
         cy.get('#password').focus().clear()
-            .type('9LKb8L_cLnQOZip')
+            .type('passw0rd')
             .type('{enter}');
         cy.getCookie('token');
         // cy.getCookie('token').should('exist');
