@@ -1,5 +1,5 @@
 import React from 'react';
-import {Nav, Form, InputGroup, OverlayTrigger, Tooltip} from 'react-bootstrap';
+import {Col, Button, Nav, Form, InputGroup, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import { DateRangePicker } from 'react-dates';
 import CourseBadge from "./CourseBadge";
 import {AggregationLevel} from './common'
@@ -8,22 +8,37 @@ import Button from "react-bootstrap/Button";
 
 const StatisticsSidebar = (props) => {
 
-
-    const{startDate, endDate, focusedInput, courses,
-        handleSearch, handleFuzzy, fuzzy, isCourseSearched} = {...props}
+const{startDate, endDate, focusedInput, courses,
+        handleSearch, handleFuzzy, fuzzy, isCourseSearched, onCheckboxChange} = {...props}
 
     return (
-        <Nav
-            className="px-4 py-4 col-md-12 d-none d-md-block sidebar"
-            style={{ 'backgroundColor': 'rgb(240, 240, 240)' }}
-        >
-            <Form>
+        <Nav style={{ height: "100%" }}>
+            <Form style={{ display: "flex", flexDirection: "column", maxHeight: "100%" }}>
+                <Form.Group >
+                    <Form.Label as="legend">
+                        Time frame:
+                                                </Form.Label>
+                    <DateRangePicker
+                        startDate={startDate} // momentPropTypes.momentObj or null,
+                        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                        endDate={endDate} // momentPropTypes.momentObj or null,
+                        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                        onDatesChange={({ startDate, endDate }) => props.onDatesChange({ startDate, endDate })} // PropTypes.func.isRequired,
+                        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                        onFocusChange={focusedInput => props.onFocusChange(focusedInput)} // PropTypes.func.isRequired,
+                        // isOutsideRange={(date)=>moment(date).isAfter(moment())} to disable future dates
+                        isOutsideRange={(date) => false}
+                        displayFormat='DD/MM/YYYY'
+                    />
+                    <Button variant='primary' className='mt-3' onClick={props.onAllTimeClick}>All-time</Button>
+
+                </Form.Group>
                 <fieldset>
                     <Form.Group >
                         <Form.Label as="legend">
                             Aggregation level:
                                                 </Form.Label>
-                        {Object.keys(AggregationLevel).filter((k)=> k !== 'NotSet').map((k) =>
+                        {Object.keys(AggregationLevel).filter((k) => k !== 'NotSet').map((k) =>
                             <Form.Check
                                 type="radio"
                                 label={k}
@@ -34,37 +49,21 @@ const StatisticsSidebar = (props) => {
                             />)}
                     </Form.Group>
                 </fieldset>
-                <Form.Group >
-                    <Form.Label as="legend">
-                        Time frame:
-                                                </Form.Label>
-                    <DateRangePicker
-                        startDate={startDate} // momentPropTypes.momentObj or null,
-                        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                        endDate={endDate} // momentPropTypes.momentObj or null,
-                        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                        onDatesChange={({ startDate, endDate }) => props.onDatesChange({startDate,endDate})} // PropTypes.func.isRequired,
-                        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                        onFocusChange={focusedInput => props.onFocusChange(focusedInput)} // PropTypes.func.isRequired,
-                        // isOutsideRange={(date)=>moment(date).isAfter(moment())} to disable future dates
-                        isOutsideRange={(date) => false}
-                    />
 
-                </Form.Group>
                 <h2 className="mb-3">Courses</h2>
                 <SearchBar
                   handleSearch={handleSearch}
                   fuzzy={fuzzy}
                   handleFuzzy={handleFuzzy}
                 />
-                <Form.Group>
+                <Form.Group style={{ flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0 }}>
                     {
                         courses.filter(isCourseSearched).map(c => (
                             <CourseBadge
                                 key={c.id}
                                 backgroundColor={props.getColor(c.id)}
                                 subjectName={c.course_name}
-                                handleClick={() => null}
+                                handleClick={() => onCheckboxChange(c)}
                             />
                         ))
                     }
