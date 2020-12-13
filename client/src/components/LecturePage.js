@@ -53,12 +53,17 @@ function LecturePage(props) {
             </Row>
             <Row>
                 <Col md={4}>
-                    {!!(lecture.deleted_at != null) && <Alert variant="danger">
+                    {!!(lecture.deleted_at != null ) && <Alert variant="danger">
                         This lecture has been <b>cancelled</b>!
                         </Alert>}
+
                     {!!(lecture.virtual) && <Alert variant="warning">
                         <b>REMOTE LECTURE</b>
                         </Alert>}
+
+
+
+
                     <Card>
                         <Card.Body>
                             <Card.Title>
@@ -74,9 +79,16 @@ function LecturePage(props) {
                                     Teacher: {lecture.teacher_surname} {lecture.teacher_name}
                             </Card.Text>
                             {!!(lecture.deleted_at == null) && <>
-                                {(!lecture.virtual && moment(lecture.datetime).diff(moment(),'minutes') >= 30) && <Button block variant="warning" onClick={changeLectureToRemote}>Change to distance lecture</Button>}
-                                {moment(lecture.datetime).diff(moment(),'hours') >= 1&&<Button block variant="danger" onClick={cancelLecture}>Cancel lecture</Button>}
-                            </>}
+                        
+                                { (!lecture.virtual && moment(lecture.datetime).diff(moment(),'minutes') >= 30)  ? 
+                                    <Button block variant="warning"  onClick={changeLectureToRemote}>Change to distance lecture</Button> :
+                                    <Button block variant="warning" disabled='true' >You can no longer make changes</Button>
+                                }
+                                { (moment(lecture.datetime).diff(moment(),'hours') >= 1)?
+                                    <Button block variant="danger" onClick={cancelLecture}>Cancel lecture</Button> :
+                                    <Button block variant="danger"disabled='true' >You can no more cancel the lecture</Button>
+                                }    
+                                </>}
                         </Card.Body>
                     </Card>
                 </Col>

@@ -70,8 +70,8 @@ const notifyLectureCancellation = async (lecture) => {
 
     // create query to get all booked students for a lecture
     try {
-        let existingLecture = await extendedLectureService.getLectureById(lecture.lecture_id);
-        if(!existingLecture) throw Error('Invalid lecture!');
+        let existingLecture = await extendedLectureService.getLectureById(lecture.lecture_id).catch(()=>{throw Error('Invalid lecture!')});
+
         let bookedStudents = await bookingDao.retrieveListOfBookedStudents(lecture.lecture_id);
         let successfulMails = [];
         let promises = Promise.all(bookedStudents.map((student) => {
