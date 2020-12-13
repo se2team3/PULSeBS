@@ -1,4 +1,5 @@
 import API from "./";
+import setupAPI from "./setupAPI";
 var axios = require("axios");
 var MockAdapter = require("axios-mock-adapter");
 
@@ -320,6 +321,48 @@ describe('Client API calls', () => {
             mock.onPatch(base_url+`/lectures/${sample_lecture.id}`,{virtual: true}).reply(500, "internal server error");
             try {
                 await API.patchLecture(sample_booking.lecture_id, {virtual:true});
+            }
+            catch (e) {
+                expect(e.status).toBe(500);
+            }
+        });
+    })
+
+    describe('setup', () => {
+        beforeEach(() => {
+            mock.reset()
+        });
+
+        it('returns true on 201', async () => {
+            mock.onPost(base_url+`/setup`,{students: [], teachers: [], courses: [], enrollment: [], schedule: []}).reply(201, "");
+            const success = await setupAPI.setup([],[],[],[],[]);
+            expect(success).toBe(true);
+        });
+
+        it("The lecture doesn't exist or it has already been set", async () => {
+            mock.onPost(base_url+`/setup`,{students: [], teachers: [], courses: [], enrollment: [], schedule: []}).reply(304, "internal server error");
+            try {
+                await setupAPI.setup([],[],[],[],[]);
+            }
+            catch (e) {
+                expect(e.status).toBe(304);
+            }
+        });
+
+        it('Invalid status value', async () => {
+            mock.onPost(base_url+`/setup`,{students: [], teachers: [], courses: [], enrollment: [], schedule: []}).reply(400, "internal server error");
+            try {
+                await setupAPI.setup([],[],[],[],[]);
+            }
+            catch (e) {
+                expect(e.status).toBe(400);
+            }
+        });
+
+        it('something went wrong changing to remote lecture', async () => {
+            mock.onPost(base_url+`/setup`,{students: [], teachers: [], courses: [], enrollment: [], schedule: []}).reply(500, "internal server error");
+            try {
+                await setupAPI.setup([],[],[],[],[]);
             }
             catch (e) {
                 expect(e.status).toBe(500);
