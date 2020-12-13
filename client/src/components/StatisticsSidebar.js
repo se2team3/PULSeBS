@@ -1,14 +1,16 @@
 import React from 'react';
-import { Col, Nav, Form} from 'react-bootstrap';
+import {Nav, Form, InputGroup, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import { DateRangePicker } from 'react-dates';
 import CourseBadge from "./CourseBadge";
 import {AggregationLevel} from './common'
+import Button from "react-bootstrap/Button";
 
 
 const StatisticsSidebar = (props) => {
 
 
-    const{startDate, endDate, focusedInput, courses} = {...props}
+    const{startDate, endDate, focusedInput, courses,
+        handleSearch, handleFuzzy, fuzzy, isCourseSearched} = {...props}
 
     return (
         <Nav
@@ -50,9 +52,14 @@ const StatisticsSidebar = (props) => {
 
                 </Form.Group>
                 <h2 className="mb-3">Courses</h2>
+                <SearchBar
+                  handleSearch={handleSearch}
+                  fuzzy={fuzzy}
+                  handleFuzzy={handleFuzzy}
+                />
                 <Form.Group>
                     {
-                        courses.map(c => (
+                        courses.filter(isCourseSearched).map(c => (
                             <CourseBadge
                                 key={c.id}
                                 backgroundColor={props.getColor(c.id)}
@@ -65,6 +72,39 @@ const StatisticsSidebar = (props) => {
             </Form>
 
         </Nav>
+    );
+}
+
+function SearchBar(props) {
+    const { handleSearch, handleFuzzy, fuzzy } = props;
+    return (
+      <Form.Group className="mb-3">
+          <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder="Search for course.."
+                onChange={handleSearch}
+              />
+              <InputGroup.Append>
+                  <OverlayTrigger
+                    placement='right'
+                    overlay={
+                        <Tooltip id={1}>
+                            { fuzzy ? 'Disable' : 'Enable'} fuzzy search
+                        </Tooltip>
+                    }
+                  >
+                      <Button
+                        variant='light'
+                        active={fuzzy}
+                        onClick={handleFuzzy}
+                      >
+                          ⛓️️
+                      </Button>
+                  </OverlayTrigger>
+              </InputGroup.Append>
+          </InputGroup>
+      </Form.Group>
     );
 }
 

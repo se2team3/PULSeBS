@@ -122,67 +122,10 @@ class StatisticsPage extends React.Component {
                                         <StatisticsSidebar startDate={this.state.startDate} endDate={this.state.endDate}
                                             handleAggregationLevelClick={this.handleAggregationLevelClick} onDatesChange={this.onDatesChange}
                                             onFocusChange={this.onFocusChange} getColor={this.getColor} focusedInput={this.state.focusedInput}
-                                            courses={this.state.courses} />
-                                        // TODO
-                                            <Nav
-                                            className="px-4 py-4 col-md-12 d-none d-md-block sidebar"
-                                            style={{ 'backgroundColor': 'rgb(240, 240, 240)' }}
-                                        >
-                                            <Form>
-                                                <fieldset>
-                                                    <Form.Group >
-                                                        <Form.Label as="legend">
-                                                            Aggregation level:
-                                                    </Form.Label>
-                                                        {Object.keys(AggregationLevel).filter(k => k !== "NotSet").map((k) =>
-                                                            <Form.Check
-                                                                type="radio"
-                                                                label={k}
-                                                                id={k}
-                                                                key={k}
-                                                                name='formAggregationLevel'
-                                                                onClick={() => this.handleAggregationLevelClick(k)}
-                                                            />)}
-                                                    </Form.Group>
-                                                </fieldset>
-                                                <Form.Group >
-                                                    <Form.Label as="legend">
-                                                        Time frame:
-                                                    </Form.Label>
-                                                    <DateRangePicker
-                                                        startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-                                                        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                                                        endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-                                                        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                                                        onDatesChange={({ startDate, endDate }) => { this.setState({ startDate: startDate, endDate: endDate }, () => this.getListElements()) }} // PropTypes.func.isRequired,
-                                                        focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                                                        onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
-                                                        // isOutsideRange={(date)=>moment(date).isAfter(moment())} to disable future dates
-                                                        isOutsideRange={(date)=>false}
-                                                    />
-
-                                                </Form.Group>
-                                                <h2 className="mb-3">Courses</h2>
-                                                <SearchBar
-                                                  handleSearch={this.handleSearch}
-                                                  fuzzy={this.state.fuzzy}
-                                                  handleFuzzy={this.handleFuzzy}
-                                                />
-                                                <Form.Group>
-                                                    {
-                                                        this.state.courses.filter(this.isCourseSearched).map(c => (
-                                                            <CourseBadge
-                                                                key={c.id}
-                                                                backgroundColor={this.getColor(c.id)}
-                                                                subjectName={c.course_name}
-                                                                handleClick={() => null}
-                                                            />
-                                                        ))
-                                                    }
-                                                </Form.Group>
-                                            </Form>
-
-                                        </Nav>
+                                            courses={this.state.courses}
+                                            handleSearch={this.handleSearch} isCourseSearched={this.isCourseSearched}
+                                            handleFuzzy={this.handleFuzzy} fuzzy={this.state.fuzzy}
+                                        />
                                     </Col>
                                     <Col sm={3}>
                                         <AggregatedList
@@ -210,40 +153,6 @@ class StatisticsPage extends React.Component {
                 </AuthContext.Consumer>
             </>)
     }
-}
-
-
-function SearchBar(props) {
-    const { handleSearch, handleFuzzy, fuzzy } = props;
-    return (
-      <Form.Group className="mb-3">
-          <InputGroup>
-              <Form.Control
-                type="text"
-                placeholder="Search for course.."
-                onChange={handleSearch}
-              />
-              <InputGroup.Append>
-                  <OverlayTrigger
-                    placement='right'
-                    overlay={
-                        <Tooltip id={1}>
-                            { fuzzy ? 'Disable' : 'Enable'} fuzzy search
-                        </Tooltip>
-                    }
-                  >
-                      <Button
-                        variant='light'
-                        active={fuzzy}
-                        onClick={handleFuzzy}
-                      >
-                          ⛓️️
-                      </Button>
-                  </OverlayTrigger>
-              </InputGroup.Append>
-          </InputGroup>
-      </Form.Group>
-    );
 }
 
 export default StatisticsPage;
