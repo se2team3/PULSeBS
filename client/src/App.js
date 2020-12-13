@@ -74,7 +74,7 @@ class App extends React.Component {
     API.userLogin(username, password)
       .then((user) => {
         this.setState({ authUser: user, authErr: null });
-        this.props.history.push("/calendar");
+        user.role === 'manager' ? this.props.history.push("/statistics") : this.props.history.push("/calendar");
       }).catch(
         (errorObj) => {
           const err = errorObj.message;
@@ -129,10 +129,6 @@ class App extends React.Component {
             <Route path="/lectures/:lecture_id" render={(props) =>
               <LecturePage lecture_id={props.match.params.lecture_id} />
             } />
-
-            <Route>
-              <Redirect to='/calendar'/>
-            </Route>
             
           </Switch>
 

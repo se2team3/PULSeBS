@@ -5,5 +5,5 @@ module.exports = {
     Student: "student",
     Teacher: "teacher",
     SupportOfficer: "support_officer",
-    BookingManager: "booking_manager"
+    BookingManager: "manager"
 }

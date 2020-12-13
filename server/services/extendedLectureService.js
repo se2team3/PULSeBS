@@ -18,3 +18,11 @@ exports.getLecturesByTeacherId = async function(teacher_id, from, to) {
         return errHandler(error);
     }
 }
+exports.getAllLectures = async function(start_date,end_date) {
+    try {
+        let lecture = await extendedLectureDao.getAllLectures(start_date,end_date);
+        return lecture;
+    } catch (error) {
+        return errHandler(error);
+    }
+}

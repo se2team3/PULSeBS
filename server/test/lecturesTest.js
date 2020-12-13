@@ -82,7 +82,7 @@ describe('Lecture tests', function() {
         beforeEach('clear db', async function() {
             await dbUtils.reset({ create: false });
         });
-
+/*
         it('should get the list of booking given a lecture', async function() {
             const lectureObj = { lecture_id: 1};
             
@@ -124,12 +124,34 @@ describe('Lecture tests', function() {
             let res = await agent.get(url).query({from: start_date, to: end_date});
             should.exist(res);
             res.should.have.status(401);
+        });*/
+
+        it('should allow to the booking manager to get the list of lectures in a time frame ', async function() {
+            const start_date = '2020-10-23';
+            const end_date = '2021-12-29';
+
+            data = await dbUtils.populate();
+            manager = dbUtils.managerObj();
+            const credentials = {email: manager.email, password: manager.password }
+            // perform login
+            const agent = chai.request.agent(server);
+            let res1=await agent.post('/api/login').send(credentials);  
+            console.log(res1.status)
+
+            const url = `/api/lectures`;
+
+            let res = await agent.get(url).query({from: start_date, to: end_date});
+            should.exist(res);
+        
+            res.should.have.status(200);
+            res.body.should.be.an('array');
+            res.body.should.have.not.length(0)
         });
 
-
+/*
         it('should get the list of lectures in a INVALID time frame given the student', async function() {
            await testTimeFrame(false);
-        });
+        });*/
     })
 
     describe('Change a lecture to a virtual one',async function(){
