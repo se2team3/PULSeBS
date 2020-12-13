@@ -11,7 +11,6 @@ import { AggregationLevel } from './common';
 import GraphView from './GraphView';
 
 
-
 class StatisticsPage extends React.Component {
     constructor(props) {
         super(props);
@@ -33,8 +32,6 @@ class StatisticsPage extends React.Component {
         await this.getLecturesAndBookings();
     }
 
-
-
     getLecturesAndBookings = async () => {
         try {
             // TODO consider renaming the API (since we ask for lectures)
@@ -44,7 +41,8 @@ class StatisticsPage extends React.Component {
             const courses = lectures
                 .map(l => l.course_id)
                 .filter(this.onlyUnique)
-                .map(id => lectures.find(l => l.course_id === id));
+                .map(id => lectures.find(l => l.course_id === id))
+                .map(c => ({ ...c, selected: true }));
             this.setState({ lectures, courses });
         } catch (err) {
             throw err;
@@ -59,7 +57,6 @@ class StatisticsPage extends React.Component {
         let ids = this.state.courses.map((c) => c.id).filter(this.onlyUnique);
         let index = ids.indexOf(course_id);
         return colorArray[index];
-
     }
 
     onlyUnique = function (value, index, self) {
@@ -71,14 +68,28 @@ class StatisticsPage extends React.Component {
     }
 
     handleAggregatedListClick = (selected) => {
-        this.setState({ view: { ...selected } });
+        // allLectures  handles all the lectures for a specific date range
+        // lectures     handles the lectures for selected courses subset
+        this.setState({ view: { ...selected, allLectures: [...selected.lectures] } });
+    }
+
+    handleCheckboxChange = (course) => {
+        const courses = this.state.courses;
+        for (let c of courses)
+            if (c.course_name === course.course_name)
+                c.selected = !c.selected;
+
+        // TODO find a better way, to avoid nested `setState`s
+        this.setState({ courses: [...courses]}, function () {
+            const view = this.state.view;
+            view.lectures = view.allLectures?.filter(this.isCourseSelected) || [];
+            this.setState({ view: {...view} });
+          }
+        )
     }
 
     switchChart = (value) => {
-        console.log(value)
-        this.setState(state => {
-            return { chart: value }
-        });
+        this.setState({ chart: value });
     }
 
     onDatesChange = ({ startDate, endDate }) => {
@@ -89,7 +100,11 @@ class StatisticsPage extends React.Component {
         this.setState({ focusedInput });
     }
 
+    isCourseSelected = (lecture) => this.state.courses.filter(c => c.selected).map(c => c.course_name).includes(lecture.course_name);
+
     render() {
+        const lectures = this.state.lectures.filter(this.isCourseSelected);
+
         return (
             <>
                 <AuthContext.Consumer>
@@ -100,14 +115,22 @@ class StatisticsPage extends React.Component {
                             <Container fluid>
                                 <Row className='mt-3'>
                                     <Col sm={3}>
-                                        <StatisticsSidebar startDate={this.state.startDate} endDate={this.state.endDate}
-                                            handleAggregationLevelClick={this.handleAggregationLevelClick} onDatesChange={this.onDatesChange}
-                                            onFocusChange={this.onFocusChange} getColor={this.getColor} focusedInput={this.state.focusedInput}
-                                            courses={this.state.courses} onAllTimeClick={()=>this.onDatesChange({startDate:null,endDate:null})}/>
+                                        <StatisticsSidebar
+                                            startDate={this.state.startDate}
+                                            endDate={this.state.endDate}
+                                            handleAggregationLevelClick={this.handleAggregationLevelClick}
+                                            onDatesChange={this.onDatesChange}
+                                            onFocusChange={this.onFocusChange}
+                                            onCheckboxChange={this.handleCheckboxChange}
+                                            getColor={this.getColor}
+                                            focusedInput={this.state.focusedInput}
+                                            courses={this.state.courses}
+                                            onAllTimeClick={()=>this.onDatesChange({startDate:null,endDate:null})}
+                                        />
                                     </Col>
                                     <Col sm={3}>
                                         <AggregatedList
-                                            lectures={this.state.lectures}
+                                            lectures={lectures}
                                             handleClick={this.handleAggregatedListClick}
                                             aggregationLevel={this.state.aggregationLevel}
                                         />
@@ -119,50 +142,14 @@ class StatisticsPage extends React.Component {
                                             chart={this.state.chart}
                                             switchChart={this.switchChart}
                                         />
-
                                     </Col>
                                 </Row>
                             </Container>
-
                         )
                     }}
-
-
                 </AuthContext.Consumer>
             </>)
     }
 }
 
-
 export default StatisticsPage;
-
-/*
-getListElements = () => {
-        let startDate = this.state.startDate;
-        let endDate = this.state.endDate;
-
-        if (!startDate || !endDate) return [];
-        let endOfWeek;
-        let dates = [];
-
-        // console.log('START: ' + startDate.format('YYYY-MM-DD') + ' END: ' + endDate.format('YYYY-MM-DD'));
-        let i = 1;
-
-        do {
-            if (moment(startDate).endOf('week').isAfter(endDate)) { // just one interval
-                dates.push({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD'), selected: false, id: i, numberOfLectures: Math.round(Math.random() * 20 + 1) });
-                break;
-            }
-            endOfWeek = moment(startDate).endOf('week');
-            dates.push({ startDate: startDate.format('YYYY-MM-DD'), endDate: endOfWeek.format('YYYY-MM-DD'), selected: false, id: i, numberOfLectures: Math.round(Math.random() * 20 + 1) });
-
-            startDate = moment(endOfWeek).add(1, 'day'); // go to next week and shift startDate
-            i++;
-
-        } while (startDate !== endDate && startDate < endDate)
-
-        this.setState({ list: dates })
-        return dates;
-        // TODO may format in the format required from server
-
-    } */
