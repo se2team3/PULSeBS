@@ -3,7 +3,6 @@ import {Col, Button, Nav, Form, InputGroup, OverlayTrigger, Tooltip} from 'react
 import { DateRangePicker } from 'react-dates';
 import CourseBadge from "./CourseBadge";
 import {AggregationLevel} from './common'
-import Button from "react-bootstrap/Button";
 
 
 const StatisticsSidebar = (props) => {
