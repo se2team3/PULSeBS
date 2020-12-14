@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, ListGroup } from 'react-bootstrap';
 import { AggregationLevel } from './common';
 import moment from 'moment';
 
 const AggregatedList = (props) => {
     const { aggregationLevel, handleClick } = { ...props };
+    const [ active, setActive ] = useState('');
 
     const getAggregatedLectures = () => {
 
@@ -41,6 +42,11 @@ const AggregatedList = (props) => {
         }));
     }
 
+    const isActive = (dateRange) => {
+        console.log(`dateRange is`, dateRange);
+        console.log(`while active is ${active}`);
+        return dateRange === active;
+    };
 
     if (aggregationLevel === AggregationLevel.NotSet)
         return null;
@@ -53,8 +59,12 @@ const AggregatedList = (props) => {
                             key={idx}
                             action
                             variant='light'
-                            onClick={() => handleClick(el)}
-                            active={el.selected}
+                            onClick={() => {
+                                setActive(el.dateRange);
+                                handleClick(el);
+                            }}
+                            active={isActive(el.dateRange)}
+                            className='shadow-none'
                         >
                             {aggregationLevel !== AggregationLevel.Month && aggregationLevel} {el.dateRange}
                         </ListGroup.Item>

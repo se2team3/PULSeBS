@@ -24,7 +24,8 @@ class StatisticsPage extends React.Component {
             startDate: moment().add(-1, 'weeks'),
             endDate: moment(),
             focusedInput: null,
-            chart: 'bar'
+            chart: 'bar',
+            toggleIsActive: true
         }
     }
 
@@ -76,6 +77,9 @@ class StatisticsPage extends React.Component {
     }
 
     handleAggregatedListClick = (selected) => {
+        const lectures = this.state.lectures;
+        console.log(lectures);
+        selected.selected = true;
         // allLectures  handles all the lectures for a specific date range
         // lectures     handles the lectures for selected courses subset
         this.setState({ view: { ...selected, allLectures: [...selected.lectures] } });

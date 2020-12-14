@@ -42,7 +42,13 @@ code {
 }
 
 .aggregated-list .list-group-item-light.list-group-item-action.active {
-  background-color: rgb(230, 230, 230) !important;
+  background-color: rgb(225, 225, 225) !important;
   color: inherit !important;
-  outline: none;
+}
+
+.aggregated-list .active:focus,
+.aggregated-list .active:hover,
+.aggregated-list .active:active {
+  outline: none !important;
+  box-shadow: none !important;
 }
