@@ -50,6 +50,50 @@ exports.insertUser = async function({university_id,email,password,name,surname,r
         });
     })
 }
+
+exports.setupInsertTeacher = async function({university_id, name, surname, email, SSN}) {
+    console.log('inside user_dao/setupInsertUser')
+
+    console.log(university_id)
+    let password = 'passw0rd';
+    let role = 'teacher';
+    console.log(password);
+    
+    console.log(role);
+    const hash = await bcrypt.hash(password, saltRounds);
+    return new Promise ((resolve,reject) =>{
+        const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
+        db.run(sql,[university_id,email,hash,name,surname,role],function(err) {
+            if(err)
+                reject(err);
+            else
+                resolve(this.lastID);
+        });
+    })
+}
+exports.setupInsertStudent = async function({university_id, name, surname, city, email, SSN}) {
+    console.log('inside user_dao/setupInsertStudent')
+
+    console.log(university_id)
+    let password = 'passw0rd';
+    let role = 'student';
+    console.log(password);
+    
+    console.log(role);
+    const hash = await bcrypt.hash(password, saltRounds);
+    return new Promise ((resolve,reject) =>{
+        console.log('before sql query');
+
+        const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
+        db.run(sql,[university_id,email,hash,name,surname,role],function(err) {
+            if(err)
+                reject(err);
+            else
+                resolve(this.lastID);
+        });
+    })
+}
+
 //gets the user with the selected id
 exports.retrieveUser = function(id) {
     return new Promise ((resolve,reject) =>{
