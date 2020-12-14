@@ -60,7 +60,6 @@ exports.getAllLectures = function(start_date,end_date) {
                 
                 rows.map((row) => {
                     let lecture = createExtendedLecture(row);
-                    console.log(row,lecture)
                     results.push(lecture);
                 })
              
@@ -80,8 +79,8 @@ exports.getLecturesByTeacherId = function(id, from_opt, to_opt) {
             WHERE L.course_id=C.id AND L.room_id=R.id AND C.teacher_id=T.id AND
                 L.id=B.lecture_id AND B.student_id=U.id AND T.role="teacher" AND U.role="student"
                 AND C.teacher_id = ?
-                AND (? IS NULL OR datetime >= ?)
-                AND (? IS NULL OR datetime <= ?)
+                AND (? IS NULL OR L.datetime >= ?)
+                AND (? IS NULL OR L.datetime <= ?)
             GROUP BY B.lecture_id
             ORDER BY L.datetime`;
         db.all(sql, [id, from_opt, from_opt, to_opt, to_opt], (err, rows) => {
