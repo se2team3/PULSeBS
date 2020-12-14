@@ -65,7 +65,8 @@ class StatisticsPage extends React.Component {
     }
 
     handleAggregationLevelClick = (value) => {
-        this.setState({ aggregationLevel: value });
+        if(value === this.state.aggregationLevel) this.setState({ aggregationLevel: value });
+        else this.setState({aggregationLevel: value, view: {}})
     }
 
     handleAggregatedListClick = (selected) => {
