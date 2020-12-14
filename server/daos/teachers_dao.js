@@ -9,16 +9,13 @@ exports.getLecturesByTeacherAndTime = function(teacher_id,start_date, end_date) 
         T.name as teacher_name, T.surname as teacher_surname,
         R.name as room_name, seats as max_seats, COUNT(B.lecture_id) as booking_counter
  FROM Lectures L, Rooms R, Bookings B, Users T, Courses C
- WHERE L.id=B.lecture_id AND L.course_id=C.id AND L.room_id= R.id AND C.teacher_id = T.id AND C.teacher_id = ? AND L.datetime <= ? AND L.datetime >= ?
- GROUP BY B.lecture_id`
- 
-        /* const sql = `SELECT * 
-        FROM Lectures L, Users U, Courses C 
-        WHERE L.course_id = C.id AND C.teacher_id = U.id
-            AND U.role = "teacher"
-            AND C.teacher_id = ? AND L.datetime <= ? AND L.datetime >= ?`; */
+ WHERE L.id=B.lecture_id AND L.course_id=C.id AND L.room_id= R.id AND C.teacher_id = T.id AND C.teacher_id = ?
+        AND (?1 IS NULL OR L.datetime >= ?1)
+        AND (?2 IS NULL OR L.datetime <= ?2)
 
-        db.all(sql, [teacher_id, end_date, start_date], (err, rows) => {
+ GROUP BY B.lecture_id`;
+
+        db.all(sql, [teacher_id, start_date, end_date], (err, rows) => {
             if(err){
                 reject(err);
             }

@@ -28,28 +28,6 @@ async function getBookings(lecture_id){
 }
 
 /**
- * Get list of bookings for all the teacher's lectures
- *
- * @param {string} [from] - optional starting date
- * @param {string} [to] - optional ending date
- * @returns [] of ExtendedLectures
- */
-async function getTeacherBookings(from, to){
-    let url = `/bookings`;
-
-    const params = { from, to };
-
-    const response = await axios.get(baseURL + url, { params }).catch(error => {
-        whatWentWrong(error);
-    });
-    if (response.status === 200) {
-        return response.data.map(res => new LectureExtended(res));
-    } else {
-        throw { status: response.status, errObj: response.data };
-    }
-}
-
-/**
  * Book a seat to a lecture given a student id and lecture id
  *
  * @param {*} student_id a valid student id
@@ -86,4 +64,4 @@ async function cancelBooking(student_id, lecture_id){
 }
 
 
-export {bookLecture, getBookings, cancelBooking, getTeacherBookings}
+export {bookLecture, getBookings, cancelBooking}

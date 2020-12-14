@@ -249,16 +249,12 @@ router.patch('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=>
  *         description: "Internal server error"
  */
 
-
-router.get('/lectures',authorize(role.BookingManager),timeValidator.checkTime, async (req, res) => {
-
-
+router.get('/lectures', authorize([role.BookingManager]),timeValidator.checkTime, async (req, res) => {
     const start_date = req.query.from;
     const end_date = req.query.to;
 
     try {
         let lectures = await extendedLectureService.getAllLectures(start_date,end_date);
-        //console.log(lectures)
         return res.status(200).json(lectures);
     } catch (error) {
         res.json(error);
