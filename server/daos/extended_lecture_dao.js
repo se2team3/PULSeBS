@@ -20,7 +20,7 @@ exports.getLectureById = function(id) {
             WHERE L.course_id=C.id AND L.room_id=R.id AND C.teacher_id=T.id AND
             L.id=B.lecture_id AND B.student_id=U.id AND L.id=? AND T.role="teacher" AND U.role="student"
             GROUP BY B.lecture_id
-            ORDER BY datetime`;
+            ORDER BY L.datetime`;
         db.get(sql, [id,id], (err, row) => {
             if(err)
                 return reject(err);
@@ -35,7 +35,7 @@ exports.getLectureById = function(id) {
 }
 
 //gets the lecture with the selected id
-exports.getAllLectures = function(opt_start_date, opt_end_date) {
+exports.getAllLectures = function(start_date,end_date) {
     return new Promise ((resolve,reject) =>{
         // id, datetime,datetime_end,course_id,room_id,virtual,deleted_at,course_name,teacher_name,teacher_surname,room_name,max_seats,booking_counter
         const sql = `
@@ -50,11 +50,11 @@ exports.getAllLectures = function(opt_start_date, opt_end_date) {
 		Lectures L, Users T, Users U, Courses C,Rooms R, Bookings B
         WHERE L.course_id=C.id AND L.room_id=R.id AND C.teacher_id=T.id  AND  L.id =t.lecture_id AND
          L.id=B.lecture_id AND B.student_id=U.id AND T.role="teacher" AND U.role="student"
-         AND (?1 IS NULL OR datetime >= ?1)
-         AND (?2 IS NULL OR datetime <= ?2)
+         AND (?1 IS NULL OR L.datetime >= ?1)
+         AND (?2 IS NULL OR L.datetime <= ?2)
         GROUP BY B.lecture_id
         ORDER BY L.datetime`;
-        db.all(sql, [opt_start_date, opt_end_date], (err, rows) => {
+        db.all(sql, [start_date, end_date], (err, rows) => {
             if (!rows)                          
                 resolve([]);
             else{
@@ -84,7 +84,7 @@ exports.getLecturesByTeacherId = function(id, from_opt, to_opt) {
                 AND (?2 IS NULL OR datetime >= ?2)
                 AND (?3 IS NULL OR datetime <= ?3)
             GROUP BY B.lecture_id
-            ORDER BY datetime`;
+            ORDER BY L.datetime`;
         db.all(sql, [id, from_opt, to_opt], (err, rows) => {
             if(err)
                 return reject(err);
