@@ -14,7 +14,7 @@ const createUser = function (row){
 exports.createUsersTable = function() {
     return new Promise ((resolve,reject) => {
         const sql = `CREATE TABLE IF NOT EXISTS Users (id INTEGER NOT NULL PRIMARY KEY, university_id TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE,
-                     password TEXT NOT NULL, name TEXT NOT NULL, surname TEXT NOT NULL, role TEXT NOT NULL CHECK (role IN("student","teacher","officer","manager")))`
+                     password TEXT NOT NULL, name TEXT NOT NULL, surname TEXT NOT NULL, role TEXT NOT NULL CHECK (role IN("student","teacher","officer","manager")), ssn TEXT, city TEXT, birthday TEXT)`
         db.run(sql,[],(err) =>{
             if(err)
                 reject(err);
@@ -62,8 +62,8 @@ exports.setupInsertTeacher = async function({university_id, name, surname, email
     console.log(role);
     const hash = await bcrypt.hash(password, saltRounds);
     return new Promise ((resolve,reject) =>{
-        const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
-        db.run(sql,[university_id,email,hash,name,surname,role],function(err) {
+        const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role,ssn) VALUES(?,?,?,?,?,?,?)'
+        db.run(sql,[university_id,email,hash,name,surname,role,SSN],function(err) {
             if(err)
                 reject(err);
             else
@@ -71,21 +71,21 @@ exports.setupInsertTeacher = async function({university_id, name, surname, email
         });
     })
 }
-exports.setupInsertStudent = async function({university_id, name, surname, city, email, SSN}) {
-    console.log('inside user_dao/setupInsertStudent')
+exports.setupInsertStudent = async function({university_id, name, surname, city, email, birthday, SSN}) {
+    //console.log('inside user_dao/setupInsertStudent')
 
-    console.log(university_id)
+    console.log('user ID' + university_id)
     let password = 'passw0rd';
     let role = 'student';
-    console.log(password);
+    //console.log(password);
     
     console.log(role);
     const hash = await bcrypt.hash(password, saltRounds);
     return new Promise ((resolve,reject) =>{
         console.log('before sql query');
 
-        const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
-        db.run(sql,[university_id,email,hash,name,surname,role],function(err) {
+        const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role,ssn,city,birthday) VALUES(?,?,?,?,?,?,?,?,?)'
+        db.run(sql,[university_id,email,hash,name,surname,role, SSN, city,birthday],function(err) {
             if(err)
                 reject(err);
             else

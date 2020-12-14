@@ -103,7 +103,7 @@ const setupInsertStudent = async function(student) {
              surname: student_array_rows3[2],
              city: student_array_rows3[3],
              email: student_array_rows3[4],
-             city: student_array_rows3[5],
+             birthday: student_array_rows3[5],
              SSN: student_array_rows3[6]
            };
            try {

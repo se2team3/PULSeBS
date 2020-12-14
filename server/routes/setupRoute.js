@@ -34,7 +34,6 @@ app.post('/setup', async(req,res) =>{
         res.status(400).json(error);
     }
     try{    
-
         console.log('inside try catch setupRoute');
         let students = await userService.setupInsertStudent({students_dict});
         console.log(students);
