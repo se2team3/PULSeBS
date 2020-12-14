@@ -122,6 +122,11 @@ class StatisticsPage extends React.Component {
 
     isCourseSelected = (lecture) => this.state.courses.filter(c => c.selected).map(c => c.course_name).includes(lecture.course_name);
 
+    toggleSelected = () => {
+        console.log(this.state);
+        this.setState(state => ({ toggleIsActive: !state.toggleIsActive }));
+    }
+
     render() {
         const lectures = this.state.lectures.filter(this.isCourseSelected);
 
@@ -148,6 +153,8 @@ class StatisticsPage extends React.Component {
                                             onAllTimeClick={()=>this.onDatesChange({startDate:null,endDate:null})}
                                             handleSearch={this.handleSearch} isCourseSearched={this.isCourseSearched}
                                             handleFuzzy={this.handleFuzzy} fuzzy={this.state.fuzzy}
+                                            toggleSelected={this.toggleSelected}
+                                            toggleIsActive={this.toggleIsActive}
                                         />
                                     </Col>
                                     <Col sm={2} className="bg-light" style={{flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0}}>

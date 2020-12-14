@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Button, Nav, Form, InputGroup, OverlayTrigger, Tooltip} from 'react-bootstrap';
+import {Col, Button, Nav, Form, InputGroup, OverlayTrigger, Tooltip, ListGroup, Row} from 'react-bootstrap';
 import { DateRangePicker } from 'react-dates';
 import CourseBadge from "./CourseBadge";
 import {AggregationLevel} from './common'
@@ -7,8 +7,11 @@ import {AggregationLevel} from './common'
 
 const StatisticsSidebar = (props) => {
 
-const{startDate, endDate, focusedInput, courses,
-        handleSearch, handleFuzzy, fuzzy, isCourseSearched, onCheckboxChange} = {...props}
+const{  startDate, endDate, focusedInput, courses,
+        handleSearch, handleFuzzy, fuzzy,
+        isCourseSearched, onCheckboxChange, toggleSelected, toggleIsActive } = {...props}
+
+  console.log(toggleIsActive);
 
     return (
         <Nav style={{ height: "100%" }}>
@@ -54,6 +57,10 @@ const{startDate, endDate, focusedInput, courses,
                   handleSearch={handleSearch}
                   fuzzy={fuzzy}
                   handleFuzzy={handleFuzzy}
+                />
+                <ToggleSelected
+                  handleClick={toggleSelected}
+                  active={toggleIsActive}
                 />
                 <Form.Group style={{ flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0 }}>
                     {
@@ -104,6 +111,21 @@ function SearchBar(props) {
           </InputGroup>
       </Form.Group>
     );
+}
+
+function ToggleSelected(props) {
+  const { handleClick, active } = props;
+  console.log(`IsActive?`, active);
+  return (
+    <Button
+        action
+        variant='light'
+        onClick={handleClick}
+        active={active}
+      >
+        { active ? 'Deselect All' : 'Select All' }
+      </Button>
+  );
 }
 
 export default StatisticsSidebar;
