@@ -11,8 +11,6 @@ const{  startDate, endDate, focusedInput, courses,
         handleSearch, handleFuzzy, fuzzy,
         isCourseSearched, onCheckboxChange, toggleSelected, toggleIsActive } = {...props}
 
-  console.log(toggleIsActive);
-
     return (
         <Nav style={{ height: "100%" }}>
             <Form style={{ display: "flex", flexDirection: "column", maxHeight: "100%" }}>
@@ -69,6 +67,7 @@ const{  startDate, endDate, focusedInput, courses,
                                 key={c.id}
                                 backgroundColor={props.getColor(c.id)}
                                 subjectName={c.course_name}
+                                checked={c.selected}
                                 handleClick={() => onCheckboxChange(c)}
                             />
                         ))
@@ -115,9 +114,9 @@ function SearchBar(props) {
 
 function ToggleSelected(props) {
   const { handleClick, active } = props;
-  console.log(`IsActive?`, active);
   return (
     <Button
+        className='mb-3'
         action
         variant='light'
         onClick={handleClick}

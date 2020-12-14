@@ -85,11 +85,11 @@ class StatisticsPage extends React.Component {
         this.setState({ view: { ...selected, allLectures: [...selected.lectures] } });
     }
 
-    handleCheckboxChange = (course) => {
+    handleCheckboxChange = (course, status) => {
         const courses = this.state.courses;
         for (let c of courses)
             if (c.course_name === course.course_name)
-                c.selected = !c.selected;
+                c.selected = status !== undefined ? status : !c.selected;
 
         // TODO find a better way, to avoid nested `setState`s
         this.setState({ courses: [...courses]}, function () {
@@ -135,8 +135,9 @@ class StatisticsPage extends React.Component {
     isCourseSelected = (lecture) => this.state.courses.filter(c => c.selected).map(c => c.course_name).includes(lecture.course_name);
 
     toggleSelected = () => {
-        console.log(this.state);
-        this.setState(state => ({ toggleIsActive: !state.toggleIsActive }));
+        const status = !this.state.toggleIsActive;
+        this.state.courses.forEach(c => this.handleCheckboxChange(c, status));
+        this.setState({ toggleIsActive: status });
     }
 
     render() {
@@ -169,7 +170,7 @@ class StatisticsPage extends React.Component {
                                             handleSearch={this.handleSearch} isCourseSearched={this.isCourseSearched}
                                             handleFuzzy={this.handleFuzzy} fuzzy={this.state.fuzzy}
                                             toggleSelected={this.toggleSelected}
-                                            toggleIsActive={this.toggleIsActive}
+                                            toggleIsActive={this.state.toggleIsActive}
                                         />
                                     </Col>
                                     <Col sm={2} className="bg-light" style={{flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0}}>
