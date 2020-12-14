@@ -3,13 +3,48 @@ import { Row, Container, Col, Nav, Form, ListGroup, ButtonGroup, Button } from '
 import Plot from 'react-plotly.js';
 
 
+
+
+
 const GraphView = (props) => {
     const { view, aggregationLevel, chart, switchChart } = props;
     const { dateRange, lectures } = view;
+    let AuthUser='manager'
     let list = [];
     let colorArray = ["#31a831", "#ed425c", "deepSkyBlue", "darkOrange", "#e37be3",
         "peru", "salmon", "lightBlue", "lightSeaGreen"]
 
+    let listScatter=[{
+        course_id:1,
+        course_name:'Analysis I',
+        tot_seats:500,
+        tot_bookings:180,
+        tot_cancellations:50,
+        num_lectures:5,
+        lectures:[{date:'2020-11-29',booking:40,students:50,cancellations:20},{date:'2020-11-30',booking:25,students:50,cancellations:10},{date:'2020-12-01',booking:20,students:50,cancellations:5},
+                {date:'2020-12-02',booking:45,students:50,cancellations:20},{date:'2020-12-04',booking:15,students:50,cancellations:3},{date:'2020-12-06',booking:10,students:50,cancellations:0},
+                
+            
+            ]
+        }, {
+        course_id:2,
+        tot_seats:250,
+        tot_bookings:100,
+        tot_cancellations:20,
+        num_lectures:5,
+        course_name:'Analysis 2',
+        lectures:[{date:'2020-11-29',booking:30,students:100,cancellations:10},{date:'2020-11-30',booking:70,students:100,cancellations:30,},{date:'2020-12-05',booking:20,students:100,cancellations:10}]
+        }, 
+        {
+        course_id:3,
+        tot_seats:180,
+        tot_bookings:90,
+        tot_cancellations:30,
+        num_lectures:5,
+        course_name:'Analysis 3',
+        lectures:[{date:'2020-11-30',booking:30,students:100,cancellations:10},{date:'2020-12-02',booking:40,students:100,cancellations:7},{date:'2020-12-04',booking:70,students:100,cancellations:20},{date:'2020-12-06',booking:20,students:100,cancellations:10}]
+        }, 
+        ] 
 
     if (lectures !== undefined && lectures.length > 0) {
         for (let el of lectures) {
@@ -18,15 +53,16 @@ const GraphView = (props) => {
                 list.push({ course_id: el.course_id, course: el.course_name, tot_seats: 0, tot_bookings: 0, num_lectures: 0, lectures: [], color: '' })
                 index = list.length - 1;
             }
-            list[index].tot_seats += el.max_seats
-            list[index].tot_bookings += el.booking_counter
-            list[index].num_lectures++;
-            list[index].lectures.push({ date: el.datetime, booking: el.booking_counter, students: el.max_seats })
-            list[index].color = colorArray[index]
-        }
-
-    }
-
+                list[index].tot_seats+= (el.max_seats-el.booking_counter)
+                list[index].tot_bookings+=el.booking_counter
+                if (AuthUser!=='teacher') list[index].tot_bookings-=el.cancellations
+                list[index].tot_cancellations+=el.cancellations
+                list[index].num_lectures++;
+                list[index].lectures.push({date:el.datetime,booking:el.booking_counter,students:el.max_seats})
+                list[index].color=colorArray[index]
+        } 
+    }    
+   
     return (
         <Row>
             <Col>
@@ -49,36 +85,11 @@ const GraphView = (props) => {
                                     <Plot
                                         config={{ displayModeBar: false }}
                                         data={[
-                                            {
-                                                y: list.map(el => (el.tot_bookings / el.num_lectures).toFixed(2)),
-                                                x: list.map(el => el.course).map(text => {
-                                                    let rxp = new RegExp('.{1,10} ', 'g')
-                                                    return text.replace(rxp, "$&<br>")
-
-                                                }),
-                                                name: aggregationLevel === 'Lecture' ? 'Bookings' : 'Bookings (avg)',
-                                                marker: { color: 'rgb(49,168,49)', },
-                                                width: 0.6,
-                                                type: 'bar',
-                                                hoverinfo: { text: 'y+text+name', size: 24 },
-
-                                            },
-
-                                            {
-                                                y: list.map(el => ((el.tot_seats - el.tot_bookings) / el.num_lectures).toFixed(2)),
-                                                x: list.map(el => el.course).map(text => {
-                                                    let rxp = new RegExp('.{1,10} ', 'g')
-                                                    return text.replace(rxp, "$&<br>")
-
-                                                }),
-                                                name: aggregationLevel === 'Lecture' ? 'Free seats' : 'Free seats (avg)',
-                                                marker: {
-                                                    color: 'rgb(0,123,255)',
-                                                },
-                                                width: 0.6,
-                                                type: 'bar',
-                                                hoverinfo: 'y+text+name',
-                                            }
+                                            
+                                                retrieveBarElement(listScatter,aggregationLevel,'tot_bookings','Bookings'),
+                                                AuthUser!='teacher'?retrieveBarElement(listScatter,aggregationLevel,'tot_cancellations','Cancellations'):{},
+                                                retrieveBarElement(listScatter,aggregationLevel,'tot_seats','Free seats')
+                                                
                                         ]}
 
                                         layout={{
@@ -107,56 +118,54 @@ const GraphView = (props) => {
 
 
 
-                                    : aggregationLevel !== 'Lecture' ?
-                                        <Plot
-                                            data={list.map((el) => {
-                                                return ({
-                                                    x: el.lectures.map((lecture) => { return lecture.date }),
-                                                    y: el.lectures.map((lecture) => { return (lecture.booking / lecture.students) }),
-                                                    mode: 'lines+markers',
-                                                    type: 'scatter',
-                                                    line: { color: el.color, width: 2.5 },
-                                                    marker: { color: el.color },
-                                                    text: el.lectures.map((lecture) => { return (lecture.booking + ' Booked <br>' + (lecture.booking * 100 / lecture.students).toFixed(0) + '% of seats') }),
-                                                    name: el.course,
-                                                    hoverinfo: 'text'
-                                                })
-                                            })}
+                                  
+                                :aggregationLevel!=='Lecture'?
+                                    <Plot
+                                       
+                                        data={AuthUser==='teacher'?
+                                            
+                                            listScatter.map((el)=>{ 
+                                                return retrieveScatterElement(el,'booking',el.color,'text')})
+                                            :
+                                            listScatter.map((el)=> {
+                                                return retrieveScatterElement(el,'booking','rgb(49,168,49)','name')})
+                                                .concat(listScatter.map((el)=>{
+                                                    return retrieveScatterElement(el,'cancellations','black','name')
+                                                }))
+                                            
+                                        }
 
-                                            layout={
-                                                {
-                                                    autosize: true,
-                                                    title: {
-                                                        text: '<b>Bookings trends</b>',
-                                                        font: { size: 30 },
-                                                        x: 0.5,
-                                                        xanchor: 'center'
-                                                    },
-                                                    legend: { font: { size: 16 }, orientation: 'h', y: '-0.17' },
-                                                    xaxis: {
-                                                        showline: true,
-                                                        tickfont: { size: 16 },
-                                                        titlefont: {
-                                                            size: 18,
-                                                            color: 'grey'
-                                                        },
-                                                    },
-                                                    yaxis: {
-                                                        showline: true,
-                                                        title: {
-                                                            text: '% bookings/total number of seats',
-                                                            standoff: 60
-                                                        },
-                                                        tickformat: '%',
-                                                        //range:[0,1], 
-                                                        tickfont: { size: 16 },
-                                                        titlefont: {
-                                                            size: 18,
-                                                            color: 'grey',
-                                                        },
-                                                    }
-                                                }}
+                                        layout={
+                                            {autosize: true,
+                                            title:{
+                                                text: '<b>Bookings trends</b>',
+                                                font: { size: 30 },
+                                                x: 0.5,
+                                                xanchor: 'center'},
+                                            legend: {font: { size: 16 },orientation:'h', y:'-0.17' },
+                                            xaxis:{
+                                                showline:true,
+                                                tickfont: { size: 16 },
+                                                titlefont: {
+                                                    size: 18,
+                                                    color: 'grey'
+                                                },
+                                             },
+                                            yaxis:{
+                                                showline:true,
+                                                title: {text:'% bookings/total number of seats', 
+                                                        standoff: 60},
+                                                tickformat: '%', 
+                                                //range:[0,1], 
+                                                tickfont: { size: 16 },
+                                                titlefont: {
+                                                    size: 18,
+                                                    color: 'grey',
+                                                },
+                                            }
+                                        }}
 
+                                           
                                             style={{
                                                 width: '100%',
                                                 height: 600
@@ -174,4 +183,40 @@ const GraphView = (props) => {
     );
 }
 
+
+
+function retrieveBarElement(list,aggregationLevel,param,type){
+    return(
+        {
+        y:list.map(el=>(el[param]/el.num_lectures).toFixed(2)),
+        x: list.map(el=>el.course_name).map(text => {
+            let rxp=new RegExp('.{1,10} ','g')
+            return text.replace(rxp, "$&<br>")}),
+        name:aggregationLevel==='Lecture'?type:(type+'(avg)'),
+        marker: {color: param==='tot_bookings'?'rgb(49,168,49)': param==='tot_cancellations'?'black':'#007BFF'},
+        width:list.length==1?0.25:0.7,
+        type: 'bar',
+        hoverinfo:'y+text+name',
+        }
+    )
+}
+
+
+
+function retrieveScatterElement(el,param,color,textChoose){
+    return(
+        {
+        x: el.lectures.map((lecture)=>{return lecture.date}),
+        y: el.lectures.map((lecture)=>{return (lecture[param]/lecture.students)}),
+        mode: 'lines+markers',
+        type: 'scatter',
+        line:{color:color, width:2.5},
+        marker:{color:color},
+        text:el.lectures.map((lecture)=>{return (lecture[param]+' Booked <br>'+(lecture[param]*100/lecture.students).toFixed(0)+'% of seats')}),
+        name: el.course_name,
+        hoverinfo:textChoose
+        }
+    )
+}
+     
 export default GraphView;
