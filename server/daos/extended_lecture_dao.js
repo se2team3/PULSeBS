@@ -20,7 +20,7 @@ exports.getLectureById = function(id) {
             WHERE L.course_id=C.id AND L.room_id=R.id AND C.teacher_id=T.id AND
             L.id=B.lecture_id AND B.student_id=U.id AND L.id=? AND T.role="teacher" AND U.role="student"
             GROUP BY B.lecture_id
-            ORDER BY datetime`;
+            ORDER BY L.datetime`;
         db.get(sql, [id,id], (err, row) => {
             if(err)
                 return reject(err);
@@ -83,7 +83,7 @@ exports.getLecturesByTeacherId = function(id, from_opt, to_opt) {
                 AND (? IS NULL OR datetime >= ?)
                 AND (? IS NULL OR datetime <= ?)
             GROUP BY B.lecture_id
-            ORDER BY datetime`;
+            ORDER BY L.datetime`;
         db.all(sql, [id, from_opt, from_opt, to_opt, to_opt], (err, rows) => {
             if(err)
                 return reject(err);
