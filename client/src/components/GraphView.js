@@ -4,12 +4,11 @@ import Plot from 'react-plotly.js';
 
 
 const GraphView = (props) => {
-    const { view, aggregationLevel, chart, switchChart } = props;
+    const { view, aggregationLevel, chart, switchChart,courses } = props;
     const { dateRange, lectures } = view;
     let AuthUser='teacher'
     let list = [];
-    let colorArray = ["#31a831", "#ed425c", "deepSkyBlue", "darkOrange", "#e37be3",
-        "peru", "salmon", "lightBlue", "lightSeaGreen"]
+    
 
     
 
@@ -24,7 +23,9 @@ const GraphView = (props) => {
             list[index].tot_bookings += el.booking_counter
             list[index].num_lectures++;
             list[index].lectures.push({ date: el.datetime, booking: el.booking_counter, students: el.max_seats })
-            list[index].color = colorArray[index]
+            let coursex=courses.filter((c)=>{return c.course_id==el.course_id })
+            list[index].color = coursex[0].color
+
         }
 
     }

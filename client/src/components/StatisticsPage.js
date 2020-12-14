@@ -56,6 +56,7 @@ class StatisticsPage extends React.Component {
             "peru", "salmon", "lightBlue", "lightSeaGreen"]
         let ids = this.state.courses.map((c) => c.id).filter(this.onlyUnique);
         let index = ids.indexOf(course_id);
+        this.state.courses.map((c)=>c.color=colorArray[ids.indexOf(c.id)])
         return colorArray[index];
     }
 
@@ -141,6 +142,7 @@ class StatisticsPage extends React.Component {
                                             aggregationLevel={this.state.aggregationLevel}
                                             chart={this.state.chart}
                                             switchChart={this.switchChart}
+                                            courses={this.state.courses}
                                         />
                                     </Col>
                                 </Row>
