@@ -56,6 +56,7 @@ const StatisticsSidebar = (props) => {
                                 key={c.id}
                                 backgroundColor={props.getColor(c.id)}
                                 subjectName={c.course_name}
+                                subjectId = {c.id}
                                 handleClick={() => onCheckboxChange(c)}
                             />
                         ))
