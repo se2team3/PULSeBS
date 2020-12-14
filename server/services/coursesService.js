@@ -36,7 +36,6 @@ exports.deleteCourses = async function(){
     }
 } */
 exports.getLectures = async function(course_id){
-    console.log(course_id)
     try{
         return lectureDao.getLectures(course_id);
     } catch(error){

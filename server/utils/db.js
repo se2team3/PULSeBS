@@ -124,14 +124,12 @@ const populate = async ({n_students, datetime} = def_options) => {
         assign2:{},
         lecture: { datetime },
         students: [...new Array(n_students)].map(() => studentObj(counter.get())),
-        manager: managerObj(counter.get()),
         booked: 0
     };
 
     // insert data
     data.teacher_id = await userDao.insertUser(data.teacher);
     data.room_id = await roomDao.insertRoom(data.room);
-    data.manager = await userDao.insertUser(data.manager);
     data.course.teacher_id = data.teacher_id;
     //data.course2.teacher_id=data.teacher_id;
     data.course_id = await courseDao.insertCourse(data.course);
@@ -155,6 +153,8 @@ const populate = async ({n_students, datetime} = def_options) => {
         data.assign2.student_id = data.students_id[0]
         await course_studentDao.assingCourseToStudent(data.assign1);
         await course_studentDao.assingCourseToStudent(data.assign2);
+        data.manager = managerObj(counter.get());
+        data.manager = await userDao.insertUser(data.manager);
     return data;
 };
 

@@ -54,7 +54,7 @@ exports.getAllLectures = function(start_date,end_date) {
         ORDER BY B.lecture_id`;
         db.all(sql, [end_date,start_date], (err, rows) => {
             if (!rows)                          
-                resolve(null);
+                resolve([]);
             else{
                 let results=[];
                 

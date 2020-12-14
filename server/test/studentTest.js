@@ -10,8 +10,6 @@ const moment = require('moment');
 const db = require('../utils/db');
 const coursesLectureService = require('../services/courseStudentService');
 const coursesService = require('../services/coursesService');
-const Course = require('../models/course');
-
 let data;
 
 chai.use(chaiHttp);
@@ -23,13 +21,12 @@ describe('Student routes', function () {
         data = await db.populate();
     });
 
- /*   after('clear db', async function() {
+    after('clear db', async function() {
         await dbUtils.reset({ create: false });
     });
 
- */   it('should retrieve all the extended lectures for a student in a given time frame', async function() {     
+    it('should retrieve all the extended lectures for a student in a given time frame', async function() {     
         let credentials = {email:data.students[0].email, password:data.students[0].password};
-      
         const agent = chai.request.agent(server);
         await agent.post(`/api/login`).send(credentials)       
         let courses = await coursesLectureService.getStudentCourses({student_id:data.students[0].university_id});
