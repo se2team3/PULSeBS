@@ -51,6 +51,7 @@ const AggregatedList = (props) => {
                     getAggregatedLectures().map((el, idx) => (
                         <ListGroup.Item
                             key={idx}
+                            id={idx}
                             action
                             variant='light'
                             onClick={() => handleClick(el)}

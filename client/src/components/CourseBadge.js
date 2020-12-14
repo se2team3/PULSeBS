@@ -22,9 +22,9 @@ const CourseBadge = (props) => {
               {props.subjectName}
             </span>
             <br/>
-            <span style={{'fontSize': '90%'}}>
+            {props.teacher && <span style={{'fontSize': '90%'}}>
               Prof. {props.teacher}
-            </span>
+            </span>}
           </span>
                 </Col>
             </Row>
