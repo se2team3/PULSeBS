@@ -106,8 +106,6 @@ class App extends React.Component {
 
         <Header showSidebar={this.showSidebar} />
 
-        <Container fluid>
-
           <Switch>
             <Route path="/login">
               <Row className="vheight-100">
@@ -131,8 +129,6 @@ class App extends React.Component {
             } />
             
           </Switch>
-
-        </Container>
       </AuthContext.Provider>
     );
   }

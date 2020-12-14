@@ -1,19 +1,19 @@
 import React from 'react';
-import { Nav, ListGroup } from 'react-bootstrap';
-import {AggregationLevel} from './common';
+import { Row, ListGroup } from 'react-bootstrap';
+import { AggregationLevel } from './common';
 import moment from 'moment';
 
 const AggregatedList = (props) => {
-    const { aggregationLevel, handleClick } = {...props};
+    const { aggregationLevel, handleClick } = { ...props };
 
-    const getAggregatedLectures = ()=> {
+    const getAggregatedLectures = () => {
 
         const list = {};
-    
+
         props.lectures.forEach(l => {
             const date = moment(l.datetime, "YYYY-MM-DD HH:mm");
             let dateRange;
-    
+
             switch (aggregationLevel) {
                 case AggregationLevel.Week:
                     dateRange =
@@ -28,42 +28,41 @@ const AggregatedList = (props) => {
                 default:
                     dateRange = date.format('DD MMMM YYYY');
             }
-    
+
             if (!list.hasOwnProperty(dateRange))
                 list[dateRange] = [];
             list[dateRange].push(l);
         });
-    
+
         return Object.keys(list).map(idx => ({
             lectures: list[idx],
             dateRange: idx,
             selected: false
         }));
     }
-    
+
 
     if (aggregationLevel === AggregationLevel.NotSet)
         return null;
     return (
-        <>
-            <Nav className="px-4 py-4 sidebar bg-light">
-                <ListGroup variant="flush" className='aggregated-list w-100'>
-                    {
-                        getAggregatedLectures().map((el, idx) => (
-                            <ListGroup.Item
-                                key={idx}
-                                action
-                                variant='light'
-                                onClick={() => handleClick(el)}
-                                active={el.selected}
-                            >
-                                {aggregationLevel !== AggregationLevel.Month && aggregationLevel} {el.dateRange}
-                            </ListGroup.Item>
-                        ))
-                    }
-                </ListGroup>
-            </Nav>
-        </>
+        <Row>
+            <ListGroup variant="flush" className='aggregated-list w-100'>
+                {
+                    getAggregatedLectures().map((el, idx) => (
+                        <ListGroup.Item
+                            key={idx}
+                            action
+                            variant='light'
+                            onClick={() => handleClick(el)}
+                            active={el.selected}
+                        >
+                            {aggregationLevel !== AggregationLevel.Month && aggregationLevel} {el.dateRange}
+                        </ListGroup.Item>
+                    ))
+                }
+            </ListGroup>
+        </Row>
+
     );
 }
 

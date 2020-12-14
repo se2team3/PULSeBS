@@ -11,7 +11,6 @@ import { AggregationLevel } from './common';
 import GraphView from './GraphView';
 
 
-
 class StatisticsPage extends React.Component {
     constructor(props) {
         super(props);
@@ -33,18 +32,17 @@ class StatisticsPage extends React.Component {
         await this.getLecturesAndBookings();
     }
 
-
-
     getLecturesAndBookings = async () => {
         try {
             // TODO consider renaming the API (since we ask for lectures)
-            let startDate = moment(this.state.startDate).format('YYYY-MM-DD')
-            let endDate = moment(this.state.endDate).format('YYYY-MM-DD')
+            let startDate = this.state.startDate && moment(this.state.startDate).format('YYYY-MM-DD')
+            let endDate = this.state.endDate && moment(this.state.endDate).format('YYYY-MM-DD')
             const lectures = await API.getTeacherBookings(startDate, endDate);
             const courses = lectures
                 .map(l => l.course_id)
                 .filter(this.onlyUnique)
-                .map(id => lectures.find(l => l.course_id === id));
+                .map(id => lectures.find(l => l.course_id === id))
+                .map(c => ({ ...c, selected: true }));
             this.setState({ lectures, courses });
         } catch (err) {
             throw err;
@@ -70,7 +68,24 @@ class StatisticsPage extends React.Component {
     }
 
     handleAggregatedListClick = (selected) => {
-        this.setState({ view: { ...selected } });
+        // allLectures  handles all the lectures for a specific date range
+        // lectures     handles the lectures for selected courses subset
+        this.setState({ view: { ...selected, allLectures: [...selected.lectures] } });
+    }
+
+    handleCheckboxChange = (course) => {
+        const courses = this.state.courses;
+        for (let c of courses)
+            if (c.course_name === course.course_name)
+                c.selected = !c.selected;
+
+        // TODO find a better way, to avoid nested `setState`s
+        this.setState({ courses: [...courses]}, function () {
+            const view = this.state.view;
+            view.lectures = view.allLectures?.filter(this.isCourseSelected) || [];
+            this.setState({ view: {...view} });
+          }
+        )
     }
 
     handleSearch = (event) => {
@@ -93,22 +108,23 @@ class StatisticsPage extends React.Component {
         return (new RegExp(pattern, "i")).test(course.course_name);
     }
 
-    switchChart= (value)=>{
-    console.log(value)
-    this.setState(state => {
-        return {chart: value}
-      });
-}
+    switchChart = (value) => {
+        this.setState({ chart: value });
+    }
 
     onDatesChange = ({ startDate, endDate }) => {
-        this.setState({ startDate: startDate, endDate: endDate },()=>this.getLecturesAndBookings());
+        this.setState({ startDate: startDate, endDate: endDate, view: {} },()=>this.getLecturesAndBookings());
     }
 
     onFocusChange = (focusedInput) => {
         this.setState({ focusedInput });
     }
 
+    isCourseSelected = (lecture) => this.state.courses.filter(c => c.selected).map(c => c.course_name).includes(lecture.course_name);
+
     render() {
+        const lectures = this.state.lectures.filter(this.isCourseSelected);
+
         return (
             <>
                 <AuthContext.Consumer>
@@ -116,40 +132,43 @@ class StatisticsPage extends React.Component {
                         if (!context.authUser)
                             return null;
                         return (
-                            <Container fluid>
-                                <Row className='mt-3'>
-                                    <Col sm={3}>
-                                        <StatisticsSidebar startDate={this.state.startDate} endDate={this.state.endDate}
-                                            handleAggregationLevelClick={this.handleAggregationLevelClick} onDatesChange={this.onDatesChange}
-                                            onFocusChange={this.onFocusChange} getColor={this.getColor} focusedInput={this.state.focusedInput}
+                            <Container fluid style={{flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0}}>
+                                <Row className="flex-nowrap" style={{height: "100%", overflowX: "auto"}}>
+                                    <Col sm={2} style={{ 'backgroundColor': 'rgb(240, 240, 240)' }}>
+                                        <StatisticsSidebar
+                                            startDate={this.state.startDate}
+                                            endDate={this.state.endDate}
+                                            handleAggregationLevelClick={this.handleAggregationLevelClick}
+                                            onDatesChange={this.onDatesChange}
+                                            onFocusChange={this.onFocusChange}
+                                            onCheckboxChange={this.handleCheckboxChange}
+                                            getColor={this.getColor}
+                                            focusedInput={this.state.focusedInput}
                                             courses={this.state.courses}
+                                            onAllTimeClick={()=>this.onDatesChange({startDate:null,endDate:null})}
                                             handleSearch={this.handleSearch} isCourseSearched={this.isCourseSearched}
                                             handleFuzzy={this.handleFuzzy} fuzzy={this.state.fuzzy}
                                         />
                                     </Col>
-                                    <Col sm={3}>
+                                    <Col sm={2} className="bg-light" style={{flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0}}>
                                         <AggregatedList
-                                            lectures={this.state.lectures}
+                                            lectures={lectures}
                                             handleClick={this.handleAggregatedListClick}
                                             aggregationLevel={this.state.aggregationLevel}
                                         />
                                     </Col>
-                                    <Col sm={6}>
+                                    <Col style={{flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0}}>
                                         <GraphView
                                             view={this.state.view}
                                             aggregationLevel={this.state.aggregationLevel}
                                             chart={this.state.chart}
                                             switchChart={this.switchChart}
                                         />
-
                                     </Col>
                                 </Row>
                             </Container>
-
                         )
                     }}
-
-
                 </AuthContext.Consumer>
             </>)
     }
