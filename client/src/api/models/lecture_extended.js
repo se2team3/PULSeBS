@@ -16,7 +16,7 @@ class LectureExtended extends Lecture{
             this.booking_waiting = !!booking_waiting;
             this.present = !!present;
         }
-        this.cancellation_counter=cancellation_counter;
+        this.cancellation_counter = cancellation_counter;  
     }
 }
 module.exports = LectureExtended;

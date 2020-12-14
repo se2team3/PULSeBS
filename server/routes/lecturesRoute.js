@@ -258,6 +258,7 @@ router.get('/lectures',authorize(role.BookingManager),timeValidator.checkTime, a
 
     try {
         let lectures = await extendedLectureService.getAllLectures(start_date,end_date);
+        //console.log(lectures)
         return res.status(200).json(lectures);
     } catch (error) {
         res.json(error);

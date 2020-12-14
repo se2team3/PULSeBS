@@ -33,11 +33,17 @@ class StatisticsPage extends React.Component {
     }
 
     getLecturesAndBookings = async () => {
+        if (!this.props.authUser)
+        throw { status: 401, errorObj: "no authUser specified" }
         try {
             // TODO consider renaming the API (since we ask for lectures)
             let startDate = this.state.startDate && moment(this.state.startDate).format('YYYY-MM-DD')
             let endDate = this.state.endDate && moment(this.state.endDate).format('YYYY-MM-DD')
-            const lectures = await API.getTeacherBookings(startDate, endDate);
+            let lectures=[]
+            console.log("in getLectures"+this.props.authUser.role)
+            if(this.props.authUser.role=='teacher')
+                lectures= await API.getTeacherBookings(startDate, endDate)
+            else lectures= await API.getLectures(startDate, endDate)
             const courses = lectures
                 .map(l => l.course_id)
                 .filter(this.onlyUnique)
@@ -56,7 +62,13 @@ class StatisticsPage extends React.Component {
             "peru", "salmon", "lightBlue", "lightSeaGreen"]
         let ids = this.state.courses.map((c) => c.id).filter(this.onlyUnique);
         let index = ids.indexOf(course_id);
-        return colorArray[index];
+        if(this.props.authUser.role=='teacher'){
+            this.state.courses.map((c)=>c.color=colorArray[ids.indexOf(c.id)])
+            return colorArray[index];}
+        else {
+            this.state.courses.map((c)=>c.color='#31A831')
+            return '#31A831'
+        }
     }
 
     onlyUnique = function (value, index, self) {
@@ -123,14 +135,17 @@ class StatisticsPage extends React.Component {
     isCourseSelected = (lecture) => this.state.courses.filter(c => c.selected).map(c => c.course_name).includes(lecture.course_name);
 
     render() {
+        
         const lectures = this.state.lectures.filter(this.isCourseSelected);
 
         return (
             <>
                 <AuthContext.Consumer>
                     {(context) => {
+                       
                         if (!context.authUser)
                             return null;
+                         console.log("in statistic"+context.authUser.role)    
                         return (
                             <Container fluid style={{flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0}}>
                                 <Row className="flex-nowrap" style={{height: "100%", overflowX: "auto"}}>
@@ -163,6 +178,8 @@ class StatisticsPage extends React.Component {
                                             aggregationLevel={this.state.aggregationLevel}
                                             chart={this.state.chart}
                                             switchChart={this.switchChart}
+                                            courses={this.state.courses}
+                                            AuthUser={context.authUser.role}
                                         />
                                     </Col>
                                 </Row>
