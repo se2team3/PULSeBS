@@ -1,15 +1,17 @@
 import React from 'react';
-import { Row, Container, Col, Nav, Form, ListGroup, ButtonGroup, Button } from 'react-bootstrap';
+import { Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
 
 
 const GraphView = (props) => {
     const { view, aggregationLevel, chart, switchChart } = props;
     const { dateRange, lectures } = view;
+    let AuthUser='teacher'
     let list = [];
     let colorArray = ["#31a831", "#ed425c", "deepSkyBlue", "darkOrange", "#e37be3",
         "peru", "salmon", "lightBlue", "lightSeaGreen"]
 
+    
 
     if (lectures !== undefined && lectures.length > 0) {
         for (let el of lectures) {
@@ -49,36 +51,11 @@ const GraphView = (props) => {
                                     <Plot
                                         config={{ displayModeBar: false }}
                                         data={[
-                                            {
-                                                y: list.map(el => (el.tot_bookings / el.num_lectures).toFixed(2)),
-                                                x: list.map(el => el.course).map(text => {
-                                                    let rxp = new RegExp('.{1,10} ', 'g')
-                                                    return text.replace(rxp, "$&<br>")
-
-                                                }),
-                                                name: aggregationLevel === 'Lecture' ? 'Bookings' : 'Bookings (avg)',
-                                                marker: { color: 'rgb(49,168,49)', },
-                                                width: 0.6,
-                                                type: 'bar',
-                                                hoverinfo: { text: 'y+text+name', size: 24 },
-
-                                            },
-
-                                            {
-                                                y: list.map(el => ((el.tot_seats - el.tot_bookings) / el.num_lectures).toFixed(2)),
-                                                x: list.map(el => el.course).map(text => {
-                                                    let rxp = new RegExp('.{1,10} ', 'g')
-                                                    return text.replace(rxp, "$&<br>")
-
-                                                }),
-                                                name: aggregationLevel === 'Lecture' ? 'Free seats' : 'Free seats (avg)',
-                                                marker: {
-                                                    color: 'rgb(0,123,255)',
-                                                },
-                                                width: 0.6,
-                                                type: 'bar',
-                                                hoverinfo: 'y+text+name',
-                                            }
+                                            
+                                                retrieveBarElement(list,aggregationLevel,'tot_bookings','Bookings'),
+                                                AuthUser!='teacher'?retrieveBarElement(list,aggregationLevel,'tot_cancellations','Cancellations'):{},
+                                                retrieveBarElement(list,aggregationLevel,'tot_seats','Free seats')
+                                                
                                         ]}
 
                                         layout={{
@@ -107,55 +84,52 @@ const GraphView = (props) => {
 
 
 
-                                    : aggregationLevel !== 'Lecture' ?
-                                        <Plot
-                                            data={list.map((el) => {
-                                                return ({
-                                                    x: el.lectures.map((lecture) => { return lecture.date }),
-                                                    y: el.lectures.map((lecture) => { return (lecture.booking / lecture.students) }),
-                                                    mode: 'lines+markers',
-                                                    type: 'scatter',
-                                                    line: { color: el.color, width: 2.5 },
-                                                    marker: { color: el.color },
-                                                    text: el.lectures.map((lecture) => { return (lecture.booking + ' Booked <br>' + (lecture.booking * 100 / lecture.students).toFixed(0) + '% of seats') }),
-                                                    name: el.course,
-                                                    hoverinfo: 'text'
-                                                })
-                                            })}
+                                  
+                                :aggregationLevel!=='Lecture'?
+                                    <Plot
+                                       
+                                        data={AuthUser==='teacher'?
+                                            
+                                            list.map((el)=>{ 
+                                                return retrieveScatterElement(el,'booking',el.color,'text')})
+                                            :
+                                            list.map((el)=> {
+                                                return retrieveScatterElement(el,'booking','rgb(49,168,49)','name')})
+                                                .concat(list.map((el)=>{
+                                                    return retrieveScatterElement(el,'cancellations','black','name')
+                                                }))
+                                            
+                                        }
 
-                                            layout={
-                                                {
-                                                    autosize: true,
-                                                    title: {
-                                                        text: '<b>Bookings trends</b>',
-                                                        font: { size: 30 },
-                                                        x: 0.5,
-                                                        xanchor: 'center'
-                                                    },
-                                                    legend: { font: { size: 16 }, orientation: 'h', y: '-0.17' },
-                                                    xaxis: {
-                                                        showline: true,
-                                                        tickfont: { size: 16 },
-                                                        titlefont: {
-                                                            size: 18,
-                                                            color: 'grey'
-                                                        },
-                                                    },
-                                                    yaxis: {
-                                                        showline: true,
-                                                        title: {
-                                                            text: '% bookings/total number of seats',
-                                                            standoff: 60
-                                                        },
-                                                        tickformat: '%',
-                                                        //range:[0,1], 
-                                                        tickfont: { size: 16 },
-                                                        titlefont: {
-                                                            size: 18,
-                                                            color: 'grey',
-                                                        },
-                                                    }
-                                                }}
+                                        layout={
+                                            {autosize: true,
+                                            title:{
+                                                text: '<b>Bookings trends</b>',
+                                                font: { size: 30 },
+                                                x: 0.5,
+                                                xanchor: 'center'},
+                                            legend: {font: { size: 16 },orientation:'h', y:'-0.17' },
+                                            xaxis:{
+                                                showline:true,
+                                                tickfont: { size: 16 },
+                                                titlefont: {
+                                                    size: 18,
+                                                    color: 'grey'
+                                                },
+                                             },
+                                            yaxis:{
+                                                showline:true,
+                                                title: {text:'% bookings/total number of seats', 
+                                                        standoff: 60},
+                                                tickformat: '%', 
+                                                //range:[0,1], 
+                                                tickfont: { size: 16 },
+                                                titlefont: {
+                                                    size: 18,
+                                                    color: 'grey',
+                                                },
+                                            }
+                                        }}
 
                                             style={{
                                                 width: '100%',
@@ -174,4 +148,40 @@ const GraphView = (props) => {
     );
 }
 
+
+
+function retrieveBarElement(list,aggregationLevel,param,type){
+    return(
+        {
+        y:list.map(el=>(el[param]/el.num_lectures).toFixed(2)),
+        x: list.map(el=>el.course).map(text => {
+            let rxp=new RegExp('.{1,10} ','g')
+            return text.replace(rxp, "$&<br>")}),
+        name:aggregationLevel==='Lecture'?type:(type+'(avg)'),
+        marker: {color: param==='tot_bookings'?'rgb(49,168,49)': param==='tot_cancellations'?'black':'#007BFF'},
+        width:list.length==1?0.25:0.7,
+        type: 'bar',
+        hoverinfo:'y+text+name',
+        }
+    )
+}
+
+
+
+function retrieveScatterElement(el,param,color,textChoose){
+    return(
+        {
+        x: el.lectures.map((lecture)=>{return lecture.date}),
+        y: el.lectures.map((lecture)=>{return (lecture[param]/lecture.students)}),
+        mode: 'lines+markers',
+        type: 'scatter',
+        line:{color:color, width:2.5},
+        marker:{color:color},
+        text:el.lectures.map((lecture)=>{return (lecture[param]+' Booked <br>'+(lecture[param]*100/lecture.students).toFixed(0)+'% of seats')}),
+        name: el.course,
+        hoverinfo:textChoose
+        }
+    )
+}
+     
 export default GraphView;
