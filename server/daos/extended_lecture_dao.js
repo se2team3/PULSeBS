@@ -40,9 +40,9 @@ exports.getAllLectures = function(opt_start_date, opt_end_date) {
         // id, datetime,datetime_end,course_id,room_id,virtual,deleted_at,course_name,teacher_name,teacher_surname,room_name,max_seats,booking_counter
         const sql = `
         SELECT L.id,L.datetime,L.datetime_end,L.course_id,L.room_id,L.virtual, L.deleted_at, C.name as course_name,
-        T.name as teacher_name, T.surname as teacher_surname, R.name as room_name, R.seats as max_seats, COUNT(B.lecture_id) as booking_counter, t.cancellations            
+        T.name as teacher_name, T.surname as teacher_surname, R.name as room_name, R.seats as max_seats, COUNT(B.lecture_id) as booking_counter, t.cancellation_counter           
         FROM 
-			(SELECT lecture_id , COUNT(B1.deleted_at) as cancellations FROM Lectures L1, Users T1, Users U1, Courses C1,Rooms R1, Bookings B1
+			(SELECT lecture_id , COUNT(B1.deleted_at) as cancellation_counter FROM Lectures L1, Users T1, Users U1, Courses C1,Rooms R1, Bookings B1
                 WHERE L1.course_id=C1.id AND L1.room_id=R1.id AND C1.teacher_id=T1.id AND
                 L1.id=B1.lecture_id AND B1.student_id=U1.id AND T1.role="teacher" AND U1.role="student" 
                 GROUP BY L1.id
@@ -53,7 +53,7 @@ exports.getAllLectures = function(opt_start_date, opt_end_date) {
          AND (?1 IS NULL OR datetime >= ?1)
          AND (?2 IS NULL OR datetime <= ?2)
         GROUP BY B.lecture_id
-        ORDER BY B.lecture_id`;
+        ORDER BY L.datetime`;
         db.all(sql, [opt_start_date, opt_end_date], (err, rows) => {
             if (!rows)                          
                 resolve([]);

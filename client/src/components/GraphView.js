@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Container, Col, Nav, Form, ListGroup, ButtonGroup, Button } from 'react-bootstrap';
+import { Row, Col,ButtonGroup, Button } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
 
 
@@ -7,59 +7,27 @@ import Plot from 'react-plotly.js';
 
 
 const GraphView = (props) => {
-    const { view, aggregationLevel, chart, switchChart } = props;
+    const { view, aggregationLevel, chart, switchChart,courses, AuthUser } = props;
     const { dateRange, lectures } = view;
-    let AuthUser='manager'
     let list = [];
-    let colorArray = ["#31a831", "#ed425c", "deepSkyBlue", "darkOrange", "#e37be3",
-        "peru", "salmon", "lightBlue", "lightSeaGreen"]
-
-    let listScatter=[{
-        course_id:1,
-        course_name:'Analysis I',
-        tot_seats:500,
-        tot_bookings:180,
-        tot_cancellations:50,
-        num_lectures:5,
-        lectures:[{date:'2020-11-29',booking:40,students:50,cancellations:20},{date:'2020-11-30',booking:25,students:50,cancellations:10},{date:'2020-12-01',booking:20,students:50,cancellations:5},
-                {date:'2020-12-02',booking:45,students:50,cancellations:20},{date:'2020-12-04',booking:15,students:50,cancellations:3},{date:'2020-12-06',booking:10,students:50,cancellations:0},
-                
-            
-            ]
-        }, {
-        course_id:2,
-        tot_seats:250,
-        tot_bookings:100,
-        tot_cancellations:20,
-        num_lectures:5,
-        course_name:'Analysis 2',
-        lectures:[{date:'2020-11-29',booking:30,students:100,cancellations:10},{date:'2020-11-30',booking:70,students:100,cancellations:30,},{date:'2020-12-05',booking:20,students:100,cancellations:10}]
-        }, 
-        {
-        course_id:3,
-        tot_seats:180,
-        tot_bookings:90,
-        tot_cancellations:30,
-        num_lectures:5,
-        course_name:'Analysis 3',
-        lectures:[{date:'2020-11-30',booking:30,students:100,cancellations:10},{date:'2020-12-02',booking:40,students:100,cancellations:7},{date:'2020-12-04',booking:70,students:100,cancellations:20},{date:'2020-12-06',booking:20,students:100,cancellations:10}]
-        }, 
-        ] 
-
+    
     if (lectures !== undefined && lectures.length > 0) {
         for (let el of lectures) {
             let index = list.map(element => { return element.course_id }).indexOf(el.course_id)
             if (index === -1) {
-                list.push({ course_id: el.course_id, course: el.course_name, tot_seats: 0, tot_bookings: 0, num_lectures: 0, lectures: [], color: '' })
+                list.push({ course_id: el.course_id, course: el.course_name, tot_seats: 0, tot_bookings: 0, num_lectures: 0, lectures: [], color: '' ,tot_cancellations:0,})
                 index = list.length - 1;
             }
                 list[index].tot_seats+= (el.max_seats-el.booking_counter)
                 list[index].tot_bookings+=el.booking_counter
-                if (AuthUser!=='teacher') list[index].tot_bookings-=el.cancellations
-                list[index].tot_cancellations+=el.cancellations
+                if (AuthUser!=='teacher') list[index].tot_bookings-=el.cancellation_counter
+                list[index].tot_cancellations+=el.cancellation_counter
                 list[index].num_lectures++;
-                list[index].lectures.push({date:el.datetime,booking:el.booking_counter,students:el.max_seats})
-                list[index].color=colorArray[index]
+                list[index].lectures.push({date:el.datetime,booking_counter:el.booking_counter,students:el.max_seats,cancellation_counter:el.cancellation_counter})
+                let coursex=courses.filter((c)=>{return c.course_id==el.course_id })
+                list[index].color = coursex[0].color
+               
+
         } 
     }    
    
@@ -86,10 +54,11 @@ const GraphView = (props) => {
                                         config={{ displayModeBar: false }}
                                         data={[
                                             
-                                                retrieveBarElement(listScatter,aggregationLevel,'tot_bookings','Bookings'),
-                                                AuthUser!='teacher'?retrieveBarElement(listScatter,aggregationLevel,'tot_cancellations','Cancellations'):{},
-                                                retrieveBarElement(listScatter,aggregationLevel,'tot_seats','Free seats')
-                                                
+                                                retrieveBarElement(list,aggregationLevel,'tot_bookings','Bookings'),
+                                                AuthUser!='teacher'?retrieveBarElement(list,aggregationLevel,'tot_cancellations','Cancellations'):{},
+                                                retrieveBarElement(list,aggregationLevel,'tot_seats','Free seats')
+                                            
+
                                         ]}
 
                                         layout={{
@@ -124,13 +93,13 @@ const GraphView = (props) => {
                                        
                                         data={AuthUser==='teacher'?
                                             
-                                            listScatter.map((el)=>{ 
-                                                return retrieveScatterElement(el,'booking',el.color,'text')})
+                                            list.map((el)=>{ 
+                                                return retrieveScatterElement(el,'booking_counter',el.color,'text')})
                                             :
-                                            listScatter.map((el)=> {
-                                                return retrieveScatterElement(el,'booking','rgb(49,168,49)','name')})
-                                                .concat(listScatter.map((el)=>{
-                                                    return retrieveScatterElement(el,'cancellations','black','name')
+                                            list.map((el)=> {
+                                                return retrieveScatterElement(el,'booking_counter','rgb(49,168,49)','name')})
+                                                .concat(list.map((el)=>{
+                                                    return retrieveScatterElement(el,'cancellation_counter','black','name')
                                                 }))
                                             
                                         }
@@ -188,8 +157,8 @@ const GraphView = (props) => {
 function retrieveBarElement(list,aggregationLevel,param,type){
     return(
         {
-        y:list.map(el=>(el[param]/el.num_lectures).toFixed(2)),
-        x: list.map(el=>el.course_name).map(text => {
+        y:list.map(el=>(el[param]/el.num_lectures).toFixed(1)),
+        x: list.map(el=>el.course).map(text => {
             let rxp=new RegExp('.{1,10} ','g')
             return text.replace(rxp, "$&<br>")}),
         name:aggregationLevel==='Lecture'?type:(type+'(avg)'),
@@ -213,7 +182,7 @@ function retrieveScatterElement(el,param,color,textChoose){
         line:{color:color, width:2.5},
         marker:{color:color},
         text:el.lectures.map((lecture)=>{return (lecture[param]+' Booked <br>'+(lecture[param]*100/lecture.students).toFixed(0)+'% of seats')}),
-        name: el.course_name,
+        name: el.course,
         hoverinfo:textChoose
         }
     )

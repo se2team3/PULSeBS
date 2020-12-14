@@ -101,6 +101,7 @@ class App extends React.Component {
       loginUser: this.login,
       logoutUser: this.logout
     }
+    if( this.state.authUser!=undefined) console.log("in app"+this.state.authUser.role)
     return (
       <AuthContext.Provider value={value}>
 
