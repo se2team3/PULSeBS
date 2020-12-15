@@ -126,7 +126,6 @@ describe('Lecture tests', function() {
             res.should.have.status(401);
         });
 
-
         it('should get the list of lectures in a INVALID time frame given the student', async function() {
            await testTimeFrame(false);
         });
