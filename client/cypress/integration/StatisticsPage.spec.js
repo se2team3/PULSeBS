@@ -33,12 +33,27 @@ describe('Statistics tests', () => {
     });
 
     it('has working time frame elements', () => {
+
         cy.contains("Time frame:").should('exist');
-        // cy.get('input[value=""]').should('not.exist');
-        // cy.get('input[value=""]').should('not.exist');
+        cy.get('input[aria-label="Start Date"]').should('exist');
+        cy.get('input[value="10/12/2020"]').should('exist'); // Current start date is 10/12
+        cy.get('input[value="17/12/2020"]').should('exist'); // Current end date is 10/12
+
+        cy.get('div[aria-label="Calendar"]').should('not.exist'); // Calendar is closed
+        cy.get('input[aria-label="Start Date"]').click(); // Opens calendar
+        cy.get('div[aria-label="Calendar"]').should('exist')
+
+        // selects time frame from calendar (22 Dec - 29 Dec)
+        cy.get('td[aria-label="Choose Tuesday, December 22, 2020 as your check-in date. It’s available."]').should('exist').click()
+        cy.get('td[aria-label="Choose Tuesday, December 29, 2020 as your check-out date. It’s available."]').should('exist').click()
+
+        // verify time frame has been changed
+        cy.get('input[value="10/12/2020"]').should('not.exist'); // Current start date is 10/12
+        cy.get('input[value="17/12/2020"]').should('not.exist'); // Current end date is 10/12
+        cy.get('input[value="22/12/2020"]').should('exist'); // Current start date is 10/12
+        cy.get('input[value="29/12/2020"]').should('exist'); // Current end date is 10/12
+
         cy.contains('All-time').should('exist').click();
-        cy.get('input[value=""]').should('exist');
-        cy.get('input[value=""]').should('exist');
     })
 
     it('has working month aggregation', () => {
@@ -128,16 +143,25 @@ describe('Statistics tests', () => {
          cy.get('h4').contains('You have selected 2 lectures').should('exist')
          cy.get('svg').contains('Computer Sciences').should('exist')
 
+         // Cancels data about Computer Sciences
          cy.get('input[id="check-33"]').click()  // clicks on Computer Sciences checkbox
          cy.get('svg').contains('Computer Sciences').should('not.exist')
          cy.get('h4').contains('You have selected 2 lectures').should('not.exist')
          cy.get('h4').contains('You have selected 1 lecture').should('exist')
 
+         // Cancels data about Chemistry
          cy.get('input[id="check-18"]').click()  // clicks on Chemistry checkbox
          cy.get('svg').contains('Chemistry').should('not.exist')
          cy.get('h4').contains('You have selected 2 lectures').should('not.exist')
          cy.get('h4').contains('You have selected 1 lecture').should('not.exist')
          cy.get('h4').contains('You have selected 0 lecture').should('exist')
+
+         // Restore Computer Sciences and Chemistry
+         cy.get('input[id="check-33"]').click()
+         cy.get('input[id="check-18"]').click()
+         cy.get('svg').contains('Computer Sciences').should('exist')
+         cy.get('svg').contains('Chemistry').should('exist')
+         cy.get('h4').contains('You have selected 2 lectures').should('exist')
     })
 
 
