@@ -117,7 +117,7 @@ function ToggleSelected(props) {
   return (
     <Button
         className='mb-3'
-        action
+        action="true"
         variant='light'
         onClick={handleClick}
         active={active}

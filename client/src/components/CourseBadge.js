@@ -11,10 +11,10 @@ const CourseBadge = (props) => {
                 <Col lg={1} className="ml-3">
                     <Form.Check
                         type="checkbox"
-                        defaultChecked="true"
                         value={props.subjectId}
+                        defaultChecked={true}
                         checked={props.checked}
-                        onClick={(ev) => props.handleClick('courseFilter',props.subjectId, ev)}
+                        onChange={(ev) => props.handleClick('courseFilter',props.subjectId, ev)}
                     />
                 </Col>
                 <Col className="align-items-center my-auto" lg={10}>
