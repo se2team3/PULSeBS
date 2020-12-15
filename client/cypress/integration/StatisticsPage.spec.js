@@ -117,10 +117,29 @@ describe('Statistics tests', () => {
         cy.get('h2').contains('Courses').should('exist') // checl coruse header presence
         cy.contains('Analysis I').scrollIntoView().should('be.visible')
         cy.get('button').contains('Lecture 29 November 2020').should('exist')
-        cy.get('input[id="check-24"]').click()  
+
+        cy.get('input[id="check-24"]').click()  // clicks on Analysis I checkbox
         cy.get('button').contains('Lecture 29 November 2020').should('not.exist')
     })
     
+    it('deletes from graph unchecked courses',()=>{
+         // Test lecture
+         cy.get('button').contains('Bar chart').should('exist').click()
+         cy.get('h4').contains('You have selected 2 lectures').should('exist')
+         cy.get('svg').contains('Computer Sciences').should('exist')
+
+         cy.get('input[id="check-33"]').click()  // clicks on Computer Sciences checkbox
+         cy.get('svg').contains('Computer Sciences').should('not.exist')
+         cy.get('h4').contains('You have selected 2 lectures').should('not.exist')
+         cy.get('h4').contains('You have selected 1 lecture').should('exist')
+
+         cy.get('input[id="check-18"]').click()  // clicks on Chemistry checkbox
+         cy.get('svg').contains('Chemistry').should('not.exist')
+         cy.get('h4').contains('You have selected 2 lectures').should('not.exist')
+         cy.get('h4').contains('You have selected 1 lecture').should('not.exist')
+         cy.get('h4').contains('You have selected 0 lecture').should('exist')
+    })
+
 
 
 
