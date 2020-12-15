@@ -13,6 +13,7 @@ const CourseBadge = (props) => {
                         type="checkbox"
                         defaultChecked="true"
                         value={props.subjectId}
+                        id = {`check-${props.subjectId}`}
                         checked={props.checked}
                         onClick={(ev) => props.handleClick('courseFilter',props.subjectId, ev)}
                     />

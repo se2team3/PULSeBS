@@ -69,6 +69,7 @@ const{  startDate, endDate, focusedInput, courses,
                                 subjectName={c.course_name}
                                 checked={c.selected}
                                 handleClick={() => onCheckboxChange(c)}
+                                subjectId = {c.id}
                             />
                         ))
                     }
