@@ -7,9 +7,7 @@ const setupDao = require('../daos/setup_dao');
 const authorize = require('../services/authorizeService');
 const role = require('../utils/roles');
 const moment = require('moment');
-//const router = express.Router();
 //const studentService = resquire('../services/studentService');
-//const bookingService = require('../services/bookingService')
 const timeValidator = require('../validators/timeValidator');
 const {validator,lectureValidation }= require('../validators/validator');
 
@@ -22,25 +20,61 @@ app.post('/setup', async(req,res) =>{
     const schedule_dict = req.body.schedule;
     const students_dict = req.body.students;
     const teachers_dict = req.body.teachers;
-    console.log('inside setupRoute');
+    //console.log('inside setupRoute');
+
 
     try{    
+        // console.log('inside try catch setupRoute setupInsertTeacher');
+         let teachers = await setupService.setupInsertTeacher({teachers_dict});
+         let students = await setupService.setupInsertStudent({students_dict});
+         let courses = await setupService.setupInsertInternalCourse({courses_dict});
+         let enrollment = await setupService.setupInsertInternalEnrollment({enrollment_dict});
+         let schedule = await setupService.setupInsertInternalSchedule({schedule_dict});
+         return res.status(201);
+     } catch(error){
+         res.status(400).json(error);
+     }
 
-        console.log('inside try catch setupRoute');
-        let teachers = await userService.setupInsertTeacher({teachers_dict});
-        console.log(teachers);
-        return res.status(201);
-    } catch(error){
-        res.status(400).json(error);
-    }
-    try{    
-        console.log('inside try catch setupRoute');
-        let students = await userService.setupInsertStudent({students_dict});
-        console.log(students);
-        return res.status(201);
-    } catch(error){
-        res.status(400).json(error);
-    }
+
+
+
+
+    // try{    
+    //    // console.log('inside try catch setupRoute setupInsertTeacher');
+    //     let teachers = await setupService.setupInsertTeacher({teachers_dict});
+    //     return res.status(201);
+    // } catch(error){
+    //     res.status(400).json(error);
+    // }
+    // try{    
+    //    // console.log('inside try catch setupRoute setupInsertStudent');
+    //     let students = await setupService.setupInsertStudent({students_dict});
+    //     return res.status(201);
+    // } catch(error){
+    //     res.status(400).json(error);
+    // }
+    // try{    
+    //   //  console.log('inside try catch setupRoute setupInsertInternalCourse');
+    //     let courses = await setupService.setupInsertInternalCourse({courses_dict});
+    //     return res.status(201);
+    // } catch(error){
+    //     res.status(400).json(error);
+    // }
+
+    // try{    
+    //     console.log('inside try catch setupRoute setupInsertInternalEnrollment');
+    //     let enrollment = await setupService.setupInsertInternalEnrollment({enrollment_dict});
+    //     return res.status(201);
+    // } catch(error){
+    //     res.status(400).json(error);
+    // }
+    // try{    
+    //     console.log('inside try catch setupRoute setupInsertInternalSchedule');
+    //     let schedule = await setupService.setupInsertInternalSchedule({schedule_dict});
+    //     return res.status(201);
+    // } catch(error){
+    //     res.status(400).json(error);
+    // }
 
     //const student_id= +req.params.student_id;
  
