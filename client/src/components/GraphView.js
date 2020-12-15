@@ -45,7 +45,7 @@ const GraphView = (props) => {
 
                         <ButtonGroup className="mb-2" style={{ 'marginTop': '25px' }}>
                             <Button onClick={() => switchChart('bar')}>Bar chart</Button>
-                            <Button onClick={() => switchChart('scatter')}>Scatter Chart</Button>
+                            <Button onClick={() => switchChart('scatter')}>Scatter chart</Button>
                         </ButtonGroup>
                         <Row className="justify-content-md-center mt-4">
                             <Col md="10" className="mx-auto">

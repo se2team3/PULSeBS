@@ -59,6 +59,7 @@ const AggregatedList = (props) => {
                             key={idx}
                             action
                             variant='light'
+                            id={idx}
                             onClick={() => {
                                 setActive(el.dateRange);
                                 handleClick(el);

@@ -11,8 +11,9 @@ const CourseBadge = (props) => {
                 <Col lg={1} className="ml-3">
                     <Form.Check
                         type="checkbox"
+                        defaultChecked="true"
                         value={props.subjectId}
-                        defaultChecked={true}
+                        id = {`check-${props.subjectId}`}
                         checked={props.checked}
                         onChange={(ev) => props.handleClick('courseFilter',props.subjectId, ev)}
                     />
