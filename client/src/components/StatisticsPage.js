@@ -156,7 +156,7 @@ class StatisticsPage extends React.Component {
                         return (
                             <Container fluid style={{flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0}}>
                                 <Row className="flex-nowrap" style={{height: "100%", overflowX: "auto"}}>
-                                    <Col sm={2} style={{ 'backgroundColor': 'rgb(240, 240, 240)' }}>
+                                    <Col lg={2} md={3} style={{ backgroundColor: 'rgb(240, 240, 240)', flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0, maxHeight: "100%" }}>
                                         <StatisticsSidebar
                                             startDate={this.state.startDate}
                                             endDate={this.state.endDate}

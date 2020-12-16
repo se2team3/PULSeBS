@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Button, Nav, Form, InputGroup, OverlayTrigger, Tooltip, ListGroup, Row} from 'react-bootstrap';
+import {Button, Nav, Form, InputGroup, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import { DateRangePicker } from 'react-dates';
 import CourseBadge from "./CourseBadge";
 import {AggregationLevel} from './common'
@@ -16,8 +16,8 @@ const{  startDate, endDate, focusedInput, courses,
             <Form style={{ display: "flex", flexDirection: "column", maxHeight: "100%" }}>
                 <Form.Group >
                     <Form.Label as="legend">
-                        Time frame:
-                                                </Form.Label>
+                        Time frame
+                    </Form.Label>
                     <DateRangePicker
                         startDate={startDate} // momentPropTypes.momentObj or null,
                         startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
@@ -36,10 +36,11 @@ const{  startDate, endDate, focusedInput, courses,
                 <fieldset>
                     <Form.Group >
                         <Form.Label as="legend">
-                            Aggregation level:
-                                                </Form.Label>
+                            Aggregation level
+                        </Form.Label>
                         {Object.keys(AggregationLevel).filter((k) => k !== 'NotSet').map((k) =>
                             <Form.Check
+                                inline
                                 type="radio"
                                 label={k}
                                 id={k}
@@ -50,7 +51,7 @@ const{  startDate, endDate, focusedInput, courses,
                     </Form.Group>
                 </fieldset>
 
-                <h2 className="mb-3">Courses</h2>
+                <Form.Label as="legend">Courses</Form.Label>
                 <SearchBar
                   handleSearch={handleSearch}
                   fuzzy={fuzzy}
@@ -60,7 +61,7 @@ const{  startDate, endDate, focusedInput, courses,
                   handleClick={toggleSelected}
                   active={toggleIsActive}
                 />
-                <Form.Group style={{ flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0 }}>
+                <Form.Group style={{ flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: "200px" }}>
                     {
                         courses.filter(isCourseSearched).map(c => (
                             <CourseBadge
@@ -70,7 +71,6 @@ const{  startDate, endDate, focusedInput, courses,
                                 checked={c.selected}
                                 subjectId = {c.id}
                                 handleClick={() => onCheckboxChange(c)}
-                                subjectId = {c.id}
                             />
                         ))
                     }
