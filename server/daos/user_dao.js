@@ -99,3 +99,27 @@ exports.deleteUsersTable = function() {
 }
 
 */
+exports.bulkInsertionUsers = function(array){
+    return new Promise ((resolve,reject) =>{
+        let sql='';
+
+    for (let i = 0; i < array.length; i++) {
+        sql += `INSERT INTO Users(university_id,email,password,name,surname,role) VALUES('${array[i].university_id}','${array[i].email}','${array[i].password}','${array[i].name}','${array[i].surname}','${array[i].role}'); `
+    }
+   console.l
+    db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
+        if(err)
+            reject(err);
+        
+    })    
+    
+    db.all("SELECT university_id, id FROM Users",[],(err,rows)=>{
+        if(err)
+            reject(err)
+        else
+            resolve(rows)
+    })
+    
+     
+    });
+}

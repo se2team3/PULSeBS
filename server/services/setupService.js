@@ -4,28 +4,38 @@ const courseDao = require('../daos/course_dao');
 const roomDao = require('../daos/room_dao');
 const enrollmentDao = require('../daos/course_student_dao');
 const dbUtils = require('../utils/db')
+//const bulkDao = require('../dao/bulk_dao')
 const moment = require('moment')
 
 
 async function insertTeachers(teachers_dict){
   //university_id=Number,email=OfficalEmail,password=?,name=GivenName, surname=Surname,role=?
   let teacher_id =[]
-  for (let t of teachers_dict){
+  let teachers = teachers_dict.map((t)=>{
+    return {university_id: t.Number, email:t.OfficialEmail, password:'passw0rd', name:t.GivenName, surname: t.Surname, role:'teacher'}
+  })
+  
+  teacher_id = await userDao.bulkInsertionUsers(teachers)
+  /* for (let t of teachers_dict){
       let teacher = {university_id: t.Number, email:t.OfficialEmail, password:'passw0rd', name:t.GivenName, surname: t.Surname, role:'teacher'}
       let res_id=await userDao.insertUser(teacher);
       teacher_id.push({university_id: t.Number,id:res_id})
-  }
+  } */
   return teacher_id;
 }
 
 async function insertStudents(students_dict){
   //university_id=Id,email=OfficalEmail,password=?,name=Name, surname=Surname,role=?
   let student_id =[];
-  for (let s of students_dict){
+  let students = students_dict.map((t)=>{
+    return {university_id:t.Id, email:t.OfficialEmail, password:'passw0rd', name:t.Name, surname: t.Surname, role:'student'}
+  })
+  /* for (let s of students_dict){
       let student = {university_id: s.Id, email:s.OfficialEmail, password:'passw0rd', name:s.Name, surname:s.Surname, role:'student'}
       let res_id = await userDao.insertUser(student);
       student_id.push({university_id:s.Id, id:res_id}) 
-  }
+  } */
+  student_id=await userDao.bulkInsertionUsers(students)
   return student_id;
 }
 
@@ -36,24 +46,24 @@ async function insertCourses(courses_dict,teacher_id){
   let course_id = [];
   for(let c of courses_dict){
   
-    if(t_id.includes(c.Teacher)){
-      num=t_id.indexOf(c.Teacher)
-
-      let course = {code:c.Code, name:c.Course, teacher_id:teacher_id[num].id, year:c.Year, semester:c.Semester}
-     
-   
-        let res_id = await courseDao.insertCourse(course);
-      
-        course_id.push({course_code:c.Code, course_id:res_id, semester: c.Semester});
-      }
-    
-    else{
-      await dbUtils.reset();
-      throw 'Teacher id is not present'
+    if(!t_id.includes(c.Teacher)){
+        //await dbUtils.reset();
+        throw 'Teacher id is not present'
     }
-  
-}
-  return course_id
+  }
+ 
+
+      let courses = courses_dict.map((c) => {
+        num=t_id.indexOf(c.Teacher)
+        
+        return {code:c.Code, name:c.Course, teacher_id:teacher_id[num].id, year:c.Year, semester:c.Semester}
+      }) 
+   
+      let courses_id = await courseDao.bulkInsertionCourses(courses);
+      
+      //course_id.push({course_code:c.Code, course_id:res_id, semester: c.Semester});
+      
+  return courses_id
 }
 
 async function insertEnrollments(enrollment_dict,course_id,student_id){
@@ -67,7 +77,7 @@ async function insertEnrollments(enrollment_dict,course_id,student_id){
       await enrollmentDao.assingCourseToStudent(enrollment);
     }
     else{
-      await dbUtils.reset();
+     // await dbUtils.reset();
       throw 'Student or course id is not present'
     }
     
@@ -94,7 +104,7 @@ async function insertSchedule(schedule_dict,course_id){
          await replicateSchedule(sd,course_id)
       }
       else{
-        await dbUtils.reset();
+      //  await dbUtils.reset();
         throw 'Course id is not present' 
       }
     
@@ -141,16 +151,22 @@ const setupInsert = async function(dictionary) {
 
     
     let teacher_id =[], student_id=[],course_id=[];
-    teacher_id= await insertTeachers(teachers_dict) ; console.log('teachers')
-    student_id = await insertStudents(students_dict); console.log('students')
-    course_id = await insertCourses(courses_dict,teacher_id); console.log('courses')
-    await insertEnrollments(enrollment_dict,course_id,student_id); console.log('enroll')
+    console.log("sono qui")
+    teacher_id = await insertTeachers(teachers_dict) ; console.log('teachers')
+    student_id = await insertStudents(students_dict); console.log('students') 
+    //course_id = await insertCourses(courses_dict,teacher_id); console.log('courses')
+    /*await insertEnrollments(enrollment_dict,course_id,student_id); console.log('enroll')
     await insertSchedule(schedule_dict,course_id); console.log('end')
-    
+    */
 
-   
-
+  
 }
+
+
+
+
+
+
 
 module.exports = {setupInsert};
 
