@@ -68,6 +68,7 @@ const{  startDate, endDate, focusedInput, courses,
                                 backgroundColor={props.getColor(c.id)}
                                 subjectName={c.course_name}
                                 checked={c.selected}
+                                subjectId = {c.id}
                                 handleClick={() => onCheckboxChange(c)}
                                 subjectId = {c.id}
                             />

@@ -73,12 +73,13 @@ class StatisticsPage extends React.Component {
     }
 
     handleAggregationLevelClick = (value) => {
-        this.setState({ aggregationLevel: value });
+        if(value === this.state.aggregationLevel) this.setState({ aggregationLevel: value });
+        else this.setState({aggregationLevel: value, view: {}})
     }
 
     handleAggregatedListClick = (selected) => {
         const lectures = this.state.lectures;
-        console.log(lectures);
+        // console.log(lectures);
         selected.selected = true;
         // allLectures  handles all the lectures for a specific date range
         // lectures     handles the lectures for selected courses subset

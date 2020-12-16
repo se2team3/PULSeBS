@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col,ButtonGroup, Button } from 'react-bootstrap';
+import { Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
 
 
@@ -9,6 +9,7 @@ import Plot from 'react-plotly.js';
 const GraphView = (props) => {
     const { view, aggregationLevel, chart, switchChart,courses, AuthUser } = props;
     const { dateRange, lectures } = view;
+    // let AuthUser='teacher'
     let list = [];
     
     if (lectures !== undefined && lectures.length > 0) {
