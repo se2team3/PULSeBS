@@ -60,10 +60,10 @@ class StatisticsPage extends React.Component {
         let ids = this.state.courses.map((c) => c.id).filter(this.onlyUnique);
         let index = ids.indexOf(course_id);
         if(this.props.authUser.role=='teacher'){
-            this.state.courses.map((c)=>c.color=colorArray[ids.indexOf(c.id)])
+            this.state.courses.forEach(function(c, ind, theArray) {theArray[ind].color=colorArray[ids.indexOf(c.id)]});
             return colorArray[index];}
         else {
-            this.state.courses.map((c)=>c.color='#31A831')
+            this.state.courses.forEach(function(c, ind, theArray) {theArray[ind].color='#31A831'});
             return '#31A831'
         }
     }
