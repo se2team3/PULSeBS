@@ -31,7 +31,7 @@ async function insertStudents(students_dict){
 async function insertCourses(courses_dict,teacher_id){
   let t_id=teacher_id.map((el)=>el.university_id)
   let course_id = [];
-  for(let c of courses_dict){  
+  for(let c of courses_dict){
     if(!t_id.includes(c.Teacher)){
       await dbUtils.reset();
       throw 'Teacher id is not present'
@@ -40,7 +40,7 @@ async function insertCourses(courses_dict,teacher_id){
   let courses = courses_dict.map((c) => {
     num=t_id.indexOf(c.Teacher)      
     return {code:c.Code, name:c.Course, teacher_id:teacher_id[num].id, year:c.Year, semester:c.Semester}
-  })    
+  })
   let courses_id = await courseDao.bulkInsertionCourses(courses);
   return courses_id
 }
@@ -53,7 +53,7 @@ async function insertEnrollments(enrollment_dict,course_id,student_id){
   
     if(!(s_id.includes(e.Student) || c_id.includes(e.Code))){
         await dbUtils.reset();
-        throw 'Teacher id is not present'
+      throw 'Teacher id is not present'
     }
   } 
   let enrolls = enrollment_dict.map((e) => {

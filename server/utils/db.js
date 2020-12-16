@@ -24,6 +24,19 @@ const createTables = async () => {
 }
 
 /**
+ * Checks if the db is in a (pseudo) empty state
+ * @returns {Promise<void>}
+ */
+const isEmpty = async () => {
+    return await lectureDao.isEmpty()
+      && await bookingDao.isEmpty()
+      && await courseDao.isEmpty()
+      && await userDao.isEmpty()
+      && await roomDao.isEmpty()
+      && await course_studentDao.isEmpty();
+}
+
+/**
  * Reset database tables, bringing them to an empty initial state
  * @param {object} options - Config options
  * @param {boolean} [options.create=true] - is for force the tables creation
@@ -159,4 +172,4 @@ const populate = async ({n_students, datetime} = def_options) => {
     return data;
 };
 
-module.exports = { reset, createTables, teacherObj, studentObj, populate, support_officerObj }
+module.exports = { reset, createTables, teacherObj, studentObj, populate, support_officerObj, isEmpty }

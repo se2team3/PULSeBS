@@ -1,4 +1,3 @@
-const sleep = require('../utils/sleep');
 const userDao  = require('../daos/user_dao');
 const errHandler = require('./errorHandler');
 const bcrypt = require("bcrypt");

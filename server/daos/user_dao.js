@@ -14,7 +14,8 @@ const createUser = function (row){
 exports.createUsersTable = function() {
     return new Promise ((resolve,reject) => {
         const sql = `CREATE TABLE IF NOT EXISTS Users (id INTEGER NOT NULL PRIMARY KEY, university_id TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE,
-                     password TEXT NOT NULL, name TEXT NOT NULL, surname TEXT NOT NULL, role TEXT NOT NULL CHECK (role IN("student","teacher","officer","manager")))`
+                     password TEXT NOT NULL, name TEXT NOT NULL, surname TEXT NOT NULL, role TEXT NOT NULL CHECK (role IN("student","teacher","officer","manager")),
+                     ssn TEXT, city TEXT, birthday TEXT)`
         db.run(sql,[],(err) =>{
             if(err)
                 reject(err);
@@ -114,7 +115,7 @@ exports.bulkInsertionUsers = function(array){
         
     })    
     
-    db.all("SELECT university_id, id FROM Users",[],(err,rows)=>{
+    db.all("SELECT university_id, id FROM Users WHERE (role LIKE 'student' OR role LIKE 'teacher')",[],(err,rows)=>{
         if(err)
             reject(err)
         else
@@ -122,5 +123,20 @@ exports.bulkInsertionUsers = function(array){
     })
     
      
+    });
+}
+
+exports.isEmpty = function(){
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT COUNT(*) as n FROM Users WHERE (role LIKE \'student\' OR role LIKE \'teacher\')'
+        db.get(sql, [], (err, row) => {
+            if(err)
+                return reject(err);
+            if (!row)
+                resolve(null);
+            else{
+                resolve(row.n === 0);
+            }
+        });
     });
 }

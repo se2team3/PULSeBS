@@ -30,7 +30,7 @@ describe('Student routes', function () {
     it('should retrieve all the extended lectures for a student in a given time frame', async function() {     
         let credentials = {email:data.students[0].email, password:data.students[0].password};
         const agent = chai.request.agent(server);
-        await agent.post(`/api/login`).send(credentials)       
+        await agent.post(`/api/login`).send(credentials);
         let courses = await coursesLectureService.getStudentCourses({student_id:data.students[0].university_id});
         let lectures = await coursesService.getLectures(courses[0].course_id)
         const datetime = lectures[0].datetime;

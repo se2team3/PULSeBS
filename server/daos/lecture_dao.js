@@ -185,4 +185,19 @@ exports.bulkInsertionLectures = function(array){
             resolve();
     })    
     });
-} 
+}
+
+exports.isEmpty = function(){
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT COUNT(*) as n FROM Lectures'
+        db.get(sql, [], (err, row) => {
+            if(err)
+                return reject(err);
+            if (!row)
+                resolve(null);
+            else{
+                resolve(row.n === 0);
+            }
+        });
+    });
+}

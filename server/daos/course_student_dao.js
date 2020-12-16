@@ -86,6 +86,21 @@ exports.deleteCourse_StudentTable = function() {
     })
 }*/
 
+exports.retrieveAllStudentsCourses = function(){
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT course_id, student_id FROM Course_Student'
+        db.all(sql, [], (err, rows) => {
+            if(err)
+                return reject(err);
+            if (!rows)
+                resolve(null);
+            else{
+                resolve(rows);
+            }
+        });
+    });
+}
+
 exports.bulkInsertionEnrollments = function(array){
     return new Promise ((resolve,reject) =>{
         let sql='';
@@ -102,4 +117,19 @@ exports.bulkInsertionEnrollments = function(array){
             resolve();
     })    
     });
-} 
+}
+
+exports.isEmpty = function(){
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT COUNT(*) as n FROM Course_Student'
+        db.get(sql, [], (err, row) => {
+            if(err)
+                return reject(err);
+            if (!row)
+                resolve(null);
+            else{
+                resolve(row.n === 0);
+            }
+        });
+    });
+}

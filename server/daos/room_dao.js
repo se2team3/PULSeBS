@@ -46,6 +46,24 @@ exports.insertRoom = function({name,seats}) {
         });
     })
 }
+
+//retrieves room by its name
+exports.getRoomByName = function(name) {
+    return new Promise ((resolve,reject) =>{
+        const sql = `
+            SELECT id, name, seats
+            FROM Rooms
+            WHERE name = ?
+        `;
+        db.get(sql,[name],function(err, row){
+            if(err)
+                reject(err);
+            else
+                resolve(row);
+        });
+    })
+}
+
 /*
 //gets the room with the selected id
 exports.retrieveRoom = function(id) {
@@ -74,3 +92,18 @@ exports.deleteRoomTable = function() {
         });
     })
 }*/
+
+exports.isEmpty = function(){
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT COUNT(*) as n FROM Rooms'
+        db.get(sql, [], (err, row) => {
+            if(err)
+                return reject(err);
+            if (!row)
+                resolve(null);
+            else{
+                resolve(row.n === 0);
+            }
+        });
+    });
+}

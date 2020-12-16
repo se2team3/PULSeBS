@@ -47,6 +47,23 @@ exports.insertCourse = function({code,name,teacher_id}) {
         });
     })
 }
+
+//it allows you to retrieve a course by its name
+exports.retrieveCourseByName = function(name) {
+    return new Promise ((resolve,reject) =>{
+        const sql = `
+            SELECT id, code, name, teacher_id, year, semester
+            FROM Courses
+            WHERE name = ? 
+        `;
+        db.get(sql,[name],function(err, row){
+            if(err)
+                reject(err);
+            else
+                resolve(row);
+        });
+    })
+}
 /*
 //gets the course with the selected id
 exports.retrieveCourse = function(id) {
@@ -97,4 +114,19 @@ exports.bulkInsertionCourses = function(array){
     })
     
     });
-} 
+}
+
+exports.isEmpty = function(){
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT COUNT(*) as n FROM Courses'
+        db.get(sql, [], (err, row) => {
+            if(err)
+                return reject(err);
+            if (!row)
+                resolve(null);
+            else{
+                resolve(row.n === 0);
+            }
+        });
+    });
+}
