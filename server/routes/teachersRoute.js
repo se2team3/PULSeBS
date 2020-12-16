@@ -65,13 +65,14 @@ router.get('/teachers/:teacher_id/lectures',timeValidator.checkTime, async (req,
     const teacher_id = req.params.teacher_id;
     const start_date = req.query.from;
     const end_date = req.query.to;
+    
 
     try {
         let lectures = await teacherService.getLecturesByTeacherAndTime(teacher_id, start_date, end_date);
         //console.log(lectures);
         return res.status(200).json(lectures);
     } catch (error) {
-        res.json(error);
+        res.status(400).json(error);
     }
 
 });
