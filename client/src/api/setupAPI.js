@@ -23,6 +23,7 @@ async function setup(students, teachers, courses, enrollment, schedule){
         enrollment: enrollment,
         schedule:  schedule
     }).catch(error => {
+        console.log("There is an error")
         whatWentWrong(error);
     });
     if (response.status === 201) {

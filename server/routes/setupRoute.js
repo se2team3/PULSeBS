@@ -11,8 +11,10 @@ app.post('/setup', authorize(role.SupportOfficer), async(req,res) =>{
 
     try{
         await setupService.setupInsert(dictionary);
-        return res.status(201);
+        return res.status(201).json()
+      
      } catch(error){
+        console.log(error)
         res.status(400).json(error);
      }
 
