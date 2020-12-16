@@ -167,3 +167,22 @@ exports.setLectureVirtual = function ({ datetime, lecture_id,teacher}) {
       
     })
 }
+
+
+exports.bulkInsertionLectures = function(array){
+    return new Promise ((resolve,reject) =>{
+        let sql='';
+    for (let i = 0; i < array.length; i++) {
+        //'INSERT INTO Lectures(datetime,datetime_end,course_id,room_id) VALUES(?,?,?,?)'
+             
+        sql += `INSERT INTO Lectures(datetime,datetime_end,course_id,room_id) 
+        VALUES("${array[i].datetime}","${array[i].datetime_end}",${array[i].course_id},${array[i].room_id}); `
+    }
+    db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
+        if(err)
+            reject(err);
+        else
+            resolve();
+    })    
+    });
+} 
