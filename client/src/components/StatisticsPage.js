@@ -56,7 +56,7 @@ class StatisticsPage extends React.Component {
             "peru", "salmon", "lightBlue", "lightSeaGreen"]
         let ids = this.state.courses.map((c) => c.id).filter(this.onlyUnique);
         let index = ids.indexOf(course_id);
-        this.state.courses.map((c)=>c.color=colorArray[ids.indexOf(c.id)])
+        this.state.courses.forEach((c, ind, theArray)=>theArray[ind].color=colorArray[ids.indexOf(c.id)]);
         return colorArray[index];
     }
 
