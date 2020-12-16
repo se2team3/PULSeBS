@@ -35,7 +35,7 @@ exports.retrieveBookingsbyLectureId = async function(lecture_id){
     } catch (error) {
         return errHandler(error);
     }
-} 
+}
 
 exports.assertBooking = async function(student_id,lecture_id){
     try {
@@ -51,7 +51,8 @@ exports.retrieveListOfBookedstudents = async function(lecture_id){
     } catch (error) {
         return errHandler(error);
     }
-} 
+}
+
 exports.deleteBooking = async function(booking) {
     try {
         let number = await bookingDao.deleteBooking({...booking});

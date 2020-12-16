@@ -20,8 +20,8 @@ const Header = (props) => {
         
         <Nav className="mr-auto" >
         <Nav.Link href="/calendar">Calendar</Nav.Link>
+        <Nav.Link href="/statistics">Statistics</Nav.Link>
           {/*
-          <Nav.Link href="#">Help</Nav.Link>
           <Nav.Link href="#">PoliTO</Nav.Link>
           */}
         </Nav>

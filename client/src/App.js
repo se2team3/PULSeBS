@@ -13,6 +13,7 @@ import { Switch } from 'react-router';
 import { AuthContext } from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
 import CalendarPage from './components/CalendarPage';
+import StatisticsPage from './components/StatisticsPage';
 
 
 class App extends React.Component {
@@ -110,8 +111,6 @@ class App extends React.Component {
 
         <Header showSidebar={this.showSidebar} />
 
-        <Container fluid>
-
           <Switch>
             <Route path="/login">
               <Row className="vheight-100">
@@ -126,6 +125,10 @@ class App extends React.Component {
               <CalendarPage goToLecturePage={this.goToLecturePage} authUser={value.authUser}/>
             </Route>
 
+            <Route path="/statistics">
+              <StatisticsPage authUser={value.authUser}/>
+            </Route>
+
             <Route path="/lectures/:lecture_id" render={(props) =>
               <LecturePage lecture_id={props.match.params.lecture_id} />
             } />
@@ -138,8 +141,6 @@ class App extends React.Component {
             </Route>
             
           </Switch>
-
-        </Container>
       </AuthContext.Provider>
     );
   }

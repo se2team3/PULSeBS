@@ -10,3 +10,12 @@ exports.getLectureById = async function(lecture_id) {
         return errHandler(error);
     }
 }
+
+
+exports.getLecturesByTeacherId = async function(teacher_id, from, to) {
+    try {
+        return await extendedLectureDao.getLecturesByTeacherId(teacher_id, from, to);
+    } catch (error) {
+        return errHandler(error);
+    }
+}
