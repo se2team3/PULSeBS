@@ -85,3 +85,21 @@ exports.deleteCourse_StudentTable = function() {
         });
     })
 }*/
+
+exports.bulkInsertionEnrollments = function(array){
+    return new Promise ((resolve,reject) =>{
+        let sql='';
+    for (let i = 0; i < array.length; i++) {
+        //INSERT INTO Course_Student(course_id,student_id) VALUES(?,?)
+             
+        sql += `INSERT INTO Course_Student(course_id,student_id) 
+        VALUES(${array[i].course_id},${array[i].student_id}); `
+    }
+    db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
+        if(err)
+            reject(err);
+        else
+            resolve();
+    })    
+    });
+} 
