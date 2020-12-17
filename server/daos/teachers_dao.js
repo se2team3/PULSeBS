@@ -10,7 +10,8 @@ exports.getLecturesByTeacherAndTime = function(teacher_id,start_date, end_date) 
         R.name as room_name, seats as max_seats, COUNT(B.lecture_id) as booking_counter
         FROM Lectures L, Rooms R, Users T, Courses C
         LEFT JOIN Bookings B ON L.id = B.lecture_id
-        WHERE L.course_id=C.id AND L.room_id= R.id AND C.teacher_id = T.id AND C.teacher_id = ? AND date(L.datetime) <= ? AND date(L.datetime) >= ?
+        WHERE L.course_id=C.id AND L.room_id= R.id AND C.teacher_id = T.id AND C.teacher_id = ?1 AND (?2 IS NULL OR date(datetime) >= ?2)
+        AND (?3 IS NULL OR date(datetime) <= ?3)
         GROUP BY L.id`;
 
         db.all(sql, [teacher_id, start_date, end_date], (err, rows) => {
