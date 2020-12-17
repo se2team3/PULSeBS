@@ -14,7 +14,8 @@ const createUser = function (row){
 exports.createUsersTable = function() {
     return new Promise ((resolve,reject) => {
         const sql = `CREATE TABLE IF NOT EXISTS Users (id INTEGER NOT NULL PRIMARY KEY, university_id TEXT NOT NULL UNIQUE, email TEXT NOT NULL UNIQUE,
-                     password TEXT NOT NULL, name TEXT NOT NULL, surname TEXT NOT NULL, role TEXT NOT NULL CHECK (role IN("student","teacher","officer","manager")))`
+                     password TEXT NOT NULL, name TEXT NOT NULL, surname TEXT NOT NULL, role TEXT NOT NULL CHECK (role IN("student","teacher","officer","manager")),
+                     ssn TEXT, city TEXT, birthday TEXT)`
         db.run(sql,[],(err) =>{
             if(err)
                 reject(err);
@@ -27,7 +28,7 @@ exports.createUsersTable = function() {
 //clears the lecture table
 exports.clearUserTable = function () {
     return new Promise ((resolve,reject) =>{
-        const sql = 'DELETE FROM Users';
+        const sql = `DELETE FROM Users WHERE role!= 'officer' AND role!='manager'`;
         db.run(sql,[],(err) =>{
             if(err)
                 reject(err);
@@ -40,7 +41,6 @@ exports.clearUserTable = function () {
 //it allows you to insert a new user
 exports.insertUser = async function({university_id,email,password,name,surname,role}) {
     const hash = await bcrypt.hash(password, saltRounds);
-
     return new Promise ((resolve,reject) =>{
         const sql = 'INSERT INTO Users(university_id,email,password,name,surname,role) VALUES(?,?,?,?,?,?)'
         db.run(sql,[university_id,email,hash,name,surname,role],function(err) {
@@ -51,6 +51,7 @@ exports.insertUser = async function({university_id,email,password,name,surname,r
         });
     })
 }
+
 //gets the user with the selected id
 exports.retrieveUser = function(id) {
     return new Promise ((resolve,reject) =>{
@@ -68,6 +69,8 @@ exports.retrieveUser = function(id) {
         });
     })
 }
+
+
 //gets the user with the selected id
 exports.retrieveUserByEmail = function(email) {
     return new Promise ((resolve,reject) =>{
@@ -75,8 +78,9 @@ exports.retrieveUserByEmail = function(email) {
         db.get(sql, [email], (err, row) => {
             if(err)
                 return reject(err);
-            if (!row)
+            if (!row) {
                 resolve(null);
+            }
             else{
                 const user = createUser(row);
                 resolve(user);
@@ -97,3 +101,43 @@ exports.deleteUsersTable = function() {
 }
 
 */
+exports.bulkInsertionUsers = function(array){
+    return new Promise ((resolve,reject) =>{
+        let sql='';
+
+    for (let i = 0; i < array.length; i++) {
+        sql += `INSERT INTO Users(university_id,email,password,name,surname,role,ssn,city,birthday) VALUES('${array[i].university_id}','${array[i].email}',
+        '${array[i].password}','${array[i].name}','${array[i].surname}','${array[i].role}','${array[i].ssn}',"${array[i].city}",'${array[i].birthday}'); `
+    }
+   
+    db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
+        if(err)
+            reject(err);
+        
+    })    
+    
+    db.all("SELECT university_id, id FROM Users WHERE (role LIKE 'student' OR role LIKE 'teacher')",[],(err,rows)=>{
+        if(err)
+            reject(err)
+        else
+            resolve(rows)
+    })
+    
+     
+    });
+}
+
+exports.isEmpty = function(){
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT COUNT(*) as n FROM Users WHERE (role LIKE \'student\' OR role LIKE \'teacher\')'
+        db.get(sql, [], (err, row) => {
+            if(err)
+                return reject(err);
+            if (!row)
+                resolve(null);
+            else{
+                resolve(row.n === 0);
+            }
+        });
+    });
+}

@@ -9,6 +9,7 @@ const studentsRoutes = require('./routes/studentRoute');
 const authenticateRoutes = require('./routes/authenticateRoute');
 const lectureRoutes = require('./routes/lecturesRoute');
 const teachersRoute = require('./routes/teachersRoute');
+const setupRoute = require('./routes/setupRoute');
 
 const errorHandler = require('./services/errorHandler');
 
@@ -16,8 +17,11 @@ const PORT = process.env.PORT || 3001;
 
 const app = new express();
 
-app.use(express.json());
+// set higher limit for request size, needed for setup
+app.use(express.json({extended: true, limit: '100mb'}));
+app.use(express.urlencoded({extended: true, limit: '100mb'}));
 app.use(cookieParser());
+
 if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('dev'));
 }
@@ -27,6 +31,7 @@ app.use('/api/', lectureRoutes);
 app.use(`/api/`, studentsRoutes);
 app.use(`/api/`, authenticateRoutes);
 app.use(`/api/`, teachersRoute);
+app.use(`/api/`, setupRoute);
 
 app.use(errorHandler);
 
@@ -38,5 +43,3 @@ mailserver.job().start();
 
 // test purposes
 module.exports = app;
-
-// create PULSEBS-8 branch

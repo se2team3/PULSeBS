@@ -15,6 +15,31 @@ const moment = require('moment');
 chai.use(chaiHttp);
 
 describe('Teachers routes', function () {
+    let data;
+
+    before('create tables and clear db', async function() {
+        await dbUtils.reset({ create: true });
+    });
+
+    before('populate db', async () => {
+        data = await dbUtils.populate();
+    });
+
+    it('should retrieve all the lectures for a teacher', async () => {
+        const { teacher_id } = data;
+        console.log(data);
+        const route = `/api/teachers/${teacher_id}/lectures`;
+        const res = await chai.request(server).get(route);
+        res.should.have.status(200);
+        console.log(res.body);
+        res.body.should.be.an('array').that.has.length(1);
+        /*
+        res.body.should.include.deep.members([{
+
+        }]);
+        */
+    });
+
     it('should retrieve all the lectures for a teacher in a given time frame', async function() {
         const teacher_id = 1;
         const route = `/api/teachers/${teacher_id}/lectures`;
@@ -33,11 +58,14 @@ describe('Teachers routes', function () {
         res.body.should.have.property('errors');
     });
 
-    before('create tables and clear db', async function() {
-        await dbUtils.reset();
-    });
+    it('should retrieve an error if the parameter is wrong', async function() {
+        const teacher_id = 'error';
+        const route = `/api/teachers/${teacher_id}/lectures`;
 
-    after('clear db', async function() {
-        await dbUtils.reset({ create: false });
+        let yesterday = moment().add(1,'days').format("YYYY-MM-DD");
+        let tomorrow = moment().add(-1,'days').format("YYYY-MM-DD");
+
+        const res = await chai.request(server).get(route).query({from: yesterday, to: tomorrow});
+        res.should.have.status(400);
     });
 });
