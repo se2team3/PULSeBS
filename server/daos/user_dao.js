@@ -78,8 +78,9 @@ exports.retrieveUserByEmail = function(email) {
         db.get(sql, [email], (err, row) => {
             if(err)
                 return reject(err);
-            if (!row)
+            if (!row) {
                 resolve(null);
+            }
             else{
                 const user = createUser(row);
                 resolve(user);

@@ -8,7 +8,7 @@ const chaiHttp = require("chai-http");
 
 const moment = require('moment');
 const db = require('../utils/db');
-const coursesLectureService = require('../services/courseStudentService');
+const courseStudentService = require('../services/courseStudentService');
 const coursesService = require('../services/coursesService');
 const Course = require('../models/course');
 
@@ -31,11 +31,11 @@ describe('Student routes', function () {
         let credentials = {email:data.students[0].email, password:data.students[0].password};
         const agent = chai.request.agent(server);
         await agent.post(`/api/login`).send(credentials);
-        let courses = await coursesLectureService.getStudentCourses({student_id:data.students[0].university_id});
+        let courses = await courseStudentService.getStudentCourses({student_id:/*data.students[0].university_id*/4});
         let lectures = await coursesService.getLectures(courses[0].course_id)
         const datetime = lectures[0].datetime;
-      
-        const tmp = `/api/students/${data.students[0].university_id}/lectures`;
+        // TODO dynamic student id
+        const tmp = `/api/students/${/*data.students[0].university_id*/4}/lectures`;
         let start_date = moment(datetime,"YYYY-MM-DD ").subtract(1,'days').format("YYYY-MM-DD");
         let end_date = moment(datetime,"YYYY-MM-DD ").add(1,'days').format("YYYY-MM-DD");
         

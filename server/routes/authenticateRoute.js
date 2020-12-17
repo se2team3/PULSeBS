@@ -84,9 +84,7 @@ app.post(`/logout`, authorize(), logout);
 app.get(`/user`, authorize(), logged_in);
 
 async function login(req, res) {
-    //console.log(req.body);
     const user = await userService.login(req.body);
-    //console.log(user);
     if (!user)
         return res.status(400).json({ message: 'Username or password is incorrect' });
     const token = jsonwebtoken.sign({ sub: user.id, role: user.role }, secret);

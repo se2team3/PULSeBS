@@ -28,7 +28,9 @@ exports.clearLectureTable = function () {
     return new Promise ((resolve,reject) =>{
         const sql = 'DELETE FROM Lectures';
         db.run(sql,[],(err) =>{
-     
+            if(err)
+                reject(err);
+            else
                 resolve();
         });
     })

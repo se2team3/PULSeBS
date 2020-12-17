@@ -4,8 +4,11 @@ const bcrypt = require("bcrypt");
 
 const login = async ({email, password}) => {
     // check credentials
-    const { hash, ...user} = await userDao.retrieveUserByEmail(email);
-    return user && await bcrypt.compare(password, hash)
+    const retrievedUser = await userDao.retrieveUserByEmail(email);
+    if (!retrievedUser)
+        return null;
+    const { hash, ...user } = retrievedUser;
+    return await bcrypt.compare(password, hash)
         ? user
         : null;
 };

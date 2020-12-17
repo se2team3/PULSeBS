@@ -22,9 +22,11 @@ describe('Teachers routes', function () {
 
     it('should retrieve all the lectures for a teacher', async () => {
         const { teacher_id } = data;
+        console.log(data);
         const route = `/api/teachers/${teacher_id}/lectures`;
         const res = await chai.request(server).get(route);
         res.should.have.status(200);
+        console.log(res.body);
         res.body.should.be.an('array').that.has.length(1);
         /*
         res.body.should.include.deep.members([{
@@ -61,13 +63,5 @@ describe('Teachers routes', function () {
         const res = await chai.request(server).get(route).query({from: yesterday, to: tomorrow});
         res.should.have.status(400);
         
-    });
-
-    before('create tables and clear db', async function() {
-        await dbUtils.reset();
-    });
-
-    after('clear db', async function() {
-        await dbUtils.reset({ create: false });
     });
 });
