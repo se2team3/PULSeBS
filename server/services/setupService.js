@@ -6,11 +6,10 @@ const enrollmentDao = require('../daos/course_student_dao');
 const dbUtils = require('../utils/db')
 const moment = require('moment')
 
-
 async function insertTeachers(teachers_dict){
   let teacher_id =[]
   let teachers = teachers_dict.map((t)=>{
-    return {university_id: t.Number, email:t.OfficialEmail, password:t.SSN, name:t.GivenName, surname: t.Surname, role:'teacher',
+    return {university_id: t.Number, email:t.OfficialEmail, hash: '$2b$10$wZzLdBmlArdCD5c74hx6DeABg3ikmFYkj7Wff0B/DZnLYg4Rd1xOq', name:t.GivenName, surname: t.Surname, role:'teacher',
             ssn:t.SSN,city:null,birthday:null}
   })
   teacher_id = await userDao.bulkInsertionUsers(teachers)
@@ -20,7 +19,7 @@ async function insertTeachers(teachers_dict){
 async function insertStudents(students_dict){
   let student_id =[];
   let students = students_dict.map((t)=>{
-    return {university_id:t.Id, email:t.OfficialEmail, password:t.SSN, name:t.Name, surname: t.Surname, role:'student',
+    return {university_id:t.Id, email:t.OfficialEmail, hash: '$2b$10$wZzLdBmlArdCD5c74hx6DeABg3ikmFYkj7Wff0B/DZnLYg4Rd1xOq', name:t.Name, surname: t.Surname, role:'student',
             ssn:t.SSN,city:t.City,birthday:t.Birthday}
   })
   student_id=await userDao.bulkInsertionUsers(students)

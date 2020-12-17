@@ -101,13 +101,13 @@ exports.deleteUsersTable = function() {
 }
 
 */
-exports.bulkInsertionUsers = function(array){
+exports.bulkInsertionUsers = async function(array){
     return new Promise ((resolve,reject) =>{
         let sql='';
 
     for (let i = 0; i < array.length; i++) {
         sql += `INSERT INTO Users(university_id,email,password,name,surname,role,ssn,city,birthday) VALUES('${array[i].university_id}','${array[i].email}',
-        '${array[i].password}','${array[i].name}','${array[i].surname}','${array[i].role}','${array[i].ssn}',"${array[i].city}",'${array[i].birthday}'); `
+        '${array[i].hash}','${array[i].name}','${array[i].surname}','${array[i].role}','${array[i].ssn}',"${array[i].city}",'${array[i].birthday}'); `
     }
    
     db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
@@ -122,8 +122,7 @@ exports.bulkInsertionUsers = function(array){
         else
             resolve(rows)
     })
-    
-     
+
     });
 }
 
