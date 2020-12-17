@@ -13,7 +13,6 @@ const moment = require('moment');
  */
 const createTables = async () => {
     await Promise.allSettled([
-        lectureDao.deleteLectureTable(),
         lectureDao.createLectureTable(),
         roomDao.createRoomsTable(),
         bookingDao.createBookingTable(),
@@ -21,6 +20,19 @@ const createTables = async () => {
         course_studentDao.createCourse_StudentTable(),
         userDao.createUsersTable()
     ]);
+}
+
+/**
+ * Checks if the db is in a (pseudo) empty state
+ * @returns {Promise<void>}
+ */
+const isEmpty = async () => {
+    return await lectureDao.isEmpty()
+      && await bookingDao.isEmpty()
+      && await courseDao.isEmpty()
+      && await userDao.isEmpty()
+      && await roomDao.isEmpty()
+      && await course_studentDao.isEmpty();
 }
 
 /**
@@ -71,6 +83,21 @@ const teacherObj = (university_id) => ({
 });
 
 /**
+ * Generates a support officer object, with a fixed email
+ * @param {string} university_id - unique ID
+ * @returns {{password: string, role: string, university_id: string, surname: string, name: string, email: string}}
+ */
+const support_officerObj = (university_id) => ({
+    university_id,
+    email: 'officer@host.com',
+    password: 'passw0rd',
+    name: 'Micheal',
+    surname: 'Jordan',
+    role: 'officer'
+});
+
+
+/**
  * Generates a student object, with a pseudo-random email
  * @param {string} university_id - unique ID
  * @returns {{password: string, role: string, university_id: string, surname: string, name: string, email: string}}
@@ -111,6 +138,7 @@ const populate = async ({n_students, datetime} = def_options) => {
         assign2:{},
         lecture: { datetime },
         students: [...new Array(n_students)].map(() => studentObj(counter.get())),
+        supportOfficer : support_officerObj(counter.get()),
         booked: 0
     };
 
@@ -143,4 +171,4 @@ const populate = async ({n_students, datetime} = def_options) => {
     return data;
 };
 
-module.exports = { reset, createTables, teacherObj, studentObj, populate }
+module.exports = { reset, createTables, teacherObj, studentObj, populate, support_officerObj, isEmpty }

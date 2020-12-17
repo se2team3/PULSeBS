@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import LoginForm from './components/LoginForm';
 import LecturePage from './components/LecturePage';
+import SetupPage from './components/SetupPage';
 import API from './api';
 import { Redirect, Route} from 'react-router-dom';
 import { Switch } from 'react-router';
@@ -74,7 +75,9 @@ class App extends React.Component {
     API.userLogin(username, password)
       .then((user) => {
         this.setState({ authUser: user, authErr: null });
-        this.props.history.push("/calendar");
+        console.log(user);
+        user.role === 'officer' ? this.props.history.push("/setup") : this.props.history.push("/calendar");
+        console.log(this.props.history);
       }).catch(
         (errorObj) => {
           const err = errorObj.message;
@@ -130,8 +133,11 @@ class App extends React.Component {
               <LecturePage lecture_id={props.match.params.lecture_id} />
             } />
 
+            {(value.authUser&&value.authUser.role=="officer")&&<Route path="/setup">
+              <SetupPage/>
+            </Route>}
             <Route>
-              <Redirect to='/calendar'/>
+              Not found
             </Route>
             
           </Switch>

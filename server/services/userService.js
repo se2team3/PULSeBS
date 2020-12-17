@@ -1,12 +1,14 @@
-const sleep = require('../utils/sleep');
 const userDao  = require('../daos/user_dao');
 const errHandler = require('./errorHandler');
 const bcrypt = require("bcrypt");
 
 const login = async ({email, password}) => {
     // check credentials
-    const { hash, ...user} = await userDao.retrieveUserByEmail(email);
-    return user && await bcrypt.compare(password, hash)
+    const retrievedUser = await userDao.retrieveUserByEmail(email);
+    if (!retrievedUser)
+        return null;
+    const { hash, ...user } = retrievedUser;
+    return await bcrypt.compare(password, hash)
         ? user
         : null;
 };
@@ -21,6 +23,7 @@ const insertUser = async function(user) {
     }
 }
 
+
 const getUser = async function(user_id) {
     try {
         let { hash, ...user } = await userDao.retrieveUser(user_id);
@@ -29,6 +32,9 @@ const getUser = async function(user_id) {
         return errHandler(error);
     }
 }
+
+
+
 /*
 const deleteUsers = async function(){
     try {

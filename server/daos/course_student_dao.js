@@ -85,3 +85,51 @@ exports.deleteCourse_StudentTable = function() {
         });
     })
 }*/
+
+exports.retrieveAllStudentsCourses = function(){
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT course_id, student_id FROM Course_Student'
+        db.all(sql, [], (err, rows) => {
+            if(err)
+                return reject(err);
+            if (!rows)
+                resolve(null);
+            else{
+                resolve(rows);
+            }
+        });
+    });
+}
+
+exports.bulkInsertionEnrollments = function(array){
+    return new Promise ((resolve,reject) =>{
+        let sql='';
+    for (let i = 0; i < array.length; i++) {
+        //INSERT INTO Course_Student(course_id,student_id) VALUES(?,?)
+             
+        sql += `INSERT INTO Course_Student(course_id,student_id) 
+        VALUES(${array[i].course_id},${array[i].student_id}); `
+    }
+    db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
+        if(err)
+            reject(err);
+        else
+            resolve();
+    })    
+    });
+}
+
+exports.isEmpty = function(){
+    return new Promise ((resolve,reject) =>{
+        const sql = 'SELECT COUNT(*) as n FROM Course_Student'
+        db.get(sql, [], (err, row) => {
+            if(err)
+                return reject(err);
+            if (!row)
+                resolve(null);
+            else{
+                resolve(row.n === 0);
+            }
+        });
+    });
+}
