@@ -292,6 +292,6 @@ let testTimeFrame = async (validTimeFrame) => {
 
         let res = await agent.get(url).query({from: start_date, to: end_date});
         should.exist(res);
-        res.should.have.status(validTimeFrame? 200: 400);
+        res.should.have.status(validTimeFrame? 200: 422);
         if(validTimeFrame) res.body.should.be.an('array');
 }

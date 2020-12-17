@@ -44,7 +44,7 @@ describe('Student routes', function () {
         res.body.should.have.length(1);
 
         res = await agent.get(tmp).query({from: '11111', to: end_date});
-        res.should.have.status(400);
+        res.should.have.status(422);
         res.body.should.have.property('errors');
     });
 
@@ -64,7 +64,7 @@ describe('Student routes', function () {
         res.body.should.have.length(0);
 
         res = await agent.get(tmp).query({from: '11111', to: end_date});
-        res.should.have.status(400);
+        res.should.have.status(422);
         res.body.should.have.property('errors');
     });
 });

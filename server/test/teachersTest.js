@@ -28,8 +28,8 @@ describe('Teachers routes', function () {
         res.body.should.be.an('array');
         res.body.should.have.length(0);
 
-        res = await chai.request(server).get(route).query({start_date: '11111', end_date: tomorrow});
-        res.should.have.status(400);
+        res = await chai.request(server).get(route).query({from: '11111', to: tomorrow});
+        res.should.have.status(422);
         res.body.should.have.property('errors');
     });
 
