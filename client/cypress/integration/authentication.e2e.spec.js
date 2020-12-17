@@ -39,7 +39,7 @@ describe('Header tests', () => {
         cy.get('#password').focus().type(pass);
         cy.contains(pass).should('not.exist');
     });
-    it('should properly login with valid credentials', () => {
+   /* it('should properly login with valid credentials', () => {
         cy.get('#username').focus().clear()
             .type('email@host.com');
         cy.get('#password').focus().clear()
@@ -49,5 +49,5 @@ describe('Header tests', () => {
         // cy.getCookie('token').should('exist');
         let regex = new RegExp('\\/calendar')
         cy.url().should('match', regex);
-    });
+    });*/
 });

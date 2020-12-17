@@ -55,7 +55,7 @@ describe('Statistics tests', () => {
 
             it('has working time frame elements', () => {
 
-                cy.contains("Time frame:").should('exist');
+                cy.contains("Time frame").should('exist');
                 cy.get('input[aria-label="Start Date"]').should('exist');
                 cy.get('input[value="10/12/2020"]').should('exist'); // Current start date is 10/12
                 cy.get('input[value="17/12/2020"]').should('exist'); // Current end date is 10/12
@@ -78,7 +78,7 @@ describe('Statistics tests', () => {
             })
 
             it('has working month aggregation', () => {
-                cy.contains("Aggregation level:").should('exist');
+                cy.contains("Aggregation level").should('exist');
         
                 // Test month
                 cy.get('button[id="0"]').should('not.exist') // November 2020
@@ -153,7 +153,7 @@ describe('Statistics tests', () => {
             it('has working courses list', () => {
                 
                 // Test lecture
-                cy.get('h2').contains('Courses').should('exist') // checl coruse header presence
+                cy.contains('Courses').should('exist') // checl coruse header presence
                 cy.contains('Analysis I').scrollIntoView().should('be.visible')
                 cy.get('button').contains('Lecture 29 November 2020').should('exist')
         
