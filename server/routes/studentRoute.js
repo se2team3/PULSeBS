@@ -150,9 +150,9 @@ app.get('/students/:lecture_id/',authorize([role.Student]), async(req,res) =>{
  *       - "write:pets"
  *       - "read:pets"
  */
-app.post('/students/:student_id/bookings', lectureValidation.checkLecture(),validator, async(req,res) =>{
+app.post('/students/:student_id/bookings', authorize([role.Student]), lectureValidation.checkLecture(), validator, async(req,res) =>{
     const {lecture_id} = req.body;
-    const student_id= +req.params.student_id;
+    const student_id = +req.params.student_id;
     try{
         let booking = await bookingService.insertBooking({lecture_id,student_id});
         return res.status(201).json(booking);
@@ -198,7 +198,7 @@ app.post('/students/:student_id/bookings', lectureValidation.checkLecture(),vali
  *       - "write:pets"
  *       - "read:pets"
  */
-app.delete('/students/:student_id/lectures/:lecture_id', async(req,res) =>{
+app.delete('/students/:student_id/lectures/:lecture_id', authorize([role.Student]), async(req,res) =>{
     const student_id= +req.params.student_id;
     const lecture_id= +req.params.lecture_id;
     const datetime= moment().format('YYYY-MM-DD HH:mm');
@@ -207,7 +207,7 @@ app.delete('/students/:student_id/lectures/:lecture_id', async(req,res) =>{
         let number = await bookingService.deleteBooking({datetime,lecture_id,student_id});
         if(number===1)
             return res.status(200).json({});
-        else if (number==0) 
+        else if (number===0)
             return res.status(304).json({});
     } catch(error){
         res.status(400).json(error);
