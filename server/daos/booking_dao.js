@@ -39,10 +39,26 @@ exports.clearBookingTable = function () {
 //it allows you to insert a new booking
 exports.insertBooking = function ({ lecture_id, student_id }) {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO Bookings(lecture_id,student_id) VALUES(?,?)'
+        const sql = `
+        INSERT INTO Bookings(lecture_id, student_id, waiting)
+        VALUES(
+            ?1,
+            ?2,
+            (SELECT COUNT(*) >= R.seats is not null and COUNT(*) >= R.seats
+             FROM Bookings B, Lectures L, Rooms R
+             WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id = ?1)
+         )
+        `;
         db.run(sql, [lecture_id, student_id], function (err) {
             if (err) {
-                const sql2 = 'UPDATE Bookings SET deleted_at= NULL WHERE lecture_id= ? AND student_id= ? AND deleted_at IS NOT NULL'
+                const sql2 = `
+                  UPDATE Bookings
+                  SET   deleted_at = NULL AND
+                        waiting = SELECT COUNT(*) >= R.seats is not null and COUNT(*) >= R.seats
+                                  FROM Bookings B, Lectures L, Rooms R
+                                  WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id = ?1
+                  WHERE lecture_id = ?1 AND student_id = ?2 AND deleted_at IS NOT NULL
+                `;
                 db.run(sql2, [ lecture_id, student_id], function (err2) {
                     if (err2 || this.changes===0) {
                         reject(err2);
