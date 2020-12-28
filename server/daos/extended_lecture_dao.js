@@ -13,7 +13,7 @@ exports.getLectureById = function(id) {
     return new Promise ((resolve,reject) =>{
 
         if(parseInt(id)!==id){
-            reject("Is not an integer")
+            reject("Invalid lecture!")
         }
 
         const sql = `
@@ -31,7 +31,7 @@ exports.getLectureById = function(id) {
         `;
         db.get(sql, [id], (err, row) => {
            if (!row)
-                resolve(null);
+                reject('Not found')
             else{
                 const lecture = createExtendedLecture(row);
                 resolve(lecture);

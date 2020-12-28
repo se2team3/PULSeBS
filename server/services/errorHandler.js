@@ -7,6 +7,10 @@
  * @returns {*}
  */
 function errorHandler(err, req, res, next) {
+    if(!res){//If there is no request propagate to an higher level
+        throw { message: err };
+    }
+
     if (typeof (err) === 'string') {
         // custom application error
         return res.status(400).json({ message: err });
