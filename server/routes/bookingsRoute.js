@@ -5,12 +5,12 @@ const extendedLectureService = require('../services/extendedLectureService');
 
 const router = express.Router();
 
-router.get(`/bookings`, authorize([role.Teacher, role.BookingManager]), async (req, res) => {
+router.get(`/bookings`, authorize([ role.Teacher, role.BookingManager ]), async (req, res) => {
   const { sub } = req.user;
   const { from, to } = req.query;
-  try{
+  try {
     return res.json(await extendedLectureService.getLecturesByTeacherId(sub, from, to));
-  } catch(error){
+  } catch (error) {
     res.json(error);
   }
 });
