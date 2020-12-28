@@ -10,8 +10,8 @@ const AggregatedList = (props) => {
     const getAggregatedLectures = () => {
 
         const list = {};
-
-        props.lectures.forEach(l => {
+        const lectures = props.lectures.sort((a,b)=>a.datetime.localeCompare(b.datetime))
+        lectures.forEach(l => {
             const date = moment(l.datetime, "YYYY-MM-DD HH:mm");
             let aggregationLabel;
 
