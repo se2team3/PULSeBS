@@ -133,19 +133,17 @@ describe('Statistics tests', () => {
                 // Test lecture
                 let numbers = Array.from(Array(12), (_,x) => x+19); // numbers from 19 to 30
                 cy.get('input[id="Lecture"]').should('exist').click();
-                numbers.forEach((n)=>cy.contains(`Lecture ${n} November 2020`).should('exist'));
+                numbers.forEach((n)=>cy.contains(`Lecture ${n}/11/20`).should('exist'));
         
-                cy.get('button').contains('Lecture 19 November 2020').click() // it contains all the lectures
-                cy.get('h1').contains('Lecture 19 November 2020').should('exist')
-                cy.get('h4').contains('You have selected 2 lectures').should('exist')
+                cy.get('button').contains('Lecture 19/11/20 16:00 Computer Sciences').click() // it contains all the lectures
+                cy.get('h1').contains('Lecture 19/11/20 16:00 Computer Sciences').should('exist')
+                cy.get('h4').contains('You have selected 1 lectures').should('not.exist')
                 cy.get('button').contains('Bar chart').should('exist').click()
                 
-                cy.get('svg').contains('Chemistry').should('exist')
                 cy.get('svg').contains('Computer Sciences').should('exist')
                 cy.contains('To see lectures trend, please select a larger timeframe.').should('not.exist')
                 cy.get('button').contains('Scatter chart').should('exist').click()
                 cy.contains('To see lectures trend, please select a larger timeframe.').should('exist')
-        
                 
             })
         
@@ -155,37 +153,39 @@ describe('Statistics tests', () => {
                 // Test lecture
                 cy.contains('Courses').should('exist') // checl coruse header presence
                 cy.contains('Analysis I').scrollIntoView().should('be.visible')
-                cy.get('button').contains('Lecture 29 November 2020').should('exist')
+                cy.get('button').contains('Lecture 29/11/20 17:30 Analysis I').should('exist')
         
                 cy.get('input[id="check-24"]').click()  // clicks on Analysis I checkbox
-                cy.get('button').contains('Lecture 29 November 2020').should('not.exist')
+                cy.get('button').contains('Lecture 29/11/20 17:30 Analysis I').should('not.exist')
             })
             
             it('deletes from graph unchecked courses',()=>{
                  // Test lecture
                  cy.get('button').contains('Bar chart').should('exist').click()
-                 cy.get('h4').contains('You have selected 2 lectures').should('exist')
+                 cy.contains('You have selected 1 lectures').should('not.exist')
                  cy.get('svg').contains('Computer Sciences').should('exist')
         
-                 // Cancels data about Computer Sciences
+                 cy.get('fieldset > .form-group').contains("Week").click();
+                 cy.contains("Week 22/11/2020 - 28/11/2020").click();
+                 
+                 // Cancels data about Computer Sciences 
                  cy.get('input[id="check-33"]').click()  // clicks on Computer Sciences checkbox
                  cy.get('svg').contains('Computer Sciences').should('not.exist')
-                 cy.get('h4').contains('You have selected 2 lectures').should('not.exist')
-                 cy.get('h4').contains('You have selected 1 lecture').should('exist')
+                 cy.get('h4').contains('You have selected 14 lecture').should('exist')
         
                  // Cancels data about Chemistry
                  cy.get('input[id="check-18"]').click()  // clicks on Chemistry checkbox
                  cy.get('svg').contains('Chemistry').should('not.exist')
-                 cy.get('h4').contains('You have selected 2 lectures').should('not.exist')
-                 cy.get('h4').contains('You have selected 1 lecture').should('not.exist')
-                 cy.get('h4').contains('You have selected 0 lecture').should('exist')
+                 cy.get('h4').contains('You have selected 18 lectures').should('not.exist')
+                 cy.get('h4').contains('You have selected 14 lectures').should('not.exist')
+                 cy.get('h4').contains('You have selected 9 lecture').should('exist')
         
                  // Restore Computer Sciences and Chemistry
                  cy.get('input[id="check-33"]').click()
                  cy.get('input[id="check-18"]').click()
                  cy.get('svg').contains('Computer Sciences').should('exist')
                  cy.get('svg').contains('Chemistry').should('exist')
-                 cy.get('h4').contains('You have selected 2 lectures').should('exist')
+                 cy.get('h4').contains('You have selected 18 lectures').should('exist')
             })
 
             if(role==='booking manager'){
@@ -211,7 +211,7 @@ describe('Statistics tests', () => {
                    cy.get('svg').contains('Chemistry').should('not.exist')
             
                    cy.get('button').contains('Select All').should('exist').click()
-                   cy.get('h4').contains('You have selected 2 lectures').should('exist')
+                   cy.get('h4').contains('You have selected 18 lectures').should('exist')
                    cy.get('svg').contains('Computer Sciences').should('exist')
                    cy.get('svg').contains('Chemistry').should('exist')
                    

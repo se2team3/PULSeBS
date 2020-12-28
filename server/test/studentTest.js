@@ -21,19 +21,19 @@ describe('Student routes', function () {
         data = await db.populate();
     });
 
-    after('clear db', async function() {
+    /*after('clear db', async function() {
         await dbUtils.reset({ create: false });
-    });
+    });*/
 
     it('should retrieve all the extended lectures for a student in a given time frame', async function() {     
         let credentials = {email:data.students[0].email, password:data.students[0].password};
         const agent = chai.request.agent(server);
-        await agent.post(`/api/login`).send(credentials);
-        let courses = await courseStudentService.getStudentCourses({student_id:/*data.students[0].university_id*/4});
+        let resLogin = await agent.post(`/api/login`).send(credentials);
+        let courses = await courseStudentService.getStudentCourses({student_id: resLogin.body.id});
         let lectures = await coursesService.getLectures(courses[0].course_id)
         const datetime = lectures[0].datetime;
         // TODO dynamic student id
-        const tmp = `/api/students/${/*data.students[0].university_id*/4}/lectures`;
+        const tmp = `/api/students/${resLogin.body.id}/lectures`;
         let start_date = moment(datetime,"YYYY-MM-DD ").subtract(1,'days').format("YYYY-MM-DD");
         let end_date = moment(datetime,"YYYY-MM-DD ").add(1,'days').format("YYYY-MM-DD");
         
@@ -52,9 +52,9 @@ describe('Student routes', function () {
         let credentials = {email:data.students[0].email, password:data.students[0].password};
       
         const agent = chai.request.agent(server);
-        await agent.post(`/api/login`).send(credentials)
+        let resLogin = await agent.post(`/api/login`).send(credentials);
 
-        const tmp = `/api/students/${data.students[0].id}/lectures`;
+        const tmp = `/api/students/${resLogin.body.id}/lectures`;
         let start_date = moment("2021-11-27","YYYY-MM-DD").format("YYYY-MM-DD");
         let end_date = moment("2021-12-28","YYYY-MM-DD").format("YYYY-MM-DD");
     

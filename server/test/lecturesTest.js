@@ -44,18 +44,18 @@ describe('Lecture tests', function() {
         await dbUtils.reset();
     });
 
-    after('clear db', async function() {
+    /*after('clear db', async function() {
         await dbUtils.reset({ create: false });
-    });
+    });*/
 
     describe('Lecture services', async function() {
         beforeEach('clear db', async function() {
             await dbUtils.reset({ create: false });
         });
         
-        after('clear db', async function() {
+        /*after('clear db', async function() {
             await dbUtils.reset({ create: false });
-        });
+        });*/
         
         it('should retrieve the list of tomorrow lectures', async function() {
             const tomorrow = moment().add(1,'days').format('YYYY-MM-DD');
@@ -89,9 +89,9 @@ describe('Lecture tests', function() {
             
         });
         
-        after('clear db', async function() {
+        /*after('clear db', async function() {
             await dbUtils.reset({ create: false });
-        });
+        });*/
         
 
         it('should get the list of booking given a lecture', async function() {
@@ -141,8 +141,8 @@ describe('Lecture tests', function() {
             const start_date = '2020-10-23';
             const end_date = '2021-12-29';
 
-            data = await dbUtils.populate();
-            manager = dbUtils.managerObj();
+            await dbUtils.populate();
+            let manager = dbUtils.managerObj();
             const credentials = {email: manager.email, password: manager.password }
             // perform login
             const agent = chai.request.agent(server);
@@ -160,8 +160,8 @@ describe('Lecture tests', function() {
             const start_date = '2021-10-23';
             const end_date = '2021-12-29';
 
-            data = await dbUtils.populate();
-            manager = dbUtils.managerObj();
+            await dbUtils.populate();
+            let manager = dbUtils.managerObj();
             const credentials = {email: manager.email, password: manager.password }
             // perform login
             const agent = chai.request.agent(server);
@@ -188,9 +188,9 @@ describe('Lecture tests', function() {
             await dbUtils.reset();
             await dbUtils.populate();
         })
-        after('clear db', async function() {
+        /*after('clear db', async function() {
             await dbUtils.reset({ create: false });
-        });
+        });*/
 
         it('should not allow change lecture to virtual because it is a past lecture', async function() {
             var clock = sinon.useFakeTimers(new Date(2020, 10, 30, 16, 30));
@@ -233,9 +233,9 @@ describe('Lecture tests', function() {
             await dbUtils.reset();
             await dbUtils.populate();
         })
-        after('clear db', async function() {
+        /*after('clear db', async function() {
             await dbUtils.reset({ create: false });
-        });
+        });*/
 
         it('should not allow deletion because it is a past lecture', async function() {
            var clock = sinon.useFakeTimers(new Date(2020, 10, 30, 16, 30));

@@ -5,6 +5,12 @@ exports.getLecturesByTeacherAndTime = function(teacher_id,start_date, end_date) 
     console.log('', { start_date, end_date })
     return new Promise((resolve,reject) => {
 
+        let value = isNaN(teacher_id) ? 0 : parseInt(teacher_id)
+
+        if(!value){
+            reject("wrong parameters")
+        }
+
         const sql = `SELECT L.id, datetime, course_id, room_id, virtual, L.deleted_at, C.name as course_name,
         T.name as teacher_name, T.surname as teacher_surname,
         R.name as room_name, seats as max_seats, COUNT(B.lecture_id) as booking_counter

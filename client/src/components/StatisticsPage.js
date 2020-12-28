@@ -78,7 +78,7 @@ class StatisticsPage extends React.Component {
     }
 
     handleAggregatedListClick = (selected) => {
-        const lectures = this.state.lectures;
+        //const lectures = this.state.lectures;
         // console.log(lectures);
         selected.selected = true;
         // allLectures  handles all the lectures for a specific date range
@@ -151,8 +151,7 @@ class StatisticsPage extends React.Component {
                     {(context) => {
                        
                         if (!context.authUser)
-                            return null;
-                         console.log("in statistic"+context.authUser.role)    
+                            return null; 
                         return (
                             <Container fluid style={{flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0}}>
                                 <Row className="flex-nowrap" style={{height: "100%", overflowX: "auto"}}>

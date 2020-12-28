@@ -71,7 +71,7 @@ router.get('/teachers/:teacher_id/lectures',timeValidator.checkTime, async (req,
         //console.log(lectures);
         return res.status(200).json(lectures);
     } catch (error) {
-        res.json(error);
+        res.status(400).json(error);
     }
 
 });
