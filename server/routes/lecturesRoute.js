@@ -130,7 +130,7 @@ router.get('/lectures/:lecture_id', async(req,res) =>{
  *       - "write:pets"
  *       - "read:pets"
  */
-router.delete('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=>{
+router.delete('/lectures/:lecture_id', authorize([role.Teacher]), async (req,res)=>{
     const teacher=req.user.sub
     const lecture_id= +req.params.lecture_id;
     const datetime= moment().format('YYYY-MM-DD HH:mm');
@@ -184,7 +184,7 @@ router.delete('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=
  */
 
 
-router.patch('/lectures/:lecture_id', authorize(role.Teacher), async (req,res)=>{
+router.patch('/lectures/:lecture_id', authorize([role.Teacher]), async (req,res)=>{
   const teacher=req.user.sub
   const lecture_id= +req.params.lecture_id;
   const datetime= moment().format('YYYY-MM-DD HH:mm');
