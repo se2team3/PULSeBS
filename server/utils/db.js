@@ -81,6 +81,19 @@ const teacherObj = (university_id) => ({
     surname: 'Jordan',
     role: 'teacher'
 });
+/**
+ * Generates a manager object, with a fixed email
+ * @param {string} university_id - unique ID
+ * @returns {{password: string, role: string, university_id: string, surname: string, name: string, email: string}}
+ */
+const managerObj = (university_id) => ({
+    university_id,
+    email: 'manager@email.com',
+    password: 'passw0rd',
+    name: 'Francesco',
+    surname: 'Verdi',
+    role: 'manager'
+});
 
 /**
  * Generates a support officer object, with a fixed email
@@ -168,7 +181,9 @@ const populate = async ({n_students, datetime} = def_options) => {
         data.assign2.student_id = data.students_id[0]
         await course_studentDao.assingCourseToStudent(data.assign1);
         await course_studentDao.assingCourseToStudent(data.assign2);
+        data.manager = managerObj(counter.get());
+        data.manager = await userDao.insertUser(data.manager);
     return data;
 };
 
-module.exports = { reset, createTables, teacherObj, studentObj, populate, support_officerObj, isEmpty }
+module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate, support_officerObj, isEmpty }

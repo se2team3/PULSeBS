@@ -12,7 +12,6 @@ const teachersRoute = require('./routes/teachersRoute');
 const setupRoute = require('./routes/setupRoute');
 
 const errorHandler = require('./services/errorHandler');
-const bookingRoute = require('./routes/bookingsRoute');
 
 const PORT = process.env.PORT || 3001;
 
@@ -31,7 +30,6 @@ app.use('/api-docs', ...swaggerOptions);
 app.use('/api/', lectureRoutes);
 app.use(`/api/`, studentsRoutes);
 app.use(`/api/`, authenticateRoutes);
-app.use(`/api/`, bookingRoute);
 app.use(`/api/`, teachersRoute);
 app.use(`/api/`, setupRoute);
 

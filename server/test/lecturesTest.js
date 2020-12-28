@@ -11,7 +11,6 @@ const server = require('../index');
 const sinon= require('sinon');
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
-let data1;
 
 const deletion= async function (lecture_id){
 
@@ -45,17 +44,22 @@ describe('Lecture tests', function() {
         await dbUtils.reset();
     });
 
-    after('clear db', async function() {
+    /*after('clear db', async function() {
         await dbUtils.reset({ create: false });
-    });
+    });*/
 
     describe('Lecture services', async function() {
         beforeEach('clear db', async function() {
             await dbUtils.reset({ create: false });
         });
+        
+        /*after('clear db', async function() {
+            await dbUtils.reset({ create: false });
+        });*/
+        
         it('should retrieve the list of tomorrow lectures', async function() {
             const tomorrow = moment().add(1,'days').format('YYYY-MM-DD');
-            const data = await dbUtils.populate({ n_students: 50, datetime: tomorrow });
+            const data = await dbUtils.populate({datetime: tomorrow });
             const res = await lectureServices.getNextDayLectures();
             should.exist(res);
             res.should.be.an('array').that.has.length(1);
@@ -80,71 +84,38 @@ describe('Lecture tests', function() {
     });
 
     describe('Lecture Routes', async function(){
-        before('clear db', async function() {
-            await dbUtils.reset();
-            data1 = await dbUtils.populate();
-        });
-        after('clear db', async function() {
+        beforeEach('clear db', async function() {
             await dbUtils.reset({ create: false });
+            
         });
-    
+        
+        /*after('clear db', async function() {
+            await dbUtils.reset({ create: false });
+        });*/
+        
 
         it('should get the list of booking given a lecture', async function() {
-
             const lectureObj = { lecture_id: 1};
             
             const tmp = `/api/lectures/${lectureObj.lecture_id}/bookings`;
-            
+            await dbUtils.populate();
 
             let res = await chai.request(server).get(tmp).send();
             should.exist(res);
             res.should.have.status(200);
             res.body.should.be.an('array');
-        });
-
-        it('should get an empty list of booking given a lecture', async function() {
-            const lectureObj = { lecture_id: 99};            
-            const tmp = `/api/lectures/${lectureObj.lecture_id}/bookings`;
-            let res = await chai.request(server).get(tmp).send();
-            should.exist(res);
-            res.should.have.status(200);
-            res.body.should.be.an('array');
-            res.body.should.have.length(0);
-        });
-        it('should receive an error in retrieving the booking given a wrong lesson', async function() {
-            const lectureObj = { lecture_id: 'error'};            
-            const tmp = `/api/lectures/${lectureObj.lecture_id}/bookings`;
-            let res = await chai.request(server).get(tmp).send();
-            
-            should.exist(res);
-            res.should.have.status(400);
         });
 
         it('should get the extended lecture given the id', async function() {
             const lectureObj = { lecture_id: 1};
             
             const tmp = `/api/lectures/${lectureObj.lecture_id}`;
-           
+            await dbUtils.populate();
+
             let res = await chai.request(server).get(tmp).send();
             should.exist(res);
             res.should.have.status(200);
             res.body.should.be.an('object');
-        });
-        it('should get an empty object given a lecture', async function() {
-            const lectureObj = { lecture_id: 99};            
-            const tmp = `/api/lectures/${lectureObj.lecture_id}`;
-            let res = await chai.request(server).get(tmp).send();
-            should.exist(res);
-            res.should.have.status(200);         
-            should.equal(res.body,null)
-        });
-        it('should receive an error in retrieving the lesson giving a wrong parameter', async function() {
-            const lectureObj = { lecture_id: 'error'};            
-            const tmp = `/api/lectures/${lectureObj.lecture_id}`;
-            let res = await chai.request(server).get(tmp).send();
-            
-            should.exist(res);
-            res.should.have.status(400);
         });
 
         it('should get the list of lectures in a time frame given the student', async function() {
@@ -156,13 +127,56 @@ describe('Lecture tests', function() {
             const start_date = '2020-11-23';
             const end_date = '2020-11-29';
 
-                       const url = `/api/students/${student_id}/lectures`;
+            await dbUtils.populate();
+
+            const url = `/api/students/${student_id}/lectures`;
 
             const agent = chai.request.agent(server);
             let res = await agent.get(url).query({from: start_date, to: end_date});
             should.exist(res);
             res.should.have.status(401);
         });
+
+        it('should allow to the booking manager to get the list of lectures in a time frame ', async function() {
+            const start_date = '2020-10-23';
+            const end_date = '2021-12-29';
+
+            await dbUtils.populate();
+            let manager = dbUtils.managerObj();
+            const credentials = {email: manager.email, password: manager.password }
+            // perform login
+            const agent = chai.request.agent(server);
+            await agent.post('/api/login').send(credentials);        
+            const url = `/api/lectures`;
+
+            let res = await agent.get(url).query({from: start_date, to: end_date});
+            should.exist(res);
+        
+            res.should.have.status(200);
+            res.body.should.be.an('array');
+            res.body.should.have.not.length(0)
+        });
+        it('should allow to the booking manager to get an empty list of lectures in a time frame ', async function() {
+            const start_date = '2021-10-23';
+            const end_date = '2021-12-29';
+
+            await dbUtils.populate();
+            let manager = dbUtils.managerObj();
+            const credentials = {email: manager.email, password: manager.password }
+            // perform login
+            const agent = chai.request.agent(server);
+            await agent.post('/api/login').send(credentials);  
+
+            const url = `/api/lectures`;
+
+            let res = await agent.get(url).query({from: start_date, to: end_date});
+            should.exist(res);
+        
+            res.should.have.status(200);
+            res.body.should.be.an('array');
+            res.body.should.have.length(0)
+        });
+
 
         it('should get the list of lectures in a INVALID time frame given the student', async function() {
            await testTimeFrame(false);
@@ -174,9 +188,9 @@ describe('Lecture tests', function() {
             await dbUtils.reset();
             await dbUtils.populate();
         })
-        after('clear db', async function() {
+        /*after('clear db', async function() {
             await dbUtils.reset({ create: false });
-        });
+        });*/
 
         it('should not allow change lecture to virtual because it is a past lecture', async function() {
             var clock = sinon.useFakeTimers(new Date(2020, 10, 30, 16, 30));
@@ -209,7 +223,7 @@ describe('Lecture tests', function() {
         it('should not allow teacher to update a lecture with wrong parameters', async function() {
             var clock = sinon.useFakeTimers(new Date(2020, 10, 29, 14, 30));
             let res=await updating(undefined);
-            res.should.be.equal(400);
+            res.should.be.equal(304);
             clock.restore();
         }); 
     })
@@ -219,9 +233,9 @@ describe('Lecture tests', function() {
             await dbUtils.reset();
             await dbUtils.populate();
         })
-        after('clear db', async function() {
+        /*after('clear db', async function() {
             await dbUtils.reset({ create: false });
-        });
+        });*/
 
         it('should not allow deletion because it is a past lecture', async function() {
            var clock = sinon.useFakeTimers(new Date(2020, 10, 30, 16, 30));
@@ -254,8 +268,8 @@ describe('Lecture tests', function() {
 
         it('should not allow teacher to delete a lecture with wrong parameters', async function() {
             var clock = sinon.useFakeTimers(new Date(2020, 10, 29, 14, 30));
-            let res=await deletion('error');
-            res.should.be.equal(400);
+            let res=await deletion(undefined);
+            res.should.be.equal(304);
             clock.restore();
         }); 
     });
@@ -266,9 +280,9 @@ let testTimeFrame = async (validTimeFrame) => {
         const start_date = '2020-11-23';
         const end_date = validTimeFrame? '2020-11-29' /*valid*/: '2020-11-33'; // invalid date
 
-       // const data = await dbUtils.populate();
+        const data = await dbUtils.populate();
 
-        const student1 = data1.students[0];
+        const student1 = data.students[0];
         const credentials = {email: student1.email, password: student1.password }
         // perform login
         const agent = chai.request.agent(server);
@@ -278,6 +292,6 @@ let testTimeFrame = async (validTimeFrame) => {
 
         let res = await agent.get(url).query({from: start_date, to: end_date});
         should.exist(res);
-        res.should.have.status(validTimeFrame? 200: 400);
+        res.should.have.status(validTimeFrame? 200: 422);
         if(validTimeFrame) res.body.should.be.an('array');
 }

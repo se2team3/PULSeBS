@@ -31,6 +31,8 @@ async function getLectures(start_date = undefined, end_date = undefined, role = 
             case "teacher":
                 url = `/teachers/${user_id}/lectures`;
                 break;
+            case "manager":
+                break;
             default:
                 throw Error('Invalid role!');
         }

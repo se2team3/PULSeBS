@@ -10,11 +10,12 @@ const CourseBadge = (props) => {
             <Row className="mb-3 w-100 d-flex justify-content-between align-items-center">
                 <Col lg={1} className="ml-3">
                     <Form.Check
-                        id={`check-${props.subjectId}`}
                         type="checkbox"
                         defaultChecked="true"
                         value={props.subjectId}
-                        onClick={(ev) => props.handleClick('courseFilter',props.subjectId, ev)}
+                        id = {`check-${props.subjectId}`}
+                        checked={props.checked}
+                        onChange={(ev) => props.handleClick('courseFilter',props.subjectId, ev)}
                     />
                 </Col>
                 <Col className="align-items-center my-auto" lg={10}>
@@ -23,7 +24,7 @@ const CourseBadge = (props) => {
               {props.subjectName}
             </span>
             <br/>
-            {props.teacher && <span style={{'fontSize': '90%'}}>
+            {!!props.teacher&&<span style={{'fontSize': '90%'}}>
               Prof. {props.teacher}
             </span>}
           </span>

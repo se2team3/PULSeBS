@@ -80,6 +80,26 @@ describe('Logout from the system', function () {
     });
 });
 
+describe('Login a booking manager', function () {
+    before('visit the page', () => {
+        cy.visit('/login');
+        cy.intercept('/api/user', {fixture: "manager1.json"});
+        cy.intercept('/api/login', {fixture: "manager1.json"});
+    });
+    it('should complete login', function () {
+        cy.get('input[type=email]').focus().type(`bm042@pulsebs.com`);
+        cy.get('input[type=password]').focus().type('password');
+        cy.get('form').submit();
+    });
+    it('should redirect to statistics', () => {
+        cy.url().should('include', '/statistics'); //FIXME should we redirect to setup?
+        cy.contains("Time frame");
+    });
+    it('should show the proper first name in the header', function () {
+        cy.contains("Guido").should('exist');
+    });
+});
+
 describe('Login an officer', function () {
     before('visit the page', () => {
         cy.visit('/login');

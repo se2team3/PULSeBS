@@ -24,7 +24,8 @@ class StatisticsPage extends React.Component {
             startDate: moment().add(-1, 'weeks'),
             endDate: moment(),
             focusedInput: null,
-            chart: 'bar'
+            chart: 'bar',
+            toggleIsActive: true
         }
     }
 
@@ -33,11 +34,13 @@ class StatisticsPage extends React.Component {
     }
 
     getLecturesAndBookings = async () => {
+        if (!this.props.authUser)
+            throw { status: 401, errorObj: "no authUser specified" }
         try {
             // TODO consider renaming the API (since we ask for lectures)
             let startDate = this.state.startDate && moment(this.state.startDate).format('YYYY-MM-DD')
             let endDate = this.state.endDate && moment(this.state.endDate).format('YYYY-MM-DD')
-            const lectures = await API.getTeacherBookings(startDate, endDate);
+            let lectures = await API.getLectures(startDate, endDate, this.props.authUser.role, this.props.authUser.id)
             const courses = lectures
                 .map(l => l.course_id)
                 .filter(this.onlyUnique)
@@ -56,8 +59,13 @@ class StatisticsPage extends React.Component {
             "peru", "salmon", "lightBlue", "lightSeaGreen"]
         let ids = this.state.courses.map((c) => c.id).filter(this.onlyUnique);
         let index = ids.indexOf(course_id);
-        this.state.courses.forEach((c, ind, theArray)=>theArray[ind].color=colorArray[ids.indexOf(c.id)]);
-        return colorArray[index];
+        if(this.props.authUser.role=='teacher'){
+            this.state.courses.forEach(function(c, ind, theArray) {theArray[ind].color=colorArray[ids.indexOf(c.id)]});
+            return colorArray[index];}
+        else {
+            this.state.courses.forEach(function(c, ind, theArray) {theArray[ind].color='#31A831'});
+            return '#31A831'
+        }
     }
 
     onlyUnique = function (value, index, self) {
@@ -70,16 +78,19 @@ class StatisticsPage extends React.Component {
     }
 
     handleAggregatedListClick = (selected) => {
+        //const lectures = this.state.lectures;
+        // console.log(lectures);
+        selected.selected = true;
         // allLectures  handles all the lectures for a specific date range
         // lectures     handles the lectures for selected courses subset
         this.setState({ view: { ...selected, allLectures: [...selected.lectures] } });
     }
 
-    handleCheckboxChange = (course) => {
+    handleCheckboxChange = (course, status) => {
         const courses = this.state.courses;
         for (let c of courses)
             if (c.course_name === course.course_name)
-                c.selected = !c.selected;
+                c.selected = status !== undefined ? status : !c.selected;
 
         // TODO find a better way, to avoid nested `setState`s
         this.setState({ courses: [...courses]}, function () {
@@ -88,6 +99,26 @@ class StatisticsPage extends React.Component {
             this.setState({ view: {...view} });
           }
         )
+    }
+
+    handleSearch = (event) => {
+        const search = event.target.value;
+        this.setState({ search });
+    }
+
+    handleFuzzy = () => {
+        this.setState(state => ({ fuzzy: !state.fuzzy }));
+    }
+
+    isCourseSearched = (course) => {
+        if (!this.state.search || !this.state.search.length)
+            return true;
+        let pattern = "";
+        if (this.state.fuzzy)
+            [...this.state.search].forEach(ch => { pattern += `${ch}.*` });
+        else
+            pattern = this.state.search;
+        return (new RegExp(pattern, "i")).test(course.course_name);
     }
 
     switchChart = (value) => {
@@ -104,19 +135,27 @@ class StatisticsPage extends React.Component {
 
     isCourseSelected = (lecture) => this.state.courses.filter(c => c.selected).map(c => c.course_name).includes(lecture.course_name);
 
+    toggleSelected = () => {
+        const status = !this.state.toggleIsActive;
+        this.state.courses.forEach(c => this.handleCheckboxChange(c, status));
+        this.setState({ toggleIsActive: status });
+    }
+
     render() {
+        
         const lectures = this.state.lectures.filter(this.isCourseSelected);
 
         return (
             <>
                 <AuthContext.Consumer>
                     {(context) => {
+                       
                         if (!context.authUser)
-                            return null;
+                            return null; 
                         return (
                             <Container fluid style={{flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0}}>
                                 <Row className="flex-nowrap" style={{height: "100%", overflowX: "auto"}}>
-                                    <Col sm={2} style={{ 'backgroundColor': 'rgb(240, 240, 240)' }}>
+                                    <Col lg={2} md={3} style={{ backgroundColor: 'rgb(240, 240, 240)', flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0, maxHeight: "100%" }}>
                                         <StatisticsSidebar
                                             startDate={this.state.startDate}
                                             endDate={this.state.endDate}
@@ -128,6 +167,10 @@ class StatisticsPage extends React.Component {
                                             focusedInput={this.state.focusedInput}
                                             courses={this.state.courses}
                                             onAllTimeClick={()=>this.onDatesChange({startDate:null,endDate:null})}
+                                            handleSearch={this.handleSearch} isCourseSearched={this.isCourseSearched}
+                                            handleFuzzy={this.handleFuzzy} fuzzy={this.state.fuzzy}
+                                            toggleSelected={this.toggleSelected}
+                                            toggleIsActive={this.state.toggleIsActive}
                                         />
                                     </Col>
                                     <Col sm={2} className="bg-light" style={{flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0}}>
@@ -144,6 +187,7 @@ class StatisticsPage extends React.Component {
                                             chart={this.state.chart}
                                             switchChart={this.switchChart}
                                             courses={this.state.courses}
+                                            AuthUser={context.authUser.role}
                                         />
                                     </Col>
                                 </Row>
