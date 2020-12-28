@@ -2,7 +2,7 @@ const Lecture=require('./lecture')
 
 class LectureExtended extends Lecture{
     constructor({id, datetime,datetime_end,course_id,room_id,virtual,deleted_at,course_name,
-                    teacher_name,teacher_surname,room_name,max_seats,booking_counter,
+                    teacher_name,teacher_surname,room_name,max_seats,booking_counter,waiting_counter,
                     booking_updated_at,booking_waiting,present}){
         super (id,datetime,datetime_end,course_id,room_id,virtual,deleted_at);
         this.course_name=course_name;
@@ -11,6 +11,7 @@ class LectureExtended extends Lecture{
         this.room_name=room_name;
         this.max_seats=max_seats;
         this.booking_counter=booking_counter;
+        this.waiting_counter=waiting_counter || 0;
         if (booking_updated_at) {
             this.booking_updated_at = booking_updated_at;
             this.booking_waiting = !!booking_waiting;

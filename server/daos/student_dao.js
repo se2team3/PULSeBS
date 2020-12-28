@@ -17,7 +17,9 @@ exports.retrieveStudentLecturesinTimeFrame = function(student_id,start_date, end
         const sql = `
           SELECT L.id, datetime, datetime_end, course_id, room_id, virtual, L.deleted_at, C.name as course_name,
               T.name as teacher_name, T.surname as teacher_surname,
-              R.name as room_name, seats as max_seats, COUNT(B.lecture_id) as booking_counter,
+              R.name as room_name, seats as max_seats,
+              sum(case B.waiting when 0 then 1 else 0 end) as booking_counter,
+              sum(case B.waiting when 1 then 1 else 0 end) as waiting_counter,
               B2.updated_at as booking_updated_at, B2.waiting as booking_waiting, B2.present
           FROM Lectures L, Rooms R, Users T, Courses C
           LEFT JOIN Bookings B2 ON B2.student_id = ?1 AND L.id = B2.lecture_id AND B2.deleted_at IS NULL
