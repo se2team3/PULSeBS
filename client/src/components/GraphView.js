@@ -1,14 +1,11 @@
 import React from 'react';
 import { Row, Col, ButtonGroup, Button } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
-
-
-
-
+import { AggregationLevel } from './common';
 
 const GraphView = (props) => {
     const { view, aggregationLevel, chart, switchChart,courses, AuthUser } = props;
-    const { dateRange, lectures } = view;
+    const { aggregationLabel, lectures } = view;
     // let AuthUser='teacher'
     let list = [];
     
@@ -36,12 +33,12 @@ const GraphView = (props) => {
         <Row>
             <Col>
                 {
-                    dateRange?.length &&
+                    aggregationLabel?.length &&
                     <>
-                        <h1>{aggregationLevel} {dateRange}</h1>
-                        <h4 className="mt-1">
+                        <h1>{aggregationLevel} {aggregationLabel}</h1>
+                        {aggregationLevel!==AggregationLevel.Lecture&&<h4 className="mt-1">
                             You have selected  {lectures.length} {lectures.length === 1 ? 'lecture' : 'lectures'}
-                        </h4>
+                        </h4>}
 
 
                         <ButtonGroup className="mb-2" style={{ 'marginTop': '25px' }}>
