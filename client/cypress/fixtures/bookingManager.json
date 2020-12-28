@@ -1,0 +1,9 @@
+{
+    "id" : 201,
+    "university_id" : "m1479",
+    "email": "manager@email.com",
+    "password": "$2b$10$wZzLdBmlArdCD5c74hx6DeABg3ikmFYkj7Wff0B/DZnLYg4Rd1xOq",
+    "name": "Francesco",
+    "surname": "Verdi",
+    "role": "manager"
+}

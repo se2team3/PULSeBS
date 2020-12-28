@@ -1,46 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, ListGroup } from 'react-bootstrap';
 import { AggregationLevel } from './common';
 import moment from 'moment';
 
 const AggregatedList = (props) => {
     const { aggregationLevel, handleClick } = { ...props };
+    const [ active, setActive ] = useState('');
 
     const getAggregatedLectures = () => {
 
         const list = {};
-
-        props.lectures.forEach(l => {
+        const lectures = props.lectures.sort((a,b)=>a.datetime.localeCompare(b.datetime))
+        lectures.forEach(l => {
             const date = moment(l.datetime, "YYYY-MM-DD HH:mm");
-            let dateRange;
+            let aggregationLabel;
 
             switch (aggregationLevel) {
                 case AggregationLevel.Week:
-                    dateRange =
+                    aggregationLabel =
                         date.startOf('week').format('DD/MM/YYYY') +
                         ' - ' +
                         date.endOf('week').format('DD/MM/YYYY');
                     break;
                 case AggregationLevel.Month:
-                    dateRange = date.format('MMMM YYYY');
+                    aggregationLabel = date.format('MMMM YYYY');
                     break;
                 case AggregationLevel.Lecture:  /* fallthrough */
                 default:
-                    dateRange = date.format('DD MMMM YYYY');
+                    aggregationLabel = date.format('DD/MM/YY HH:mm') + " " + l.course_name;
             }
 
-            if (!list.hasOwnProperty(dateRange))
-                list[dateRange] = [];
-            list[dateRange].push(l);
+            if (!list.hasOwnProperty(aggregationLabel))
+                list[aggregationLabel] = [];
+            list[aggregationLabel].push(l);
         });
 
         return Object.keys(list).map(idx => ({
             lectures: list[idx],
-            dateRange: idx,
+            aggregationLabel: idx,
             selected: false
         }));
     }
 
+    const isActive = (aggregationLabel) => {
+        //console.log(`dateRange is`, aggregationLabel);
+        //console.log(`while active is ${active}`);
+        return aggregationLabel === active;
+    };
 
     if (aggregationLevel === AggregationLevel.NotSet)
         return null;
@@ -54,10 +60,15 @@ const AggregatedList = (props) => {
                             id={idx}
                             action
                             variant='light'
-                            onClick={() => handleClick(el)}
-                            active={el.selected}
+                            id={idx}
+                            onClick={() => {
+                                setActive(el.aggregationLabel);
+                                handleClick(el);
+                            }}
+                            active={isActive(el.aggregationLabel)}
+                            className='shadow-none'
                         >
-                            {aggregationLevel !== AggregationLevel.Month && aggregationLevel} {el.dateRange}
+                            {aggregationLevel !== AggregationLevel.Month && aggregationLevel} {el.aggregationLabel}
                         </ListGroup.Item>
                     ))
                 }

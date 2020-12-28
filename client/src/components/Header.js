@@ -19,11 +19,11 @@ const Header = (props) => {
         
         
         <Nav className="mr-auto" >
-        <Nav.Link href="/calendar">Calendar</Nav.Link>
-        <Nav.Link href="/statistics">Statistics</Nav.Link>
-          {/*
-          <Nav.Link href="#">PoliTO</Nav.Link>
-          */}
+        {context.authUser && <>
+        {(context.authUser.role==="teacher"||context.authUser.role==="student")&&<Nav.Link as={NavLink} to="/calendar">Calendar</Nav.Link>}
+        {(context.authUser.role==="teacher"||context.authUser.role==="manager")&&<Nav.Link as={NavLink} to="/statistics">Statistics</Nav.Link>}
+        {(context.authUser.role==="officer"||context.authUser.role==="manager")&&<Nav.Link as={NavLink} to="/setup">Setup</Nav.Link>}
+        </>}
         </Nav>
         
 

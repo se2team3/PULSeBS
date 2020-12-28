@@ -133,7 +133,7 @@ describe('EmailService', function() {
          });
 
          it('should fail because of non-existing lecture', async () => {
-            const lecture = {lecture_id :'dffdfdkkl'}; //invalid lecture id
+            const lecture = {id :'dffdfdkkl'}; //invalid lecture id
 
             const response = await EmailUtils.notifyLectureCancellation(lecture);
                     

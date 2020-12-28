@@ -29,8 +29,7 @@ class CalendarPage extends React.Component {
       lectures: [],
       events: [],
       courseFilters: [],
-      statusFilters: [],
-      courseIncrementalArray: []
+      statusFilters: []
     }
   }
 
@@ -51,19 +50,13 @@ class CalendarPage extends React.Component {
   }
 
   getColor = (course_id) => {
-    
     let colorArray = ["#31a831", "#ed425c","deepSkyBlue","darkOrange","#e37be3",
-      "peru","salmon","lightSeaGreen"]
-    let index=this.state.courseIncrementalArray.indexOf(course_id);
-    if(index!==-1)
-      return colorArray[index]
-    let list=this.state.courseIncrementalArray.concat(course_id)
-    this.setState({
-        courseIncrementalArray:list})
-      
+      "peru","salmon","lightBlue", "lightSeaGreen"]
+    let ids = this.state.lectures.map((l) => l.course_id).filter(this.onlyUnique);
+    let index = ids.indexOf(course_id);
+
+    return colorArray[index];
   }
-    
-   
 
   setDates = (date) => {
     let startDate = moment(date.startStr).format('YYYY-MM-DD');
@@ -79,11 +72,11 @@ class CalendarPage extends React.Component {
     let filteredLectures = this.state.lectures.filter((lec) => {
       let rightCourse = true;
       if (this.state.courseFilters.length > 0) {
-        rightCourse = !this.state.courseFilters.some((filter) => filter === lec.course_id);
+        rightCourse = this.state.courseFilters.some((filter) => filter !== lec.course_id);
       }
 
       let rightStatus = true;
-      if (this.state.statusFilters.length >0) {
+      if (this.state.statusFilters.length > 0) {
         rightStatus = this.state.statusFilters.some((filter) => filter === this.getStatus(lec));
       }
 
@@ -300,7 +293,7 @@ class CalendarPage extends React.Component {
                                     return null;
                                   })
                             }
-                          </Form> 
+                          </Form>
                         </Nav>
                       </Col>
                     </Row>

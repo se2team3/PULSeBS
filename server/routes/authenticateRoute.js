@@ -88,7 +88,7 @@ async function login(req, res) {
     if (!user)
         return res.status(400).json({ message: 'Username or password is incorrect' });
     const token = jsonwebtoken.sign({ sub: user.id, role: user.role }, secret);
-    res.cookie('token', token, {httpOnly: true, sameSite: true, maxAge: 1000 * 30000 });
+    res.cookie('token', token, {httpOnly: true, sameSite: true, maxAge: 1000 * 30000 /*5 min*/});
     return res.json(user);
 }
 

@@ -28,7 +28,7 @@ exports.createUsersTable = function() {
 //clears the lecture table
 exports.clearUserTable = function () {
     return new Promise ((resolve,reject) =>{
-        const sql = `DELETE FROM Users WHERE role!= 'officer' AND role!='manager'`;
+        const sql = `DELETE FROM Users`;
         db.run(sql,[],(err) =>{
             if(err)
                 reject(err);

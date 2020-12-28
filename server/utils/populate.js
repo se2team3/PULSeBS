@@ -107,7 +107,7 @@ const populate = (async () => {
 
     for (let teacher_id of teachers_id) {
         const course_id = await generateCourse({ teacher_id });
-        //const n = 10;
+        const n = 10;
        // const selected = students_id.sort(() => 0.5 - Math.random()).slice(0, n);
         for (let student_id of students_id) {
             await assignCourse({course_id, student_id});

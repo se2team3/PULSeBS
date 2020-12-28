@@ -1,5 +1,10 @@
 process.env.NODE_ENV = 'test';
+/* const userService = require('../services/userService');
+const roomService = require('../services/roomService');
+const courseService = require('../services/coursesService');
+const lectureService = require('../services/lectureService'); */
 const dbUtils = require('../utils/db');
+
 const server = require('../index');
 const chai = require('chai');
 const should = chai.should();
@@ -49,7 +54,7 @@ describe('Teachers routes', function () {
         res.body.should.have.length(0);
 
         res = await chai.request(server).get(route).query({from: '11111', to: tomorrow});
-        res.should.have.status(400);
+        res.should.have.status(422);
         res.body.should.have.property('errors');
     });
 
@@ -62,6 +67,5 @@ describe('Teachers routes', function () {
 
         const res = await chai.request(server).get(route).query({from: yesterday, to: tomorrow});
         res.should.have.status(400);
-        
     });
 });

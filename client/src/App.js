@@ -75,15 +75,16 @@ class App extends React.Component {
     API.userLogin(username, password)
       .then((user) => {
         this.setState({ authUser: user, authErr: null });
-        console.log(user);
-        user.role === 'officer' ? this.props.history.push("/setup") : this.props.history.push("/calendar");
+        if(user.role === 'manager')
+          this.props.history.push("/statistics")
+        else if(user.role === 'officer')
+          this.props.history.push("/setup")
+        else this.props.history.push("/calendar");
         console.log(this.props.history);
       }).catch(
         (errorObj) => {
           const err = errorObj.message;
           this.setState({ authErr: err });
-          this.props.history.push("/login");
-
         }
       );
   }
@@ -106,6 +107,7 @@ class App extends React.Component {
       loginUser: this.login,
       logoutUser: this.logout
     }
+    if( this.state.authUser!=undefined) console.log("in app"+this.state.authUser.role)
     return (
       <AuthContext.Provider value={value}>
 
@@ -132,7 +134,7 @@ class App extends React.Component {
             <Route path="/lectures/:lecture_id" render={(props) =>
               <LecturePage lecture_id={props.match.params.lecture_id} />
             } />
-
+            
             {(value.authUser&&value.authUser.role=="officer")&&<Route path="/setup">
               <SetupPage/>
             </Route>}
