@@ -49,7 +49,8 @@ exports.insertBooking = function ({ lecture_id, student_id }) {
             ?2,
             (SELECT COUNT(*) >= R.seats is not null and COUNT(*) >= R.seats
              FROM Bookings B, Lectures L, Rooms R
-             WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id = ?1)
+             WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id = ?1 
+                                    AND B.deleted_at IS NULL AND B.waiting = 0)
          )
         `;
         db.run(sql, [lecture_id, student_id], function (err) {
@@ -57,11 +58,15 @@ exports.insertBooking = function ({ lecture_id, student_id }) {
                 // TODO: check that updated_at is actually updated
                 const sql2 = `
                   UPDATE Bookings
-                  SET   deleted_at = NULL AND
+                  SET   deleted_at = NULL,
                         waiting = (SELECT COUNT(*) >= R.seats is not null and COUNT(*) >= R.seats
                                   FROM Bookings B, Lectures L, Rooms R
-                                  WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id = ?1)
-                  WHERE lecture_id = ?1 AND student_id = ?2 AND deleted_at IS NOT NULL
+                                  WHERE B.lecture_id = L.id
+                                        AND L.room_id = R.id
+                                        AND B.lecture_id = ?1
+                                        AND B.deleted_at IS NULL
+                                        AND B.waiting = 0)
+                  WHERE lecture_id = ?1 AND student_id = ?2
                 `;
                 db.run(sql2, [ lecture_id, student_id], function (err2) {
                     if (err2 || this.changes===0) {
@@ -159,16 +164,13 @@ exports.retrieveListOfBookedStudents = function(lecture_id) {
 //it allows you to delete a booking
 exports.deleteBooking = function ({ datetime, lecture_id, student_id }) {
     return new Promise((resolve, reject) => {
-
         const sql = 'UPDATE Bookings SET deleted_at= ? WHERE lecture_id= ? AND student_id= ? AND deleted_at IS NULL'
         db.run(sql, [datetime, lecture_id, student_id], function (err) {
             if (err) {
-                console.log(err)
                 reject(err);
             }
             else
                 resolve(this.changes);
-
         });
     })
 }

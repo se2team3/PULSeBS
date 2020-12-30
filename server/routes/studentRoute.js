@@ -205,6 +205,7 @@ app.delete('/students/:student_id/lectures/:lecture_id', authorize([role.Student
     
     try{
         let number = await bookingService.deleteBooking({datetime,lecture_id,student_id});
+        bookingService.popWaitingStudent(lecture_id);
         if(number===1)
             return res.status(200).json({});
         else if (number===0)

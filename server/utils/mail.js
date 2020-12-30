@@ -38,7 +38,6 @@ const start = (callback = _ => { }) => {
 const notifyBooking = async (booking) => {
 
     if (!booking) return new Promise((resolve, reject) => {reject("Undefined recipient")});
-    
     const user = await userService.getUser(booking.student_id);
     const lecture = await extendedLectureService.getLectureById(booking.lecture_id);
     const txt = mailFormatter.studentBookingBody(user,lecture);
