@@ -54,12 +54,13 @@ exports.insertBooking = function ({ lecture_id, student_id }) {
         `;
         db.run(sql, [lecture_id, student_id], function (err) {
             if (err) {
+                // TODO: check that updated_at is actually updated
                 const sql2 = `
                   UPDATE Bookings
                   SET   deleted_at = NULL AND
-                        waiting = SELECT COUNT(*) >= R.seats is not null and COUNT(*) >= R.seats
+                        waiting = (SELECT COUNT(*) >= R.seats is not null and COUNT(*) >= R.seats
                                   FROM Bookings B, Lectures L, Rooms R
-                                  WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id = ?1
+                                  WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id = ?1)
                   WHERE lecture_id = ?1 AND student_id = ?2 AND deleted_at IS NOT NULL
                 `;
                 db.run(sql2, [ lecture_id, student_id], function (err2) {
