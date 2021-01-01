@@ -278,6 +278,20 @@ class CalendarPage extends React.Component {
                                       onClick={(ev) => this.changeDisplayEvent('statusFilter', LectureState.remote, ev)}
                           />
                         </Badge>
+                        <br/>
+                        {(this.props.authUser?.role === 'student') ?
+                            <Badge className='ml-2'>
+                              <Form.Check type="checkbox"
+
+                                          defaultChecked={false}
+                                          label='Waiting'
+                                          style={{ fontSize: 20 }}
+                                          onClick={(ev) => this.changeDisplayEvent('statusFilter', LectureState.waiting, ev)}
+                              />
+                            </Badge>
+                            :<></>} 
+                        <br/>
+                        <br/>
                         <Nav className="px-4 py-4 col-md-12 d-none d-md-block bg-light sidebar">
                           <h2 className="mb-3">Courses</h2>
 
