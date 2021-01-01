@@ -14,6 +14,7 @@ const LectureState={
   canceled: 'canceled',
   closed: 'closed',
   booked: 'booked',
+  waiting_list: 'waiting list',
   full: 'full',
   free: 'free',
   remote: 'remote'
@@ -44,7 +45,8 @@ class CalendarPage extends React.Component {
     if (l.deleted_at) return LectureState.canceled; // canceled
     if (l.virtual) return LectureState.remote; // remote Stronger priority
     if ((moment(l.datetime).isBefore(moment().format("YYYY-MM-DD")))) return LectureState.closed // closed
-    if (l.booking_updated_at) return LectureState.booked; // booked
+    if (l.booking_updated_at&&l.booking_waiting===false) return LectureState.booked; // booked
+    if (l.booking_updated_at&&l.booking_waiting) return LectureState.waiting_list; // booked
     if (l.max_seats - l.booking_counter <= 0) return LectureState.full; // full
     return LectureState.free; // free
   }
@@ -193,6 +195,7 @@ class CalendarPage extends React.Component {
       teacher: l.teacher_name + " " + l.teacher_surname,
       status: stat,
       seats: diff,
+      waiting_list_pos: l.waiting_counter,
       title: l.course_name,
       room: l.room_name,
       start: l.datetime,

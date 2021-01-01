@@ -145,6 +145,7 @@ describe('Calendar tests', ()=>{
                 cy.get (".fc-timeGridWeek-button").click();
                 
             })
+
             it('has list view working', () => {
         
                 cy.get (".fc-listWeek-button").click();
@@ -165,6 +166,13 @@ describe('Calendar tests', ()=>{
     }   
     // CALLING THE TESTS
     testCalendar('student');
+
+    describe("student calendar, waiting list", () => {
+        it('has WAITING LIST label when student has booked a place in the waiting list for a lecture', () => {
+            cy.contains("WAITING LIST").parent().contains("Chemistry");
+        });
+    });
+
     testCalendar('teacher');
     
 });

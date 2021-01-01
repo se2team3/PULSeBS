@@ -11,7 +11,7 @@ class LectureExtended extends Lecture{
         this.room_name=room_name;
         this.max_seats=max_seats;
         this.booking_counter=booking_counter;
-        this.waiting_counter=waiting_counter || 0;
+        this.waiting_counter=Object.is(waiting_counter, undefined) ? 0 : waiting_counter;
         if (booking_updated_at) {
             this.booking_updated_at = booking_updated_at;
             this.booking_waiting = !!booking_waiting;
