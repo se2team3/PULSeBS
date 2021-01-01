@@ -140,9 +140,10 @@ describe('Lecture tests', function() {
         it('should allow to the booking manager to get the list of lectures in a time frame ', async function() {
             const start_date = '2020-10-23';
             const end_date = '2021-12-29';
-
+            await dbUtils.addStaff()
             await dbUtils.populate();
-            let manager = dbUtils.managerObj();
+            
+            let manager = dbUtils.managerObj;
             const credentials = {email: manager.email, password: manager.password }
             // perform login
             const agent = chai.request.agent(server);
@@ -159,9 +160,10 @@ describe('Lecture tests', function() {
         it('should allow to the booking manager to get an empty list of lectures in a time frame ', async function() {
             const start_date = '2021-10-23';
             const end_date = '2021-12-29';
-
+            await dbUtils.addStaff()    
             await dbUtils.populate();
-            let manager = dbUtils.managerObj();
+            
+            let manager = dbUtils.managerObj;
             const credentials = {email: manager.email, password: manager.password }
             // perform login
             const agent = chai.request.agent(server);

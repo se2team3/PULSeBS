@@ -36,11 +36,6 @@ describe('Booking routes', function () {
     before('create tables and clear db', async function() {
         await dbUtils.reset();
     });
-
-    after('clear db', async function() {
-        await dbUtils.reset({ create: false });
-    });
-
     it('should allow student to book a lecture', async function() {
         let res=await book();
         res.should.be.equal(201);

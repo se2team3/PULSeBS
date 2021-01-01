@@ -128,10 +128,11 @@ const setupInsert = async function(dictionary) {
     const schedule_dict = dictionary.schedule;
 
     await dbUtils.reset();
+    await dbUtils.addStaff();
 
     
     let teacher_id =[], student_id=[],course_id=[];
-    console.log("sono qui")
+
     teacher_id = await insertTeachers(teachers_dict) ; console.log('teachers')
     student_id = await insertStudents(students_dict); console.log('students') 
     course_id = await insertCourses(courses_dict,teacher_id); console.log('courses')

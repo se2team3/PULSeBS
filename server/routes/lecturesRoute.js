@@ -148,7 +148,7 @@ router.delete('/lectures/:lecture_id', authorize([role.Teacher]), async (req,res
 
  /**
  * @swagger
- * /teachers/{teacher_id}/lectures/{lecture_id}:
+ * /lectures/{lecture_id}:
  *  patch:
  *    tags:
  *      - lectures
