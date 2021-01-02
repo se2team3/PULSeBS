@@ -35,7 +35,6 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-http": "^4.3.0",
-    "mailslurp-client": "^9.0.1",
     "mocha": "^8.2.0",
     "nodemon": "^2.0.5",
     "nyc": "^15.1.0",
