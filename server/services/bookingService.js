@@ -15,7 +15,8 @@ exports.createBookingTable = async function() {
 const insertBooking = async function(booking) {
     try {
         let book = await bookingDao.insertBooking({...booking});
-        mailUtils.notifyBooking(book);
+        if (!book.waiting)
+            mailUtils.notifyBooking(book);
         return book;
     } catch (error) {
         return errHandler(error);

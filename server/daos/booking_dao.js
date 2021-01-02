@@ -4,8 +4,8 @@
 const db = require('../db/db.js');
 const Booking = require('../models/booking.js');
 
-const createBooking = function (lecture_id, student_id) {
-    return new Booking(lecture_id, student_id);
+const createBooking = function (lecture_id, student_id, waiting) {
+    return new Booking(lecture_id, student_id, waiting);
 }
 
 // it creates the booking table
@@ -43,46 +43,42 @@ exports.clearBookingTable = function () {
 exports.insertBooking = function ({ lecture_id, student_id }) {
     return new Promise((resolve, reject) => {
         const sql = `
-        INSERT INTO Bookings(lecture_id, student_id, waiting)
-        VALUES(
-            ?1,
-            ?2,
-            (SELECT COUNT(*) >= R.seats is not null and COUNT(*) >= R.seats
-             FROM Bookings B, Lectures L, Rooms R
-             WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id = ?1 
-                                    AND B.deleted_at IS NULL AND B.waiting = 0)
-         )
+            SELECT COUNT(*) >= R.seats is not null and COUNT(*) >= R.seats as waiting
+            FROM Bookings B, Lectures L, Rooms R
+            WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id = ?1 
+                AND B.deleted_at IS NULL AND B.waiting = 0
         `;
-        db.run(sql, [lecture_id, student_id], function (err) {
-            if (err) {
-                // TODO: check that updated_at is actually updated
-                const sql2 = `
-                  UPDATE Bookings
-                  SET   deleted_at = NULL,
-                        waiting = (SELECT COUNT(*) >= R.seats is not null and COUNT(*) >= R.seats
-                                  FROM Bookings B, Lectures L, Rooms R
-                                  WHERE B.lecture_id = L.id
-                                        AND L.room_id = R.id
-                                        AND B.lecture_id = ?1
-                                        AND B.deleted_at IS NULL
-                                        AND B.waiting = 0)
-                  WHERE lecture_id = ?1 AND student_id = ?2
-                `;
-                db.run(sql2, [ lecture_id, student_id], function (err2) {
-                    if (err2 || this.changes===0) {
-                        reject(err2);
-                    }
-                    else{
-                        const booking = createBooking(lecture_id, student_id);
-                        resolve(booking);
-                    }
-                });
-            }
-            else {
-                const booking = createBooking(lecture_id, student_id);
-                resolve(booking);
-            }
+        db.get(sql, [lecture_id], function (err, row)  {
+            const { waiting } = row;
+            const sql2 = `
+                INSERT INTO Bookings(lecture_id, student_id, waiting)
+                VALUES(?1, ?2, ?3)
+            `;
+            db.run(sql2, [lecture_id, student_id, waiting], function (err) {
+                if (err) {
+                    // TODO: check that updated_at is actually updated
+                    const sql3 = `
+                      UPDATE Bookings
+                      SET deleted_at = NULL, waiting = ?3
+                      WHERE lecture_id = ?1 AND student_id = ?2
+                    `;
+                    db.run(sql3, [ lecture_id, student_id, waiting], function (err2) {
+                        if (err2 || this.changes===0) {
+                            reject(err2);
+                        }
+                        else{
+                            const booking = createBooking(lecture_id, student_id, !!waiting);
+                            resolve(booking);
+                        }
+                    });
+                }
+                else {
+                    const booking = createBooking(lecture_id, student_id, !!waiting);
+                    resolve(booking);
+                }
+            });
         });
+
     })
 }
 /*
