@@ -2,13 +2,13 @@
 <!-- Endpoints are meant to be preceded by /api (/operations == /api/operations)-->
 ## Bookings
 - GET `/bookings`
-  - Param: Time frame (start date and end date)
+  - Param: Time frame (start date and end date) (not used - also bookingRoute)
   - Response: List of all bookings
   ##### NOTE: This endpoint is intended to be used for statistics 
 
 ## Lectures
-- GET `/lectures` (not used)
-  - Param: NONE
+- GET `/lectures` 
+  - Query: start_datem end_date
   - Response: List of all lectures
 - GET `/lectures?from=<start_date>&to=<end_date>` (not used)
   - Query: start_datem end_date

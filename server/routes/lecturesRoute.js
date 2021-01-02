@@ -201,12 +201,12 @@ router.patch('/lectures/:lecture_id', authorize([role.Teacher]), async (req,res)
 
 /**
  * @swagger
- * /teachers/getLecturesByTeacherAndTime:
+ * /lectures:
  *  get:
  *    tags:
  *      - lectures
  *    summary: "Get the list of all lectures in a time frame "
- *    #description: "Use to request all the lectures"
+ *    #description: "Used by booking manager to request all the lectures"
  *    parameters:
  *      - in: query
  *        name: start_date
