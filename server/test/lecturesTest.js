@@ -18,11 +18,9 @@ const deletion= async function (lecture_id){
     const credentials={email:t.email, password:t.password}
     const agent = chai.request.agent(server);
     await agent.post(`/api/login`).send(credentials);
-
     const newLecture = { lecture_id: lecture_id };
     const tmp = `/api/lectures/${newLecture.lecture_id}`; 
     let res = await agent.delete(tmp).send();
-
     return res.status;
 }
 const updating= async function (lecture_id){
@@ -31,32 +29,33 @@ const updating= async function (lecture_id){
     const credentials={email:t.email, password:t.password}
     const agent = chai.request.agent(server);
     await agent.post(`/api/login`).send(credentials);
-
     const newLecture = { lecture_id: lecture_id };
     const tmp = `/api/lectures/${newLecture.lecture_id}`; 
     let res = await agent.patch(tmp).send();
     return res.status;
 }
 
+const setupManager = async function(start_date, end_date){
+    await dbUtils.addStaff()
+    await dbUtils.populate();    
+    let manager = dbUtils.managerObj;
+    const credentials = {email: manager.email, password: manager.password }
+    const agent = chai.request.agent(server);
+    await agent.post('/api/login').send(credentials);
+    const url ='/api/lectures'
+    return await agent.get(url).query({from: start_date, to: end_date});
+}
 
 describe('Lecture tests', function() {
     before('create tables and clear db', async function() {
         await dbUtils.reset();
     });
 
-    /*after('clear db', async function() {
-        await dbUtils.reset({ create: false });
-    });*/
-
     describe('Lecture services', async function() {
         beforeEach('clear db', async function() {
             await dbUtils.reset({ create: false });
         });
-        
-        /*after('clear db', async function() {
-            await dbUtils.reset({ create: false });
-        });*/
-        
+
         it('should retrieve the list of tomorrow lectures', async function() {
             const tomorrow = moment().add(1,'days').format('YYYY-MM-DD');
             const data = await dbUtils.populate({datetime: tomorrow });
@@ -74,7 +73,6 @@ describe('Lecture tests', function() {
         });
 
         it('should retrieve an empty list for Sundays lecture', async function() {
-            // populate db
             await dbUtils.populate();
             const daysToSunday = +moment().startOf('isoWeek').add(1, 'week').fromNow('day').split(" ")[0];
             const res = await lectureServices.getNextDayLectures(daysToSunday);
@@ -85,14 +83,8 @@ describe('Lecture tests', function() {
 
     describe('Lecture Routes', async function(){
         beforeEach('clear db', async function() {
-            await dbUtils.reset({ create: false });
-            
+            await dbUtils.reset({ create: false });            
         });
-        
-        /*after('clear db', async function() {
-            await dbUtils.reset({ create: false });
-        });*/
-        
 
         it('should get the list of booking given a lecture', async function() {
             const lectureObj = { lecture_id: 1};
@@ -138,42 +130,15 @@ describe('Lecture tests', function() {
         });
 
         it('should allow to the booking manager to get the list of lectures in a time frame ', async function() {
-            const start_date = '2020-10-23';
-            const end_date = '2021-12-29';
-            await dbUtils.addStaff()
-            await dbUtils.populate();
-            
-            let manager = dbUtils.managerObj;
-            const credentials = {email: manager.email, password: manager.password }
-            // perform login
-            const agent = chai.request.agent(server);
-            await agent.post('/api/login').send(credentials);        
-            const url = `/api/lectures`;
-
-            let res = await agent.get(url).query({from: start_date, to: end_date});
-            should.exist(res);
-        
+            let res = await setupManager('2020-10-23','2021-12-29');
+            should.exist(res);        
             res.should.have.status(200);
             res.body.should.be.an('array');
             res.body.should.have.not.length(0)
         });
         it('should allow to the booking manager to get an empty list of lectures in a time frame ', async function() {
-            const start_date = '2021-10-23';
-            const end_date = '2021-12-29';
-            await dbUtils.addStaff()    
-            await dbUtils.populate();
-            
-            let manager = dbUtils.managerObj;
-            const credentials = {email: manager.email, password: manager.password }
-            // perform login
-            const agent = chai.request.agent(server);
-            await agent.post('/api/login').send(credentials);  
-
-            const url = `/api/lectures`;
-
-            let res = await agent.get(url).query({from: start_date, to: end_date});
-            should.exist(res);
-        
+            let res = await setupManager('2021-10-23','2021-12-29');
+            should.exist(res);        
             res.should.have.status(200);
             res.body.should.be.an('array');
             res.body.should.have.length(0)
@@ -190,9 +155,6 @@ describe('Lecture tests', function() {
             await dbUtils.reset();
             await dbUtils.populate();
         })
-        /*after('clear db', async function() {
-            await dbUtils.reset({ create: false });
-        });*/
 
         it('should not allow change lecture to virtual because it is a past lecture', async function() {
             var clock = sinon.useFakeTimers(new Date(2020, 10, 30, 16, 30));
@@ -235,10 +197,7 @@ describe('Lecture tests', function() {
             await dbUtils.reset();
             await dbUtils.populate();
         })
-        /*after('clear db', async function() {
-            await dbUtils.reset({ create: false });
-        });*/
-
+        
         it('should not allow deletion because it is a past lecture', async function() {
            var clock = sinon.useFakeTimers(new Date(2020, 10, 30, 16, 30));
            let res=await deletion(1);
@@ -286,7 +245,7 @@ let testTimeFrame = async (validTimeFrame) => {
 
         const student1 = data.students[0];
         const credentials = {email: student1.email, password: student1.password }
-        // perform login
+
         const agent = chai.request.agent(server);
         await agent.post('/api/login').send(credentials);
         

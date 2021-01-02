@@ -125,7 +125,6 @@ const studentObj = (university_id) => ({
 });
 
 const addStaff = async () => {
-    console.log("add staff")
     await userDao.insertUser(support_officerObj);
     await userDao.insertUser(managerObj);
     return;
