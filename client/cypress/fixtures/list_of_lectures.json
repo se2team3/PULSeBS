@@ -400,5 +400,23 @@
     "booking_updated_at": "2020-11-16T10:00:00",
     "booking_waiting": true,
     "present": false
+  },
+  {
+    "id": 23,  
+    "datetime": "2020-11-27T10:00:00",
+    "datetime_end": "2020-11-27T11:30:00",
+    "course_id": 3,
+    "room_id": 5,
+    "virtual": false,
+    "deleted_at": null,
+    "course_name": "Chemistry",
+    "teacher_name": "Walter",
+    "teacher_surname": "White",
+    "room_name": "ROOM8",
+    "max_seats": 42,
+    "booking_counter": 42,
+    "booking_updated_at": "2020-11-16T10:00:00",
+    "booking_waiting": true,
+    "present": false
   }
 ]

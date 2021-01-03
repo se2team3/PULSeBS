@@ -48,10 +48,9 @@ describe('Calendar tests', ()=>{
 
 
     const seeCheckedLectures= function(role,view){
-        let value=(role==='student')? 'Booked':'Cancelled'
-        let list=['Physics','Analysis I','Remote',value]  
-        let blackStatus=(role==='student')? 'CANCELED':'BOOKED'
-        let whiteStatus=(role==='student')? 'BOOKED':'CANCELED'
+        let list=(role==='student')? ['Physics','Analysis I','Remote','Booked','Waiting']:['Physics','Analysis I','Remote','Cancelled']
+        let blackStatus=(role==='student')? ['CANCELED']:['WAITING LIST','BOOKED']
+        let whiteStatus=(role==='student')? ['WAITING LIST','BOOKED']:['CANCELED']
         let whiteList=[]       
         let blackList=[]
         
@@ -63,10 +62,10 @@ describe('Calendar tests', ()=>{
         }
         else if(view==='normal' || view==='future'){
             blackList=['Physics','Analysis I']
-            if(role==='student') blackList=blackList.concat(['FULL','FREE',blackStatus])
+            if(role==='student') blackList=blackList.concat(['FULL','FREE']).concat(blackStatus)
             if(role==='student' && view==='normal') blackList=blackList.concat(['CLOSED'])
             whiteList=['Chemistry','REMOTE']
-            if(role==='student') whiteList=whiteList.concat([whiteStatus])
+            if(role==='student') whiteList=whiteList.concat(whiteStatus)
         }
         else if(view==='list' || view==='month'){
             blackList=['Physics','Analysis I']
