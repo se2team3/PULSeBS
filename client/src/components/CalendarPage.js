@@ -286,7 +286,7 @@ class CalendarPage extends React.Component {
                                           defaultChecked={false}
                                           label='Waiting'
                                           style={{ fontSize: 20 }}
-                                          onClick={(ev) => this.changeDisplayEvent('statusFilter', LectureState.waiting, ev)}
+                                          onClick={(ev) => this.changeDisplayEvent('statusFilter', LectureState.waiting_list, ev)}
                               />
                             </Badge>
                             :<></>} 
