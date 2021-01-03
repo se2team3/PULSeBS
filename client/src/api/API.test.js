@@ -108,14 +108,6 @@ const sample_booking = {
     deleted_at: null
 };
 
-/*const sample_booking_waiting = {
-    lecture_id: 42,
-    student_id: 2,
-    waiting: true,
-    present: false,
-    updated_at: "2013-10-07 04:23:19.120-04:00",
-    deleted_at: null
-};*/
 
 /*const sample_user={
     university_id:1,
@@ -248,7 +240,7 @@ describe('Client API calls', () => {
             const booking = await API.bookLecture(sample_booking.student_id, sample_booking.lecture_id);
             expect(booking.lecture_id).toEqual(sample_booking.lecture_id);
             expect(booking.student_id).toEqual(sample_booking.student_id);
-            expect(booking.waiting).toEqual(sample_booking_waiting.waiting);
+            expect(booking.waiting).toEqual(sample_booking.waiting);
             expect(booking.updated_at).toEqual(sample_booking.updated_at);}
 
         it('book a lecture', async () => {
@@ -259,15 +251,7 @@ describe('Client API calls', () => {
             checking('true')
         });
 
-        /*it('book a lecture but you are put in the waiting list', async () => {
-            mock.onPost(base_url+`/students/${sample_booking_waiting.student_id}/bookings`,{lecture_id: sample_booking_waiting.lecture_id}).reply(201, sample_booking_waiting);
-            const booking = await API.bookLecture(sample_booking_waiting.student_id, sample_booking_waiting.lecture_id);
-            expect(booking.lecture_id).toEqual(sample_booking_waiting.lecture_id);
-            expect(booking.student_id).toEqual(sample_booking_waiting.student_id);
-            expect(booking.waiting).toEqual(sample_booking_waiting.waiting);
-            expect(booking.updated_at).toEqual(sample_booking_waiting.updated_at); //TODO do more reasonable tests
-        });*/
-
+        
         it('something went wrong booking lecture', async () => {
             mock.onPost(base_url+`/students/${sample_booking.student_id}/bookings`).reply(500, "internal server error");
             try {
@@ -545,7 +529,7 @@ describe('Client API calls', () => {
         });
     });
 
-    /* describe('userAuthentication', () => {
+/*     describe('userAuthentication', () => {
         beforeEach(() => {
             mock.reset();
         });
