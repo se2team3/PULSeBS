@@ -27,7 +27,7 @@
         "student_university_id": 123456,
         "student_surname": "Rossi",
         "student_name": "Mario",
-        "waiting": false,
+        "waiting": true,
         "present": false,
         "updated_at": "2020-11-19 11:30:00.000+01:00",
         "deleted_at": null
