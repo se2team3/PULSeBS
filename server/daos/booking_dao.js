@@ -54,17 +54,17 @@ exports.insertBooking = function ({ lecture_id, student_id }) {
                 INSERT INTO Bookings(lecture_id, student_id, waiting)
                 VALUES(?1, ?2, ?3)
             `;
-            db.run(sql2, [lecture_id, student_id, waiting], function (err) {
-                if (err) {
+            db.run(sql2, [lecture_id, student_id, waiting], function (err2) {
+                if (err2) {
                     // TODO: check that updated_at is actually updated
                     const sql3 = `
                       UPDATE Bookings
                       SET deleted_at = NULL, waiting = ?3
                       WHERE lecture_id = ?1 AND student_id = ?2
                     `;
-                    db.run(sql3, [ lecture_id, student_id, waiting], function (err2) {
-                        if (err2 || this.changes===0) {
-                            reject(err2);
+                    db.run(sql3, [ lecture_id, student_id, waiting], function (err3) {
+                        if (err3 || this.changes===0) {
+                            reject(err3);
                         }
                         else{
                             const booking = createBooking(lecture_id, student_id, !!waiting);
