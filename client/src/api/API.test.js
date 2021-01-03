@@ -436,7 +436,7 @@ describe('Client API calls', () => {
 
         it('should not return anything', async () => {
             try{
-                const studentLectures = await API.getLectures(unused, unused, 'abc', 1);
+                await API.getLectures(unused, unused, 'abc', 1);
             }
             catch(e){expect(e.message).toBe('Invalid role!')}
         });
