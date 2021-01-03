@@ -60,7 +60,6 @@ const AggregatedList = (props) => {
                             id={idx}
                             action
                             variant='light'
-                            id={idx}
                             onClick={() => {
                                 setActive(el.aggregationLabel);
                                 handleClick(el);

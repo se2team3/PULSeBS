@@ -403,7 +403,7 @@ describe('Client API calls', () => {
             mock.reset();
         });
 
-        const from = "2013-10-07", to = "2013-10-07", unused = undefined;
+       // const from = "2013-10-07", to = "2013-10-07", unused = undefined;
 
         it('returns all the student lectures in the db', async () => {
             mock.onGet(base_url+"/students/1/lectures").reply(200, sample_lectures);
@@ -419,7 +419,6 @@ describe('Client API calls', () => {
             mock.reset();
         });
 
-        const from = "2013-10-07", to = "2013-10-07", unused = undefined;
 
         it('returns all the student lectures in the db', async () => {
             mock.onGet(base_url+"/lectures").reply(200, sample_lectures);
@@ -434,8 +433,6 @@ describe('Client API calls', () => {
         beforeEach(() => {
             mock.reset();
         });
-
-        const from = "2013-10-07", to = "2013-10-07", unused = undefined;
 
         it('should not return anything', async () => {
             try{

@@ -22,7 +22,7 @@ const GraphView = (props) => {
                 list[index].tot_cancellations+=el.cancellation_counter
                 list[index].num_lectures++;
                 list[index].lectures.push({date:el.datetime,booking_counter:el.booking_counter,students:el.max_seats,cancellation_counter:el.cancellation_counter})
-                let coursex=courses.filter((c)=>{return c.course_id==el.course_id })
+                let coursex=courses.filter((c)=>{return c.course_id===el.course_id })
                 list[index].color = coursex[0].color
                
 
@@ -53,7 +53,7 @@ const GraphView = (props) => {
                                         data={[
                                             
                                                 retrieveBarElement(list,aggregationLevel,'tot_bookings','Bookings'),
-                                                AuthUser!='teacher'?retrieveBarElement(list,aggregationLevel,'tot_cancellations','Cancellations'):{},
+                                                AuthUser!=='teacher'?retrieveBarElement(list,aggregationLevel,'tot_cancellations','Cancellations'):{},
                                                 retrieveBarElement(list,aggregationLevel,'tot_seats','Free seats')
                                             
 
@@ -161,7 +161,7 @@ function retrieveBarElement(list,aggregationLevel,param,type){
             return text.replace(rxp, "$&<br>")}),
         name:aggregationLevel==='Lecture'?type:(type+'(avg)'),
         marker: {color: param==='tot_bookings'?'rgb(49,168,49)': param==='tot_cancellations'?'black':'#007BFF'},
-        width:list.length==1?0.25:0.7,
+        width:list.length===1?0.25:0.7,
         type: 'bar',
         hoverinfo:'y+text+name',
         }

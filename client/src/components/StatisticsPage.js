@@ -59,7 +59,7 @@ class StatisticsPage extends React.Component {
             "peru", "salmon", "lightBlue", "lightSeaGreen"]
         let ids = this.state.courses.map((c) => c.id).filter(this.onlyUnique);
         let index = ids.indexOf(course_id);
-        if(this.props.authUser.role=='teacher'){
+        if(this.props.authUser.role==='teacher'){
             this.state.courses.forEach(function(c, ind, theArray) {theArray[ind].color=colorArray[ids.indexOf(c.id)]});
             return colorArray[index];}
         else {
