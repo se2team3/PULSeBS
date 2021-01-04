@@ -195,19 +195,24 @@ const bookLectures = async() =>{
     try{
         const courses_students = await course_studentDao.retrieveAllStudentsCourses(); 
         const datetime= moment().format('YYYY-MM-DD HH:mm');
-        let index=0;
-           for (let cs of courses_students){
+        let index=-1;
+        let bookings=[];
+        let deletions=[];
+        let booking;
+        for (let cs of courses_students){
             index++;
             let lectures = await lectureDao.getLectures(cs.course_id)  
-            let lectures_size = lectures.length
-            let booking
-            for(let count=0;count<lectures_size;count++){
-                if(count%40===0)
-                    booking=await bookingDao.insertBooking({lecture_id:lectures[count].id,student_id:cs.student_id})
-                if(count%120===0 && index%5===0)
-                    await bookingDao.deleteBooking({datetime,lecture_id:booking.lecture_id,student_id:booking.student_id})  
+            for(let count=0;count<lectures.length;count++){
+                if(count%4===0){
+                    booking=({lecture_id:lectures[count].id,student_id:cs.student_id})
+                    bookings.push(booking);
+                }
+                if(count%12===0 && index%5===0)
+                    deletions.push({datetime:datetime,lecture_id:booking.lecture_id,student_id:booking.student_id})  
             }
         }
+        await bookingDao.bulkBookings(bookings);
+        await bookingDao.bulkDeletions(deletions);
     }
     catch(err){
         console.log(err)

@@ -168,3 +168,35 @@ exports.isEmpty = function(){
         });
     });
 }
+
+
+exports.bulkBookings = function(array){
+    return new Promise ((resolve,reject) =>{
+        let sql='';
+        for (let i = 0; i < array.length; i++) {
+            sql += `INSERT INTO Bookings(lecture_id,student_id) 
+            VALUES('${array[i].lecture_id}','${array[i].student_id}'); `
+        }
+        db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
+            if(err)
+                reject(err);
+            else resolve (this.changes)
+        })    
+    });
+}
+
+exports.bulkDeletions = function(array){
+    return new Promise ((resolve,reject) =>{
+        let sql='';
+        for (let i = 0; i < array.length; i++) {
+            sql += `UPDATE Bookings SET deleted_at='${array[i].datetime}'
+            WHERE lecture_id='${array[i].lecture_id}' AND student_id='${array[i].student_id}'; `
+        }
+        db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
+            if(err)
+                reject(err);
+            else
+                resolve(this.changes)
+        })    
+    });
+}
