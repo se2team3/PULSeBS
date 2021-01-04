@@ -142,17 +142,15 @@ exports.retrieveListOfBookedStudents = function(lecture_id) {
 //it allows you to delete a booking
 exports.deleteBooking = function ({ datetime, lecture_id, student_id }) {
     return new Promise((resolve, reject) => {
-
         const sql = 'UPDATE Bookings SET deleted_at= ? WHERE lecture_id= ? AND student_id= ? AND deleted_at IS NULL'
         db.run(sql, [datetime, lecture_id, student_id], function (err) {
             if (err) {
                 console.log(err)
                 reject(err);
-            }
-            else
+            }else
                 resolve(this.changes);
-
-        });
+            }
+        );
     })
 }
 
