@@ -102,7 +102,7 @@ const managerObj = {
  */
 const support_officerObj = {
     university_id: '201',
-    email: 'officer@host.com',
+    email: 'officer@email.com',
     password: 'passw0rd',
     name: 'Micheal',
     surname: 'Jordan',
@@ -189,4 +189,27 @@ const populate = async ({n_students, datetime} = def_options) => {
     return data;
 };
 
-module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate, support_officerObj, isEmpty, addStaff }
+
+
+const bookLectures = async() =>{
+    const courses_students = await course_studentDao.retrieveAllStudentsCourses(); //{corso, studente}
+    let bookings = []
+    courses_students.forEach(async (cs) => {  //20000
+        let lectures = await lectureDao.getLectures(cs.course_id)  //20k*
+        let lectures_size = lectures.length
+        //if (cs.student_id==='3004')console.log("dimensione = ",lectures_size)
+        for(let count=0;count<lectures_size;count++){
+            if(count%4===0)
+                bookings.push(await bookingDao.insertBooking({lecture_id:lectures[count].id,student_id:cs.student_id}))    
+        }
+    })
+    //console.log("bookings",bookings)
+    let booking_size= bookings.length;
+    const datetime= moment().format('YYYY-MM-DD HH:mm');
+    for(let count=0;count<booking_size;count++){
+        if(count%12===0)
+           await bookingDao.deleteBooking({datetime,lecture_id:bookings[count].lecture_id,student_id:bookings[count].student_id})   
+    }
+}
+
+module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate, support_officerObj, isEmpty, addStaff, bookLectures }
