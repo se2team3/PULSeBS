@@ -194,16 +194,18 @@ const populate = async ({n_students, datetime} = def_options) => {
 const bookLectures = async() =>{
     const courses_students = await course_studentDao.retrieveAllStudentsCourses(); //{corso, studente}
     let bookings = []
+    console.log("enrollment = ",courses_students.length)
     courses_students.forEach(async (cs) => {  //20000
         let lectures = await lectureDao.getLectures(cs.course_id)  //20k*
         let lectures_size = lectures.length
+        console.log("lectures = ",lectures_size)
         //if (cs.student_id==='3004')console.log("dimensione = ",lectures_size)
         for(let count=0;count<lectures_size;count++){
             if(count%4===0)
                 bookings.push(await bookingDao.insertBooking({lecture_id:lectures[count].id,student_id:cs.student_id}))    
         }
     })
-    //console.log("bookings",bookings)
+    console.log("bookings",bookings.length)
     let booking_size= bookings.length;
     const datetime= moment().format('YYYY-MM-DD HH:mm');
     for(let count=0;count<booking_size;count++){
