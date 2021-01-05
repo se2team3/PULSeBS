@@ -192,6 +192,9 @@ const populate = async ({n_students, datetime} = def_options) => {
 
 
 const bookLectures = async() =>{
+    let factor_book= 4; //the student books 1 lecture over 4
+    let factor_canc= 3; //the student cancels 1 of his bookings over 3
+    let factor_stud= 5; //only 1 student over 5 is cancelling some of his bookings
     try{
         const courses_students = await course_studentDao.retrieveAllStudentsCourses(); 
         const datetime= moment().format('YYYY-MM-DD HH:mm');
@@ -203,13 +206,13 @@ const bookLectures = async() =>{
             index++;
             let lectures = await lectureDao.getLectures(cs.course_id)  
             for(let count=0;count<lectures.length;count++){
-                if(count%4===0){
+                if(count%factor_book===0){
                     let to_be_canc=0
-                    if(count%12===0) to_be_canc=1; 
+                    if(count%(factor_book*factor_canc)===0) to_be_canc=1; 
                     booking=({lecture_id:lectures[count].id,student_id:cs.student_id, to_be_canc:to_be_canc})
                     bookings.push(booking);
                 }
-                if(count%12===0 && index%5===0)
+                if(count%(factor_book*factor_canc)===0 && index%factor_stud===0)
                     deletions.push({datetime:datetime,lecture_id:booking.lecture_id,student_id:booking.student_id})  
             }
         }
