@@ -77,7 +77,7 @@ async function insertRooms(schedule_dict){
 async function insertSchedule(schedule_dict,course_id){
   let c_id=course_id.map((el)=>el.code)
  
-  for (let sd of schedule_dict){      
+  for (let sd of schedule_dict){  
     if(!c_id.includes(sd.Code)){
       await dbUtils.reset();
       throw 'Course id is not present' 
@@ -106,8 +106,9 @@ async function replicateSchedule(schedules,courses){
     
     while(startDate.isBefore(endDate)){ 
       let time = sd.Time.split('-') 
-      let date1 = moment(startDate, 'YYYY-MM-DD hh:mm').add(time[0],'hh:mm').format('YYYY-MM-DD hh:mm')
-      let date2 = moment(startDate ,'YYYY-MM-DD').add(time[1],'hh:mm').format('YYYY-MM-DD hh:mm')
+      
+      let date1 = moment(startDate, 'YYYY-MM-DD hh:mm').add(time[0],'hh:mm').format('YYYY-MM-DD HH:mm')
+      let date2 = moment(startDate ,'YYYY-MM-DD ').add(time[1],'hh:mm').format('YYYY-MM-DD HH:mm')
       const lecture = {datetime:date1, datetime_end:date2, course_id:course[0].id,room_id:sd.Room} 
       lectures.push(lecture);     
       startDate.add(7, 'days');
