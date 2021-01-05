@@ -143,7 +143,7 @@ exports.getWaitingStudents = function(lecture_id) {
         const sql = `
             SELECT student_id
             FROM Bookings B
-            WHERE waiting = 1 AND B.lecture_id = ?
+            WHERE waiting = 1 AND B.lecture_id = ? AND B.deleted_at IS NULL
             ORDER BY B.updated_at
         `;
         db.all(sql, [lecture_id], (err, rows) => {
