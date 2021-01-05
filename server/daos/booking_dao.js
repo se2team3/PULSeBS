@@ -171,12 +171,16 @@ exports.isEmpty = function(){
 
 
 exports.bulkBookings = function(array){
+    let factor_stud= 5; //only 1 student over 5 (of type A) is cancelling some of his bookings
     return new Promise ((resolve,reject) =>{
         let sql=''; 
-        let factor_stud= 5; //1 student over 5 is cancelling some bookings
         for (let i = 0; i < array.length; i++) {
-            if (array[i].to_be_canc===1)
+            if (array[i].to_be_canc===1){
                 factor= factor_stud/(factor_stud-1)
+            }
+            else if(array[i].to_be_canc===2){
+                factor=(2*factor_stud)/(2*factor_stud-1)
+            }
             else factor=1;
 
             sql += `INSERT INTO Bookings(lecture_id,student_id,waiting) 

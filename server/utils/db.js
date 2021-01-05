@@ -192,9 +192,11 @@ const populate = async ({n_students, datetime} = def_options) => {
 
 
 const bookLectures = async() =>{
-    let factor_book= 4; //the student books 1 lecture over 4
-    let factor_canc= 3; //the student cancels 1 of his bookings over 3
-    let factor_stud= 5; //only 1 student over 5 is cancelling some of his bookings
+    let ripartition=3; //1 student over 3 is type A, 1 is type B, the other does nothing
+    let factor_bookA= 4; //the student of type A books 1 lecture over 4 (only this type can cancel)
+    let factor_bookB= 3; //the student of type B books 1 lecture over 3
+    let factor_canc= 3; //1 deletion every 3 bookings
+    let factor_stud= 5; //only 1 student over 5 (of type A) is cancelling some of his bookings
     try{
         const courses_students = await course_studentDao.retrieveAllStudentsCourses(); 
         const datetime= moment().format('YYYY-MM-DD HH:mm');
@@ -202,18 +204,40 @@ const bookLectures = async() =>{
         let bookings=[];
         let deletions=[];
         let booking;
+        let factor_book;
+        let flag;
+
         for (let cs of courses_students){
-            index++;
-            let lectures = await lectureDao.getLectures(cs.course_id)  
-            for(let count=0;count<lectures.length;count++){
-                if(count%factor_book===0){
-                    let to_be_canc=0
-                    if(count%(factor_book*factor_canc)===0) to_be_canc=1; 
-                    booking=({lecture_id:lectures[count].id,student_id:cs.student_id, to_be_canc:to_be_canc})
-                    bookings.push(booking);
+            index++; 
+            if(index%ripartition===0 || index%ripartition===1){
+                if(index%ripartition===0)
+                    factor_book=factor_bookA;
+                else 
+                    factor_book=factor_bookB;
+
+                let lectures = await lectureDao.getLectures(cs.course_id) 
+
+                for(let count=0;count<lectures.length;count++){
+                    to_be_book=0;
+                    to_be_canc=0;
+                    flag=0;
+                    if(count%factor_book===0){
+                        to_be_book=1;
+                        if(count%(factor_book*factor_canc)===0) {
+                            to_be_canc=1; 
+                            flag=1;
+                        }
+                        if(count%factor_bookA===0 && count%factor_bookB===0 && !(count%(factor_bookA*factor_canc)===0 && count%(factor_bookB*factor_canc)===0)){
+                            to_be_canc=2;
+                        }
+                        booking=({lecture_id:lectures[count].id,student_id:cs.student_id, to_be_canc:to_be_canc})
+                        bookings.push(booking);
+                    }
+
+                    if(to_be_book===1 && flag===1 && ((factor_book===factor_bookA && (index%(ripartition*factor_stud)===0)) ||(factor_book===factor_bookB && (index%(ripartition*factor_stud)===1)))){
+                        deletions.push({datetime:datetime,lecture_id:booking.lecture_id,student_id:booking.student_id})  
+                    }
                 }
-                if(count%(factor_book*factor_canc)===0 && index%factor_stud===0)
-                    deletions.push({datetime:datetime,lecture_id:booking.lecture_id,student_id:booking.student_id})  
             }
         }
         await bookingDao.bulkBookings(bookings);
