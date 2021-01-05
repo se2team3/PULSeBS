@@ -144,7 +144,7 @@ const populate = async ({n_students, datetime} = def_options) => {
     const counter = require('../utils/counter')();
     const data = {
         teacher: teacherObj(counter.get()),
-        room: {name: 'Aula 1', seats: 200},
+        room: {name: 'Aula 1', seats: 3},
         course: {code: 'SE2', name: 'Software Engineering 2', teacher_id: 1 },
         course2: {code: 'SE1', name:'Software Engineering 1', teacher_id: 1},
         assign1:{},
@@ -172,7 +172,7 @@ const populate = async ({n_students, datetime} = def_options) => {
     for (let student of data.students) {
         const student_id = await userDao.insertUser(student);
         data.students_id.push(student_id);
-        if(data.booked<45){   
+        if(data.booked<45 && student_id > 4){   // for testing purposes, there are 3 seats, and 5 students. 2 will go in the waiting list
             data.booked++;
             await bookingDao.insertBooking({ lecture_id: data.lecture_id, student_id });
         }
