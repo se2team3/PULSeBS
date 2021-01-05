@@ -204,7 +204,9 @@ const bookLectures = async() =>{
             let lectures = await lectureDao.getLectures(cs.course_id)  
             for(let count=0;count<lectures.length;count++){
                 if(count%4===0){
-                    booking=({lecture_id:lectures[count].id,student_id:cs.student_id})
+                    let to_be_canc=0
+                    if(count%12===0) to_be_canc=1; 
+                    booking=({lecture_id:lectures[count].id,student_id:cs.student_id, to_be_canc:to_be_canc})
                     bookings.push(booking);
                 }
                 if(count%12===0 && index%5===0)

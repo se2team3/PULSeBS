@@ -172,10 +172,17 @@ exports.isEmpty = function(){
 
 exports.bulkBookings = function(array){
     return new Promise ((resolve,reject) =>{
-        let sql='';
+        let sql=''; 
         for (let i = 0; i < array.length; i++) {
-            sql += `INSERT INTO Bookings(lecture_id,student_id) 
-            VALUES('${array[i].lecture_id}','${array[i].student_id}'); `
+            if (array[i].to_be_canc===1)
+                factor= 5/4
+            else factor=1;
+
+            sql += `INSERT INTO Bookings(lecture_id,student_id,waiting) 
+                    SELECT'${array[i].lecture_id}','${array[i].student_id}', (COUNT(*) >= R.seats is not null and COUNT(*) >= (${factor}*R.seats))
+                    FROM Bookings B, Lectures L, Rooms R
+                    WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id =  '${array[i].lecture_id}'
+                    AND B.deleted_at IS NULL AND B.waiting = 0; `
         }
         db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
             if(err)
@@ -199,4 +206,4 @@ exports.bulkDeletions = function(array){
                 resolve(this.changes)
         })    
     });
-}
+} 
