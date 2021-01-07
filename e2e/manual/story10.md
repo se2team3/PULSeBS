@@ -18,10 +18,10 @@ As a teacher I want to access the historical data about bookings so that I can p
 | --- | --- | --- |
 | **Test description** <td colspan=2> Entering statistics page |
 | **Steps** | Operator actions | Expected results |
-| 1 | Following S10_0, click "calendar" button on top left part of the page | redirecting to http://localhost:3000/statistics page which displays 1) Time Frame (start and end dates), 2)Aggregation level (Monthly, Weekly, or by lecture), and 3) Course search form on the left side of the page |
-| 2 | Select time frame as 27/12/2020-03/01/2021, aggregation level month, week, and by lecture seperately | A red border should appear around the email box |
+| 1 | Following S10_0, click "statistics" button on top left part of the page | redirecting to http://localhost:3000/statistics page which displays:<br> 1) Time Frame (start and end dates), <br>2)Aggregation level (Monthly, Weekly, or by lecture), <br>3) Course search form on the left side of the page |
+| 2 | Select time frame as 27/12/2020-03/01/2021, aggregation level month, week, and by lecture seperately | Statistics should come up* |
 
 <br>
 
 
-* These fields fill be edited/extended after having proper access to the Pulsebs (No proper DB yet)
+*These fields fill be edited/extended after having proper access to the Pulsebs (No proper DB yet)
