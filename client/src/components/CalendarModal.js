@@ -7,10 +7,11 @@ const CalendarModal = (props) => {
     let text = {
         'booked': "You have booked a seat for this lecture",
         'free': `${lecture.extendedProps.seats} available seats`,
-        'full': `No available seats right now, you can enter the waiting list if you like.\n${lecture.extendedProps.waiting_list_pos} are currently in the waiting list.`,
+        'full': `No available seats right now, you can enter the waiting list if you like.\n${lecture.extendedProps.waiting_counter} are currently in the waiting list.`,
         'waiting list': `You are currently in the waiting list, there are ${lecture.extendedProps.waiting_list_pos} students before you.`,
         'closed': "Booking closed"
       }
+      console.log(lecture.extendedProps);
 
     return (
         <Modal show={props.show} onHide={closeModal} size="md"
