@@ -148,7 +148,7 @@ router.delete('/lectures/:lecture_id', authorize([role.Teacher]), async (req,res
 
  /**
  * @swagger
- * /teachers/{teacher_id}/lectures/{lecture_id}:
+ * /lectures/{lecture_id}:
  *  patch:
  *    tags:
  *      - lectures
@@ -201,12 +201,12 @@ router.patch('/lectures/:lecture_id', authorize([role.Teacher]), async (req,res)
 
 /**
  * @swagger
- * /teachers/getLecturesByTeacherAndTime:
+ * /lectures:
  *  get:
  *    tags:
  *      - lectures
  *    summary: "Get the list of all lectures in a time frame "
- *    #description: "Use to request all the lectures"
+ *    #description: "Used by booking manager to request all the lectures"
  *    parameters:
  *      - in: query
  *        name: start_date
