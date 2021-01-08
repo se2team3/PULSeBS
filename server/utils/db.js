@@ -206,6 +206,7 @@ const bookLectures = async() =>{
         let booking;
         let factor_book;
         let flag;
+        let to_be_book, to_be_canc;
 
         for (let cs of courses_students){
             index++; 
