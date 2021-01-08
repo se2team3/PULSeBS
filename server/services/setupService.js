@@ -106,9 +106,10 @@ async function replicateSchedule(schedules,courses){
     
     while(startDate.isBefore(endDate)){ 
       let time = sd.Time.split('-') 
-      
+
       let date1 = moment(startDate, 'YYYY-MM-DD hh:mm').add(time[0],'hh:mm').format('YYYY-MM-DD HH:mm')
-      let date2 = moment(startDate ,'YYYY-MM-DD ').add(time[1],'hh:mm').format('YYYY-MM-DD HH:mm')
+      let date2 = moment(startDate ,'YYYY-MM-DD').add(time[1],'hh:mm').format('YYYY-MM-DD HH:mm')
+
       const lecture = {datetime:date1, datetime_end:date2, course_id:course[0].id,room_id:sd.Room} 
       lectures.push(lecture);     
       startDate.add(7, 'days');

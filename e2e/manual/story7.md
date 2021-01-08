@@ -18,18 +18,17 @@ As a teacher I want to cancel a lecture up to 1h before its scheduled time
 | --- | --- | --- |
 | **Test description** <td colspan=2> Cancel before 1 hour left to lecture |
 | **Steps** | Operator actions | Expected results |
-| 1 | Following S7_0, click on lecture that is scheduled more than 1 hour later than current time | selected lecture is highlighted |
-| 2 | Click  | Schedule of teacher is displayed|
+| 1 | Following S7_0, click on lecture that is scheduled more than 1 hour later than current time | Selected lecture is highlighted |
+| 2 | Click  | Success message displays *|
+
 
 | Test ID | S7_2 |  |
 | --- | --- | --- |
 | **Test description** <td colspan=2> Cancel lecture that is in less than 1 hour |
 | **Steps** | Operator actions | Expected results |
-| 1 | Visit login page at http://localhost:3000 | The login page is displayed with no errors |
-| 2 | Insert not valid email "email.email.it" | A red border should appear around the email box |
-| 3 | Correct the previously inserted email to match "email@email.it" | The red border should disappear |
-| ... | ... | ... |
+| 1 | Following S7_0, click on lecture that is scheduled less than 1 hour than current time | Selected lecture is highlighted |
+| 2 | Click  | Failure message displays*|
 
-<br>
 
-* These fields fill be edited/extended after having proper access to the Pulsebs (No proper DB yet)
+
+*These fields fill be edited/extended after having proper access to the Pulsebs (No proper DB yet)

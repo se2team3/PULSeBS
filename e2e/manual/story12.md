@@ -49,3 +49,6 @@ As a support officer I want to upload the list of students, courses, teachers, l
 | **Steps** | Operator actions | Expected results |
 | 1 | Following S10_0, click on the empty fields next "students" | Small pop-up opened, displaying Windows Explorer to locate the student .csv file |
 | 2 | Click "Submit all" button | Error message displays|
+
+
+*These fields fill be edited/extended after having proper access to the Pulsebs (No proper DB yet)
