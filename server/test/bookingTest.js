@@ -96,7 +96,7 @@ describe('Booking routes', function () {
 
 
     it('should put a student in the waiting list', async function () {
-        let res = await login(1);
+        await login(1);
         res = await book(1);
         res.body.should.have.property('waiting', true);
     });
@@ -123,7 +123,7 @@ describe('Booking routes', function () {
 
         // login as a student booked before someone
         await login(0);
-        res = await deletion(0);
+        await deletion(0);
 
         // student popped from waiting list
         await login(1);
@@ -155,11 +155,11 @@ describe('Assert bookings', function () {
         data = await populateDb.populate();
         const lecture_id = 1;
         let credentials = { email: data.students[0].email, password: data.students[0].password };
-        const agent = chai.request.agent(server);
-        await agent.post(`/api/login`).send(credentials);
+        const agent2 = chai.request.agent(server);
+        await agent2.post(`/api/login`).send(credentials);
 
         const tmp = `/api/students/${lecture_id}`;
-        let res = await agent.get(tmp);
+        let res = await agent2.get(tmp);
 
         res.should.have.status(200);
         res.body.should.be.an('object');
@@ -173,9 +173,9 @@ describe('Assert bookings', function () {
         const tmp = `/api/students/${lecture_id}`;
 
         let credentials = { email: data.students[0].email, password: data.students[0].password };
-        const agent = chai.request.agent(server);
-        await agent.post(`/api/login`).send(credentials);
-        let res2 = await agent.get(tmp);
+        const agent3 = chai.request.agent(server);
+        await agent3.post(`/api/login`).send(credentials);
+        let res2 = await agent3.get(tmp);
         res2.should.have.status(200);
         res2.body.should.be.an('object');
         res2.body.bookable.should.be.equal(true)
