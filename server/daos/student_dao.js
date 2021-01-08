@@ -18,7 +18,13 @@ exports.retrieveStudentLecturesinTimeFrame = function(student_id,start_date, end
               R.name as room_name, seats as max_seats,
               sum(case B.deleted_at IS NULL AND B.waiting = 0 when 1 then 1 else 0 end) as booking_counter,
               sum(case B.deleted_at IS NULL AND B.waiting = 1 when 1 then 1 else 0 end) as waiting_counter,
-              B2.updated_at as booking_updated_at, B2.waiting as booking_waiting, B2.present
+              B2.updated_at as booking_updated_at, B2.waiting as booking_waiting, B2.present,
+              (
+                SELECT  count(*)
+                FROM    Bookings B
+                WHERE   lecture_id = L.id AND deleted_at IS NULL AND waiting = 1
+                AND updated_at < (SELECT updated_at FROM Bookings WHERE lecture_id = L.id AND student_id = ?1)
+              ) as waiting_list_pos
           FROM Lectures L, Rooms R, Users T, Courses C
           LEFT JOIN Bookings B2 ON B2.student_id = ?1 AND L.id = B2.lecture_id AND B2.deleted_at IS NULL
           LEFT JOIN Bookings B ON L.id = B.lecture_id

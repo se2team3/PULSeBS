@@ -7,7 +7,7 @@ const timeValidator = require('../validators/timeValidator')
 
 /**
  * @swagger
- * /teachers/getLecturesByTeacherAndTime:
+ * /teachers/:teacher_id/lectures:
  *  get:
  *    tags:
  *      - teachers

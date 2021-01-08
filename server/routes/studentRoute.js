@@ -201,7 +201,7 @@ app.post('/students/:student_id/bookings', authorize([role.Student]), lectureVal
 app.delete('/students/:student_id/lectures/:lecture_id', authorize([role.Student]), async(req,res) =>{
     const student_id= +req.params.student_id;
     const lecture_id= +req.params.lecture_id;
-    const datetime= moment().format('YYYY-MM-DD HH:mm');
+    const datetime= moment().format('YYYY-MM-DD HH:mm:ss');
     
     try{
         let number = await bookingService.deleteBooking({datetime,lecture_id,student_id});

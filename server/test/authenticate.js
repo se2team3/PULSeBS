@@ -21,10 +21,7 @@ describe('Authentication routes', function () {
         await userDao.clearUserTable();
     });
 
-    after('clear db', async function() {
-        await userDao.clearUserTable();
-    });
-
+    
     it('should allow existing user to login', async function() {
         const newUser = dbUtils.studentObj('S123456');
         let id;
@@ -42,7 +39,8 @@ describe('Authentication routes', function () {
         res.should.have.cookie('token');
     });
     it('should allow an existing officer to login', async function() {
-        const newUser = dbUtils.support_officerObj('o8794');
+        await dbUtils.addStaff();
+        const newUser = dbUtils.support_officerObj;
         let id;
         try {
             id = await insertUser(newUser);
@@ -59,7 +57,9 @@ describe('Authentication routes', function () {
     });
 
     it('should allow an existing manager to login', async function() {
-        const newUser = dbUtils.managerObj('m8794');
+        await dbUtils.addStaff()
+        await userDao.clearUserTable()
+        const newUser = dbUtils.managerObj;
         const id = await insertUser(newUser);
         const credentials = (({email, password}) => ({email, password}))(newUser);
         const res = await chai.request(server).post(`/api/login`).send(credentials);

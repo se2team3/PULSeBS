@@ -41,9 +41,9 @@ const isEmpty = async () => {
  * @param {boolean} [options.create=true] - is for force the tables creation
  * @returns {Promise<void>}
  */
-const reset = async ({ create = true } = {}) => {
+const reset = async ({ create = true } = {}) => {    
     if (create)
-        await createTables();
+        await createTables();  
     await Promise.allSettled([
         lectureDao.clearLectureTable(),
         roomDao.clearRoomTable(),
@@ -86,28 +86,28 @@ const teacherObj = (university_id) => ({
  * @param {string} university_id - unique ID
  * @returns {{password: string, role: string, university_id: string, surname: string, name: string, email: string}}
  */
-const managerObj = (university_id) => ({
-    university_id,
+const managerObj = {
+    university_id: '200',
     email: 'manager@email.com',
     password: 'passw0rd',
     name: 'Francesco',
     surname: 'Verdi',
     role: 'manager'
-});
+};
 
 /**
  * Generates a support officer object, with a fixed email
  * @param {string} university_id - unique ID
  * @returns {{password: string, role: string, university_id: string, surname: string, name: string, email: string}}
  */
-const support_officerObj = (university_id) => ({
-    university_id,
+const support_officerObj = {
+    university_id: '201',
     email: 'officer@host.com',
     password: 'passw0rd',
     name: 'Micheal',
     surname: 'Jordan',
     role: 'officer'
-});
+};
 
 
 /**
@@ -123,6 +123,12 @@ const studentObj = (university_id) => ({
     surname: 'Jordan',
     role: 'student'
 });
+
+const addStaff = async () => {
+    await userDao.insertUser(support_officerObj);
+    await userDao.insertUser(managerObj);
+    return;
+}
 
 const def_options = {
     n_students: 5,
@@ -151,7 +157,6 @@ const populate = async ({n_students, datetime} = def_options) => {
         assign2:{},
         lecture: { datetime },
         students: [...new Array(n_students)].map(() => studentObj(counter.get())),
-        supportOfficer : support_officerObj(counter.get()),
         booked: 0
     };
 
@@ -181,9 +186,7 @@ const populate = async ({n_students, datetime} = def_options) => {
         data.assign2.student_id = data.students_id[0]
         await course_studentDao.assingCourseToStudent(data.assign1);
         await course_studentDao.assingCourseToStudent(data.assign2);
-        data.manager = managerObj(counter.get());
-        data.manager = await userDao.insertUser(data.manager);
     return data;
 };
 
-module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate, support_officerObj, isEmpty }
+module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate, support_officerObj, isEmpty, addStaff }

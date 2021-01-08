@@ -2,7 +2,6 @@ const e = require('express');
 const db = require('../db/db');
 
 exports.getLecturesByTeacherAndTime = function(teacher_id,start_date, end_date) {
-    console.log('', { start_date, end_date })
     return new Promise((resolve,reject) => {
 
         let value = isNaN(teacher_id) ? 0 : parseInt(teacher_id)
