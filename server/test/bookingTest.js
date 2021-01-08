@@ -184,7 +184,7 @@ describe('Assert bookings', function () {
     });
 
     it('should verify that the student is already booked for a specific lecture', async function () {
-        const data = await populateDb.populate();
+        data = await populateDb.populate();
         const lecture_id = 1;
         let credentials = { email: data.students[0].email, password: data.students[0].password };
         const agent = chai.request.agent(server);
@@ -200,7 +200,7 @@ describe('Assert bookings', function () {
     });
 
     it('should verify that a student can book a specific lecture', async function () {
-        const data = await populateDb.populate();
+        data = await populateDb.populate();
         const lecture_id = 8;
         const tmp = `/api/students/${lecture_id}`;
 

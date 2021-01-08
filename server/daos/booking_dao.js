@@ -49,8 +49,8 @@ exports.insertBooking = async function ({ lecture_id, student_id }) {
         FROM Bookings B
         WHERE lecture_id = ? AND student_id = ? AND deleted_at IS NULL
     `;
-        db.get(alreadyBookedQyery,[lecture_id,student_id],function(err,row){
-            if(row || err){
+        db.get(alreadyBookedQyery,[lecture_id,student_id],function(err0,row0){
+            if(row0 || err0){
                 reject(Error('Already booked'));
             }else{
                 const sql = `
@@ -59,7 +59,7 @@ exports.insertBooking = async function ({ lecture_id, student_id }) {
                 WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id = ?1 
                     AND B.deleted_at IS NULL AND B.waiting = 0
             `;
-            db.get(sql, [lecture_id], function (err, row)  {
+            db.get(sql, [lecture_id], function (err1, row)  {
                 const { waiting } = row;
                 const sql2 = `
                     INSERT INTO Bookings(lecture_id, student_id, waiting)
