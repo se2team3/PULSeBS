@@ -83,7 +83,7 @@ async function insertSchedule(schedule_dict,course_id){
       throw 'Course id is not present' 
     }    
   }
-  await insertRooms(schedule_dict); console.log('rooms')
+  await insertRooms(schedule_dict); /* console.log('rooms') */
   replicateSchedule(schedule_dict,course_id)
 }
 
@@ -133,11 +133,11 @@ const setupInsert = async function(dictionary) {
     
     let teacher_id =[], student_id=[],course_id=[];
 
-    teacher_id = await insertTeachers(teachers_dict) ; console.log('teachers')
-    student_id = await insertStudents(students_dict); console.log('students') 
-    course_id = await insertCourses(courses_dict,teacher_id); console.log('courses')
-    await insertEnrollments(enrollment_dict,course_id,student_id); console.log('enroll')
-    await insertSchedule(schedule_dict,course_id); console.log('end')
+    teacher_id = await insertTeachers(teachers_dict) ; /* console.log('teachers') */
+    student_id = await insertStudents(students_dict); /* console.log('students')  */
+    course_id = await insertCourses(courses_dict,teacher_id); /* console.log('courses') */
+    await insertEnrollments(enrollment_dict,course_id,student_id); /* console.log('enroll') */
+    await insertSchedule(schedule_dict,course_id); /* console.log('end') */
     
 
   

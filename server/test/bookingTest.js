@@ -9,17 +9,18 @@ const chaiHttp = require("chai-http");
 const populateDb = require('../utils/populate')
 const moment = require('moment');
 let data;
-
+const agent = chai.request.agent(server);
 
 chai.use(chaiHttp);
 
-const book = async function () {
-    let credentials = { email: data.students[0].email, password: data.students[0].password };
-    const agent = chai.request.agent(server);
+const login = async function (student_index){
+    let credentials = { email: data.students[student_index].email, password: data.students[student_index].password };
     let resLogin = await agent.post(`/api/login`).send(credentials);
+    return resLogin;
+}
 
-    let student_id = resLogin.body.id;
-
+const book = async function (student_index) {
+    let student_id = data.students[student_index].university_id;
     const newBooking = { lecture_id: 1, student_id: student_id };
     const tmp = `/api/students/${newBooking.student_id}/bookings`;
     let res = await agent.post(tmp).send({ lecture_id: newBooking.lecture_id });
@@ -29,206 +30,113 @@ const book = async function () {
 
 }
 
-const deletion = async function () {
-    let credentials = { email: data.students[0].email, password: data.students[0].password };
-    const agent = chai.request.agent(server);
-    let resLogin = await agent.post(`/api/login`).send(credentials);
-
-    let student_id = resLogin.body.id;
-    // console.log(student_id);
-
+const deletion = async function (student_index) {
+    let student_id = data.students[student_index].university_id;
     const newBooking = { lecture_id: 1, student_id: student_id };
     const tmp = `/api/students/${newBooking.student_id}/lectures/${newBooking.lecture_id}`;
     let res = await agent.delete(tmp).send();
     should.exist(res);
     res.body.should.be.an('object');
     return res.status;
+}
 
+const getStudentLectures = async function(student_index){
+    const student_id = data.students[student_index].university_id;
+    const start_date = moment(new Date(2020, 10, 28, 16, 30)).format('YYYY-MM-DD');
+    const end_date = moment(new Date(2020, 10, 31, 16, 30)).format('YYYY-MM-DD');
+    const tmp = `/api/students/${student_id}/lectures`;
+    let res = await agent.get(tmp).query({ from: start_date, to: end_date });
+    return res;
 }
 
 describe('Booking routes', function () {
     before('create tables and clear db', async function () {
         await dbUtils.reset();
-    });
-    before('populate db', async () => {
         data = await dbUtils.populate();
     });
 
     it('should allow student to book a lecture', async function () {
-        let credentials = { email: data.students[0].email, password: data.students[0].password };
-        const agent = chai.request.agent(server);
-        let resLogin = await agent.post(`/api/login`).send(credentials);
-        let start_date = moment(new Date(2020, 10, 28, 16, 30)).format('YYYY-MM-DD');
-        let end_date = moment(new Date(2020, 10, 31, 16, 30)).format('YYYY-MM-DD');
-
-        
-        const tmp = `/api/students/${resLogin.body.id}/lectures`;
-        
-        let res = await agent.get(tmp).query({ from: start_date, to: end_date });
-        // console.log('BEFORE BOOKING:', res.body)
-        
-        res = await book();
+        await login(0);        
+        let res = await getStudentLectures(0);
+        res = await book(0);
         res.should.have.property('status', 201);
-        
-        res = await agent.get(tmp).query({ from: start_date, to: end_date });
-
-        // console.log('AFTER BOOKING:', res.body)
-
     });
 
     it('should not allow student to book a lecture already booked', async function () {
-
-        let credentials = { email: data.students[0].email, password: data.students[0].password };
-        const agent = chai.request.agent(server);
-        let resLogin = await agent.post(`/api/login`).send(credentials);
-        let start_date = moment(new Date(2020, 10, 28, 16, 30)).format('YYYY-MM-DD'); // just for debug, can be removed if pass
-        let end_date = moment(new Date(2020, 10, 31, 16, 30)).format('YYYY-MM-DD');// just for debug, can be removed if pass
-
-        
-        const tmp = `/api/students/${resLogin.body.id}/lectures`; // just for debug, can be removed if pass
-        
-        
-        // let res = await agent.get(tmp).query({ from: start_date, to: end_date });
-        // console.log('SECOND FUNCTION:', res.body)
-
-        res = await book();
+        let res = await login(0);
+        res = await book(0);
         res.should.not.have.property('status', 201);
         res.should.have.property('status',400);
-
-        // res = await agent.get(tmp).query({ from: start_date, to: end_date });
-        // console.log('AFTER FUNCTION :', res.body)
     });
 
-    it('should allow student to delete a booking', async function () {
+     it('should allow student to delete a booking', async function () {
 
-        let credentials = { email: data.students[0].email, password: data.students[0].password };
-        const agent = chai.request.agent(server);
-        let resLogin = await agent.post(`/api/login`).send(credentials);
-        const tmp = `/api/students/${resLogin.body.id}/lectures`;
-
-        let start_date = moment(new Date(2020, 10, 28, 16, 30)).format('YYYY-MM-DD');
-        let end_date = moment(new Date(2020, 10, 31, 16, 30)).format('YYYY-MM-DD');
-
-        let res = await agent.get(tmp).query({ from: start_date, to: end_date });
-
-        // console.log('BEFORE DELETE: ', res.body)
-
-        res = await deletion();
+        let res = await login(0);
+        res = await getStudentLectures(0);
+        res = await deletion(0);
         res.should.be.equal(200);
+        res = await getStudentLectures(0);
 
-        res = await agent.get(tmp).query({ from: start_date, to: end_date });
-
-        // console.log('AFTER DELETE: ', res.body)
 
     });
 
 
 
     it('should not allow student to delete a booking yet deleted', async function () {
-        let res = await deletion();
+        res = await deletion(0);
         res.should.not.be.equal(200);
         res.should.be.equal(304);
     });
 
     it('should allow student to book a lecture for which he deleted his booking before', async function () {
-        let res = await book();
+        let res = await book(0);
         res.should.have.property('status', 201);
 
     });
 
 
     it('should put a student in the waiting list', async function () {
-        let credentials = { email: data.students[1].email, password: data.students[1].password };
-        const agent = chai.request.agent(server);
-        let resLogin = await agent.post(`/api/login`).send(credentials);
-
-        let student_id = resLogin.body.id;
-        const newBooking = { lecture_id: 1, student_id: student_id };
-        let tmp = `/api/students/${newBooking.student_id}/bookings`;
-        let res = await agent.post(tmp).send({ lecture_id: newBooking.lecture_id });
-
+        let res = await login(1);
+        res = await book(1);
         res.body.should.have.property('waiting', true);
     });
 
     it('should check the waiting list count of a lecture', async function () {
         // One student is already in the waiting list
-        let credentials = { email: data.students[2].email, password: data.students[2].password };
-        const agent = chai.request.agent(server);
-        let resLogin = await agent.post(`/api/login`).send(credentials);
+        await login(2); // login with a third student
 
-        let student_id = resLogin.body.id;
-        const newBooking = { lecture_id: 1, student_id: student_id };
-        let tmp = `/api/students/${newBooking.student_id}/bookings`;
-        let res = await agent.post(tmp).send({ lecture_id: newBooking.lecture_id });
-
-        res.body.should.have.property('waiting', true);
-
-        let start_date = moment(new Date(2020, 10, 28, 16, 30)).format('YYYY-MM-DD');
-        let end_date = moment(new Date(2020, 10, 31, 16, 30)).format('YYYY-MM-DD');
-
-
-        credentials = { email: data.students[0].email, password: data.students[0].password };
-        resLogin = await agent.post(`/api/login`).send(credentials);
-        tmp = `/api/students/${resLogin.body.id}/lectures`;
-
-        res = await agent.get(tmp).query({ from: start_date, to: end_date });
+        let res = await book(2);
+        res = await getStudentLectures(2);
         res.body[0].should.have.property('waiting_counter',2)
     });
 
+   
+
     it('should pop someone from the waiting list when a booking is canceled', async function () {
         // One student is already in the waiting list
-        let credentials = { email: data.students[1].email, password: data.students[1].password }; // student[1] and [2] are in waiting list
-        const agent = chai.request.agent(server);
-        let resLogin = await agent.post('/api/login').send(credentials);
+        let resLogin = await login(1);
+    
 
-        let student_id = resLogin.body.id;
-        let tmp = `/api/students/${student_id}/lectures`;
-        let res;
-
-
-        let start_date = moment(new Date(2020, 10, 28, 16, 30)).format('YYYY-MM-DD');
-        let end_date = moment(new Date(2020, 10, 31, 16, 30)).format('YYYY-MM-DD');
-
-        res = await agent.get(tmp).query({ from: start_date, to: end_date });
-        console.log('STUDENT: ',student_id,res.body)
+        let res = await getStudentLectures(1);
         res.body[0].should.have.property('booking_waiting', true);
         res.body[0].should.have.property('waiting_counter',2)
 
         // login as a student booked before someone
-        credentials = { email: data.students[0].email, password: data.students[0].password };
-        resLogin = await agent.post('/api/login').send(credentials);
-
-        /* tmp = /api/students/${resLogin.body.id}/lectures;
-
-        res = await agent.get(tmp).query({ from: start_date, to: end_date });
-        let lecture = res.body[0]
-        console.log('STUDENT: ',resLogin.body.id , lecture) */
-
-        res = await deletion();
-
-        /* res = await agent.get(tmp).query({ from: start_date, to: end_date });
-        lecture = res.body[0]
-        console.log('STUDENT: ',resLogin.body.id ,lecture) */
+        resLogin = await login(0);
+        res = await deletion(0);
 
         // student popped from waiting list
-        credentials = { email: data.students[1].email, password: data.students[1].password }; // student[1] should be booked normally now
-        resLogin = await agent.post('/api/login').send(credentials);
+        resLogin = await login(1);
 
-        res = await agent.get(tmp).query({ from: start_date, to: end_date });
+        res = await getStudentLectures(1);
 
-        console.log(res.body)
         res.body[0].should.have.property('booking_waiting', false);
         res.body[0].should.have.property('waiting_counter',1)
 
         // student still in the waiting list
-        credentials = { email: data.students[2].email, password: data.students[2].password }; // student[1] should be booked normally now
-        resLogin = await agent.post('/api/login').send(credentials);
-        student_id = resLogin.body.id;
-        tmp = `/api/students/${student_id}/lectures`;
+        resLogin = await login(2);
+        res = await getStudentLectures(2);
 
-        res = await agent.get(tmp).query({ from: start_date, to: end_date });
-
-        console.log(res.body)
         res.body[0].should.have.property('booking_waiting', true);
         res.body[0].should.have.property('waiting_counter', 1)
 
