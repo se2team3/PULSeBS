@@ -71,7 +71,7 @@ exports.popWaitingStudent = async function(lecture_id) {
     try {
         const waitingStudents = await lectureDao.getWaitingStudents(lecture_id);
         if (waitingStudents.length)
-            await insertBooking({ lecture_id, student_id: waitingStudents[0] });
+            await bookingDao.removeFromWaitingList({ lecture_id, student_id: waitingStudents[0] });
     }   catch(error) {
         return errHandler(error);
     }

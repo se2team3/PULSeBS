@@ -97,6 +97,23 @@ exports.insertBooking = async function ({ lecture_id, student_id }) {
 
     })
 }
+
+//it moves the first waiting student to the booked list
+exports.removeFromWaitingList = async function ({ lecture_id, student_id }) {
+    return new Promise((resolve, reject) => {
+        const sql = `
+          UPDATE Bookings
+          SET deleted_at = NULL, waiting = 0
+          WHERE lecture_id = ?1 AND student_id = ?2
+        `;
+        db.run(sql, [lecture_id, student_id], (err) => {
+            if (err || this.changes===0)
+                return reject(err);
+            resolve(createBooking(lecture_id, student_id, false))
+        });
+    });
+}
+
 /*
 //gets the bookings given the student_id
 exports.retrieveStudentBookings = function (student_id) {
