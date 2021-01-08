@@ -58,7 +58,7 @@ describe('Lecture tests', function() {
 
         it('should retrieve the list of tomorrow lectures', async function() {
             const tomorrow = moment().add(1,'days').format('YYYY-MM-DD');
-            const data = await dbUtils.populate({datetime: tomorrow });
+            const data = await dbUtils.populate({n_students:5, datetime: tomorrow });
             const res = await lectureServices.getNextDayLectures();
             should.exist(res);
             res.should.be.an('array').that.has.length(1);
