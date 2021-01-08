@@ -182,10 +182,14 @@ const populate = async ({n_students, datetime} = def_options) => {
             await bookingDao.insertBooking({ lecture_id: data.lecture_id, student_id });
         }
     }
-        data.assign1.student_id = data.students_id[0]
-        data.assign2.student_id = data.students_id[0]
-        await course_studentDao.assingCourseToStudent(data.assign1);
-        await course_studentDao.assingCourseToStudent(data.assign2);
+    data.assign1.student_id = data.students_id[0]
+    data.assign2.student_id = data.students_id[0]
+
+    await course_studentDao.assingCourseToStudent({ course_id: data.course_id, student_id: data.students_id[1] });
+    await course_studentDao.assingCourseToStudent({ course_id: data.course_id, student_id: data.students_id[2] });
+    await course_studentDao.assingCourseToStudent(data.assign1);
+    await course_studentDao.assingCourseToStudent(data.assign2);
+
     return data;
 };
 

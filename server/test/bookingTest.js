@@ -175,6 +175,66 @@ describe('Booking routes', function () {
         res.body[0].should.have.property('waiting_counter',2)
     });
 
+    it('should pop someone from the waiting list when a booking is canceled', async function () {
+        // One student is already in the waiting list
+        let credentials = { email: data.students[1].email, password: data.students[1].password }; // student[1] and [2] are in waiting list
+        const agent = chai.request.agent(server);
+        let resLogin = await agent.post('/api/login').send(credentials);
+
+        let student_id = resLogin.body.id;
+        let tmp = `/api/students/${student_id}/lectures`;
+        let res;
+
+
+        let start_date = moment(new Date(2020, 10, 28, 16, 30)).format('YYYY-MM-DD');
+        let end_date = moment(new Date(2020, 10, 31, 16, 30)).format('YYYY-MM-DD');
+
+        res = await agent.get(tmp).query({ from: start_date, to: end_date });
+        console.log('STUDENT: ',student_id,res.body)
+        res.body[0].should.have.property('booking_waiting', true);
+        res.body[0].should.have.property('waiting_counter',2)
+
+        // login as a student booked before someone
+        credentials = { email: data.students[0].email, password: data.students[0].password };
+        resLogin = await agent.post('/api/login').send(credentials);
+
+        /* tmp = /api/students/${resLogin.body.id}/lectures;
+
+        res = await agent.get(tmp).query({ from: start_date, to: end_date });
+        let lecture = res.body[0]
+        console.log('STUDENT: ',resLogin.body.id , lecture) */
+
+        res = await deletion();
+
+        /* res = await agent.get(tmp).query({ from: start_date, to: end_date });
+        lecture = res.body[0]
+        console.log('STUDENT: ',resLogin.body.id ,lecture) */
+
+        // student popped from waiting list
+        credentials = { email: data.students[1].email, password: data.students[1].password }; // student[1] should be booked normally now
+        resLogin = await agent.post('/api/login').send(credentials);
+
+        res = await agent.get(tmp).query({ from: start_date, to: end_date });
+
+        console.log(res.body)
+        res.body[0].should.have.property('booking_waiting', false);
+        res.body[0].should.have.property('waiting_counter',1)
+
+        // student still in the waiting list
+        credentials = { email: data.students[2].email, password: data.students[2].password }; // student[1] should be booked normally now
+        resLogin = await agent.post('/api/login').send(credentials);
+        student_id = resLogin.body.id;
+        tmp = `/api/students/${student_id}/lectures`;
+
+        res = await agent.get(tmp).query({ from: start_date, to: end_date });
+
+        console.log(res.body)
+        res.body[0].should.have.property('booking_waiting', true);
+        res.body[0].should.have.property('waiting_counter', 1)
+
+
+    });
+
 });
 describe('Assert bookings', function () {
 
