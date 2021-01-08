@@ -12,7 +12,7 @@ switch (process.env.NODE_ENV) {
         filename = 'PULSeBS.populate';
         break;
     default:
-        filename = 'PULSeBS.db';
+        filename = 'PULSeBS';
 }
 const db_name = path.join(__dirname, "database", filename);
 
