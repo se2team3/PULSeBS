@@ -57,25 +57,25 @@ describe('Booking routes', function () {
 
     it('should allow student to book a lecture', async function () {
         await login(0);        
-        let res = await getStudentLectures(0);
-        res = await book(0);
+        await getStudentLectures(0);
+        let res = await book(0);
         res.should.have.property('status', 201);
     });
 
     it('should not allow student to book a lecture already booked', async function () {
-        let res = await login(0);
-        res = await book(0);
+        await login(0);
+        let res = await book(0);
         res.should.not.have.property('status', 201);
         res.should.have.property('status',400);
     });
 
      it('should allow student to delete a booking', async function () {
 
-        let res = await login(0);
-        res = await getStudentLectures(0);
-        res = await deletion(0);
+        await login(0);
+        // res = await getStudentLectures(0);
+        let res = await deletion(0);
         res.should.be.equal(200);
-        res = await getStudentLectures(0);
+        // res = await getStudentLectures(0);
 
 
     });
@@ -83,7 +83,7 @@ describe('Booking routes', function () {
 
 
     it('should not allow student to delete a booking yet deleted', async function () {
-        res = await deletion(0);
+        let res = await deletion(0);
         res.should.not.be.equal(200);
         res.should.be.equal(304);
     });
@@ -105,8 +105,8 @@ describe('Booking routes', function () {
         // One student is already in the waiting list
         await login(2); // login with a third student
 
-        let res = await book(2);
-        res = await getStudentLectures(2);
+        await book(2);
+        let res = await getStudentLectures(2);
         res.body[0].should.have.property('waiting_counter',2)
     });
 
@@ -114,7 +114,7 @@ describe('Booking routes', function () {
 
     it('should pop someone from the waiting list when a booking is canceled', async function () {
         // One student is already in the waiting list
-        let resLogin = await login(1);
+        await login(1);
     
 
         let res = await getStudentLectures(1);
@@ -122,11 +122,11 @@ describe('Booking routes', function () {
         res.body[0].should.have.property('waiting_counter',2)
 
         // login as a student booked before someone
-        resLogin = await login(0);
+        await login(0);
         res = await deletion(0);
 
         // student popped from waiting list
-        resLogin = await login(1);
+        await login(1);
 
         res = await getStudentLectures(1);
 
@@ -134,7 +134,7 @@ describe('Booking routes', function () {
         res.body[0].should.have.property('waiting_counter',1)
 
         // student still in the waiting list
-        resLogin = await login(2);
+        await login(2);
         res = await getStudentLectures(2);
 
         res.body[0].should.have.property('booking_waiting', true);
