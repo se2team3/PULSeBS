@@ -97,7 +97,7 @@ describe('Booking routes', function () {
 
     it('should put a student in the waiting list', async function () {
         await login(1);
-        res = await book(1);
+        let res = await book(1);
         res.body.should.have.property('waiting', true);
     });
 
