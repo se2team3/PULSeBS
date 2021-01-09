@@ -17,7 +17,9 @@ exports.getLecturesByTeacherAndTime = function(teacher_id,start_date, end_date) 
         LEFT JOIN Bookings B ON L.id = B.lecture_id
         WHERE L.course_id=C.id AND L.room_id= R.id AND C.teacher_id = T.id AND C.teacher_id = ?1 AND (?2 IS NULL OR date(datetime) >= ?2)
         AND (?3 IS NULL OR date(datetime) <= ?3)
-        GROUP BY L.id`;
+		AND (B.waiting IS NULL OR B.waiting=0) AND B.deleted_at IS NULL
+        GROUP BY L.id`; 
+
 
         db.all(sql, [teacher_id, start_date, end_date], (err, rows) => {
             if(err){

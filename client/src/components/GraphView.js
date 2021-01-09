@@ -18,7 +18,7 @@ const GraphView = (props) => {
             }
                 list[index].tot_seats+= (el.max_seats-el.booking_counter)
                 list[index].tot_bookings+=el.booking_counter
-                if (AuthUser!=='teacher') list[index].tot_bookings-=el.cancellation_counter
+                //if (AuthUser!=='teacher') list[index].tot_bookings-=el.cancellation_counter
                 list[index].tot_cancellations+=el.cancellation_counter
                 list[index].num_lectures++;
                 list[index].lectures.push({date:el.datetime,booking_counter:el.booking_counter,students:el.max_seats,cancellation_counter:el.cancellation_counter})
