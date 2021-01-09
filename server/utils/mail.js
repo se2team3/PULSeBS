@@ -51,6 +51,35 @@ const notifyBooking = async (booking) => {
 };
 
 
+const notifyPopping = async (booking) => {
+
+    if (!booking) return new Promise((resolve, reject) => {reject("Undefined recipient")});
+    const user = await userService.getUser(booking.student_id);
+    const lecture = await extendedLectureService.getLectureById(booking.lecture_id);
+    const txt = mailFormatter.studentPoppingBody(user,lecture);
+    const info = await send({
+        to: user.email,
+        subject: mailFormatter.studentPoppedSubject(lecture),
+        text: txt,
+    });
+
+    return {info,txt};
+};
+
+const notifyWaiting = async (booking) => {
+
+    if (!booking) return new Promise((resolve, reject) => {reject("Undefined recipient")});
+    const user = await userService.getUser(booking.student_id);
+    const lecture = await extendedLectureService.getLectureById(booking.lecture_id);
+    const txt = mailFormatter.studentWaitingBody(user,lecture);
+    const info = await send({
+        to: user.email,
+        subject: mailFormatter.studentWaitingSubject(lecture),
+        text: txt,
+    });
+
+    return {info,txt};
+};
 
 
 const notifyTeachers = async () => {
@@ -119,4 +148,4 @@ const send = async ({ to, subject, text }, callback = _ => { }) => {
     return transport.sendMail(message, callback());
 };
 
-module.exports = { start, job, send, notifyBooking, notifyLectureCancellation };
+module.exports = { start, job, send, notifyBooking, notifyPopping, notifyWaiting, notifyLectureCancellation };

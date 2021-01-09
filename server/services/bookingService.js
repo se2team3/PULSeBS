@@ -17,6 +17,8 @@ const insertBooking = async function(booking) {
         let book = await bookingDao.insertBooking({...booking});
         if (!book.waiting)
             mailUtils.notifyBooking(book);
+        else
+            mailUtils.notifyWaiting(book);
         return book;
     } catch (error) {
         return errHandler(error);
@@ -67,12 +69,14 @@ exports.deleteBooking = async function(booking) {
     }
 }
 
-exports.popWaitingStudent = async function(lecture_id) {
+exports.popWaitingStudent = async function (lecture_id) {
     try {
         const waitingStudents = await lectureDao.getWaitingStudents(lecture_id);
-        if (waitingStudents.length)
-            await bookingDao.removeFromWaitingList({ lecture_id, student_id: waitingStudents[0] });
-    }   catch(error) {
+        if (waitingStudents.length) {
+            const booking = await bookingDao.removeFromWaitingList({ lecture_id, student_id: waitingStudents[0] });
+            mailUtils.notifyPopping(booking);
+        }
+    } catch (error) {
         return errHandler(error);
     }
 }
