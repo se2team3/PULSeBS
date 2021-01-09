@@ -1,14 +1,13 @@
 import React from 'react';
 import './App.css';
 import Header from './components/Header';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import LoginForm from './components/LoginForm';
 import LecturePage from './components/LecturePage';
 import SetupPage from './components/SetupPage';
 import API from './api';
-import { Redirect, Route} from 'react-router-dom';
+import { Route} from 'react-router-dom';
 import { Switch } from 'react-router';
 import { AuthContext } from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
@@ -107,7 +106,6 @@ class App extends React.Component {
       loginUser: this.login,
       logoutUser: this.logout
     }
-    if( this.state.authUser!=undefined) console.log("in app"+this.state.authUser.role)
     return (
       <AuthContext.Provider value={value}>
 
@@ -135,7 +133,7 @@ class App extends React.Component {
               <LecturePage lecture_id={props.match.params.lecture_id} />
             } />
             
-            {(value.authUser&&value.authUser.role=="officer")&&<Route path="/setup">
+            {(value.authUser&&value.authUser.role==="officer")&&<Route path="/setup">
               <SetupPage/>
             </Route>}
             <Route>

@@ -109,6 +109,16 @@ const sample_booking = {
 };
 
 
+/*const sample_user={
+    university_id:1,
+    email: 'email@host.com',
+    password: 'passw0rd',
+    name: 'Micheal',
+    surname: 'Jordan',
+    role: 'teacher'
+
+}*/
+
 describe('Client API calls', () => {
     describe('getLectures', () => {
 
@@ -216,6 +226,7 @@ describe('Client API calls', () => {
                 expect(e.status).toBe(500);
             }
         });
+       
     })
 
     describe('bookLecture', () => {
@@ -223,14 +234,24 @@ describe('Client API calls', () => {
             mock.reset()
         });
 
-        it('book a lecture', async () => {
+        const checking =async (waiting)=>{
+            sample_booking.waiting=waiting;
             mock.onPost(base_url+`/students/${sample_booking.student_id}/bookings`,{lecture_id: sample_booking.lecture_id}).reply(201, sample_booking);
             const booking = await API.bookLecture(sample_booking.student_id, sample_booking.lecture_id);
             expect(booking.lecture_id).toEqual(sample_booking.lecture_id);
             expect(booking.student_id).toEqual(sample_booking.student_id);
-            expect(booking.updated_at).toEqual(sample_booking.updated_at); //TODO do more reasonable tests
+            expect(booking.waiting).toEqual(sample_booking.waiting);
+            expect(booking.updated_at).toEqual(sample_booking.updated_at);}
+
+        it('book a lecture', async () => {
+             checking('false')
         });
 
+        it('book a lecturein waiting list', async () => {
+            checking('true')
+        });
+
+        
         it('something went wrong booking lecture', async () => {
             mock.onPost(base_url+`/students/${sample_booking.student_id}/bookings`).reply(500, "internal server error");
             try {
@@ -370,6 +391,52 @@ describe('Client API calls', () => {
         });
     })
 
+    describe('getStudentLectures', () => {
+        beforeEach(() => {
+            mock.reset();
+        });
+
+       //const from = "2013-10-07", to = "2013-10-07", unused = undefined;
+        const unused=undefined
+        it('returns all the student lectures in the db', async () => {
+            mock.onGet(base_url+"/students/1/lectures").reply(200, sample_lectures);
+            const studentLectures = await API.getLectures(unused, unused, 'student', 1);
+            for (let i = 0; i < sample_lectures.length; i++)
+                expect({deleted_at: null, ...studentLectures[i]}).toMatchObject(sample_lectures[i]);
+
+        });
+    });
+
+    describe('getManagerLectures', () => {
+        beforeEach(() => {
+            mock.reset();
+        });
+
+
+        it('returns all the student lectures in the db', async () => {
+            mock.onGet(base_url+"/lectures").reply(200, sample_lectures);
+            const unused=undefined
+            const studentLectures = await API.getLectures(unused, unused, 'manager', 1);
+            for (let i = 0; i < sample_lectures.length; i++)
+                expect({deleted_at: null, ...studentLectures[i]}).toMatchObject(sample_lectures[i]);
+
+        });
+    });
+
+    describe('getInvalidRoleLectures', () => {
+        beforeEach(() => {
+            mock.reset();
+        });
+
+        it('should not return anything', async () => {
+            try{
+                const unused=undefined
+                await API.getLectures(unused, unused, 'abc', 1);
+            }
+            catch(e){expect(e.message).toBe('Invalid role!')}
+        });
+    });
+
     describe('getTeacherLectures', () => {
         beforeEach(() => {
             mock.reset();
@@ -461,4 +528,18 @@ describe('Client API calls', () => {
             }
         });
     });
+
+/*     describe('userAuthentication', () => {
+        beforeEach(() => {
+            mock.reset();
+        });
+
+        
+        it('login', async () => {
+            mock.onPost(base_url+`/login`,{email: sample_user.email, password:sample_user.password}).reply(201, sample_user);
+            const user = await API.userLogin(sample_user.email, sample_user.password);
+            expect(user.email).toEqual(sample_user.email);
+            
+        });
+    }); */
 })

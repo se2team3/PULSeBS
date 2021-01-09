@@ -15,6 +15,11 @@ describe('Lecture page', () => {
             const rows = Cypress.$('tbody tr');
             expect(rows.length).to.equal(3);
         })
+        it('has waiting state column working properly', () => {
+            cy.get('thead > tr > :nth-child(4)').contains('Waiting list');
+            cy.get('tbody > :nth-child(1) > :nth-child(4)').contains('No');
+            cy.get('tbody > :nth-child(3) > :nth-child(4)').contains('Yes');
+        })
     })
 
     // FROM HERE

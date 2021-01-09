@@ -29,7 +29,6 @@ async function insertStudents(students_dict){
 
 async function insertCourses(courses_dict,teacher_id){
   let t_id=teacher_id.map((el)=>el.university_id)
-  let course_id = [];
   for(let c of courses_dict){
     if(!t_id.includes(c.Teacher)){
       await dbUtils.reset();
@@ -37,7 +36,7 @@ async function insertCourses(courses_dict,teacher_id){
     }
   }
   let courses = courses_dict.map((c) => {
-    num=t_id.indexOf(c.Teacher)      
+    let num=t_id.indexOf(c.Teacher)      
     return {code:c.Code, name:c.Course, teacher_id:teacher_id[num].id, year:c.Year, semester:c.Semester}
   })
   let courses_id = await courseDao.bulkInsertionCourses(courses);
@@ -83,7 +82,7 @@ async function insertSchedule(schedule_dict,course_id){
       throw 'Course id is not present' 
     }    
   }
-  await insertRooms(schedule_dict); console.log('rooms')
+  await insertRooms(schedule_dict); /* console.log('rooms') */
   replicateSchedule(schedule_dict,course_id)
 }
 
@@ -101,7 +100,6 @@ async function replicateSchedule(schedules,courses){
       endDate =  moment('2021-06-30','YYYY-MM-DD');
     }
     
-    let days={Mon:1, Tue:2, Wed:3, Thu:4, Fri:5}
     //let tmp = startDate.clone().day(days[sd.Day]); //takes the first day_of_week (ex the first Monday)
     
     while(startDate.isBefore(endDate)){ 

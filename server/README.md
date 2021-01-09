@@ -1,11 +1,13 @@
 # API
 <!-- Endpoints are meant to be preceded by /api (/operations == /api/operations)-->
-
 ## Lectures
-- GET `/lectures` 
-  - Query: start_datem end_date
+- GET `/lectures`
+  - Param: NONE
   - Response: List of all lectures
-- GET `/lectures/{lecture_id}` 
+- GET `/lectures?from=<start_date>&to=<end_date>`
+  - Query: start_date end_date
+  - Response: List of all lectures in a given time frame
+- GET `/lectures/{lecture_id}`
   - Param: lecture_id
   - Response: Extended Lecture object for the given id
 - GET `/lectures/{lecture_id}/bookings` 
@@ -15,30 +17,32 @@
   - Param lecture_id
   - Body: {virtual: true/false}
   - Response: NONE
+  - Note: This endpoint is used to update the status of a lecture from presence to virtual
 - DELETE: `/lectures/{lecture_id}` 
   - Param: lecture_id
   - Response: NONE
   
 ## Students
-- GET `/students/{student_id}/lectures` 
+- GET `/students/{student_id}/lectures?from=<start_date>&to=<end_date>`
   - Param: student_id
-  - Query: from (start_date), to (end_date)
-  - Response: List of all lectures the student is entitled to follow
-- GET `/students/:lecture_id/` 
+  - Query: from (start_date), to (end_date) - optional
+  - Response: List of all lectures the student is entitled to follow in the given time frame
+- GET `/students/{lecture_id}/`
   - Param: lecture_id
   - Response: true if the lecture is bookable, false otherwise
-- DELETE `/students/{student_id}/lectures/{lecture_id}` x
-  - Param: student_id, lecture_id
-  - Response: Response status
-- POST `/students/{student_id}/bookings` 
+  - Note: This endpoint should receive query parameters for time frame
+- POST `/students/{student_id}/bookings`
   - Param: student_id
   - Body: lecture_id
   - Response: Booking object
+- DELETE `/students/{student_id}/lectures/{lecture_id}`
+  - Param: student_id, lecture_id
+  - Response: Response status
 
 ## Teachers
-- GET `/teachers/{teacher_id}/lectures`
+- GET `/teachers/{teacher_id}/lectures?from=<start_date>&to=<end_date>`
   - Param: teacher_id
-  - Query: from (start_date), to (end_date)
+  - Query: from (start_date), to (end_date) - optional
   - Response: List of all lectures the teacher is giving in a certain time period
 
 ## Suppor Officer

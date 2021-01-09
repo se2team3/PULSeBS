@@ -7,9 +7,11 @@ const CalendarModal = (props) => {
     let text = {
         'booked': "You have booked a seat for this lecture",
         'free': `${lecture.extendedProps.seats} available seats`,
-        'full': "No available seats",
+        'full': `No available seats right now, you can enter the waiting list if you like.\n${lecture.extendedProps.waiting_counter} are currently in the waiting list.`,
+        'waiting list': `You are currently in the waiting list, there are ${lecture.extendedProps.waiting_list_pos} students before you.`,
         'closed': "Booking closed"
       }
+      console.log(lecture.extendedProps);
 
     return (
         <Modal show={props.show} onHide={closeModal} size="md"
@@ -25,6 +27,10 @@ const CalendarModal = (props) => {
                     <Button variant="success" onClick={bookLecture}>Book a seat</Button>}
                 {lecture.extendedProps.status === "booked" &&
                     <Button variant="danger" onClick={cancelBooking}>Cancel booking</Button>}
+                {lecture.extendedProps.status === "full" &&
+                    <Button variant="primary" onClick={bookLecture}>Join waiting list</Button>}
+                {lecture.extendedProps.status === "waiting list" &&
+                    <Button variant="warning" onClick={cancelBooking}>Exit waiting list</Button>}
                 <Button variant="secondary" onClick={closeModal}>Close</Button>
                 
             </Modal.Footer>

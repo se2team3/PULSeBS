@@ -1,6 +1,5 @@
 import Booking from './models/booking';
 import BookingExtended from './models/booking_extended';
-import LectureExtended from './models/lecture_extended';
 import axios from 'axios';
 import {whatWentWrong, deleteResource} from './utils';
 

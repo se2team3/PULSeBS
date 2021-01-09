@@ -13,7 +13,11 @@
       "room_name": "ROOM4",
       "max_seats": 35,
       "booking_counter": 35,
-      "waiting_counter": 10
+      "waiting_counter": 15,
+      "waiting_list_pos": 10,
+      "booking_waiting": true,
+      "booking_updated_at": "2020-11-17T13:30:00",
+      "present": false
     },
     {
       "id": 2,
@@ -58,7 +62,10 @@
       "teacher_surname": "Volta",
       "room_name": "ROOM4",
       "max_seats": 42,
-      "booking_counter": 20
+      "booking_counter": 21,
+      "booking_updated_at": "2020-11-17T13:30:00",
+      "booking_waiting": false,
+      "present": false
     },
   
     {

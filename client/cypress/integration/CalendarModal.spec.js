@@ -1,3 +1,11 @@
+const setAndClick= function(){
+    cy.intercept('/api/students/1/bookings', {
+        statusCode: 201,
+        body: 'it worked!'
+      })
+    cy.get('.fc').contains('Physics').click();
+}
+
 describe('Calendar modal to book a lecture or cancel a booking',()=>{
     before('visit page', () => {
         cy.clock(Date.UTC(2020,10,17),['Date'])
@@ -41,6 +49,25 @@ describe('Calendar modal to book a lecture or cancel a booking',()=>{
             cy.contains("available seats");
             cy.contains("Book a seat");
             cy.contains("Close").click();
+        })
+        it('join waiting list', () => {
+            cy.clock(Date.UTC(2020,10,17),['Date'])
+            cy.intercept('/api/students/1/lectures', {fixture: 'lecturesCalendarModalWaiting.json'}).as('getAfterWaiting')
+            setAndClick();
+            cy.get('.modal-body').contains("No available seats right now, you can enter the waiting list if you like. 10 are currently in the waiting list.");
+            cy.contains("Join waiting list").click();
+            cy.wait('@getAfterWaiting');
+            cy.wait(1000)
+        })
+        it('exit waiting list', () => {
+            cy.clock(Date.UTC(2020,10,17),['Date'])
+            cy.intercept('/api/students/1/lectures', {fixture: 'lecturesCalendarModal.json'}).as('getAfterCancelWaiting')
+            setAndClick();
+            cy.get('.modal-body').contains("You are currently in the waiting list, there are 10 students before you.");
+            cy.contains("Exit waiting list").click();
+            cy.wait('@getAfterCancelWaiting');
+            cy.wait(1000);
+            cy.get('.fc').contains('Physics').parent().contains('FULL');
         })
     //})
 })

@@ -138,6 +138,22 @@ exports.getLectures = function(course_id) {
     })
 };
 
+exports.getWaitingStudents = function(lecture_id) {
+    return new Promise((resolve, reject) => {
+        const sql = `
+            SELECT student_id
+            FROM Bookings B
+            WHERE waiting = 1 AND B.lecture_id = ? AND B.deleted_at IS NULL
+            ORDER BY B.updated_at
+        `;
+        db.all(sql, [lecture_id], (err, rows) => {
+            if (err)
+                return reject(err);
+            resolve(rows.map(r => r.student_id));
+        });
+    });
+}
+
 exports.deleteLecture = function ({ datetime, lecture_id,teacher}) {
     return new Promise((resolve, reject) => {
         const sql = `UPDATE Lectures SET deleted_at= ? 
