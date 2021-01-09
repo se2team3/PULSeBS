@@ -37,7 +37,7 @@ async function insertCourses(courses_dict,teacher_id){
     }
   }
   let courses = courses_dict.map((c) => {
-    num=t_id.indexOf(c.Teacher)      
+    let num=t_id.indexOf(c.Teacher)      
     return {code:c.Code, name:c.Course, teacher_id:teacher_id[num].id, year:c.Year, semester:c.Semester}
   })
   let courses_id = await courseDao.bulkInsertionCourses(courses);
@@ -77,7 +77,7 @@ async function insertRooms(schedule_dict){
 async function insertSchedule(schedule_dict,course_id){
   let c_id=course_id.map((el)=>el.code)
  
-  for (let sd of schedule_dict){      
+  for (let sd of schedule_dict){  
     if(!c_id.includes(sd.Code)){
       await dbUtils.reset();
       throw 'Course id is not present' 
@@ -101,13 +101,14 @@ async function replicateSchedule(schedules,courses){
       endDate =  moment('2021-06-30','YYYY-MM-DD');
     }
     
-    let days={Mon:1, Tue:2, Wed:3, Thu:4, Fri:5}
     //let tmp = startDate.clone().day(days[sd.Day]); //takes the first day_of_week (ex the first Monday)
     
     while(startDate.isBefore(endDate)){ 
       let time = sd.Time.split('-') 
+
       let date1 = moment(startDate, 'YYYY-MM-DD hh:mm').add(time[0],'hh:mm').format('YYYY-MM-DD HH:mm')
       let date2 = moment(startDate ,'YYYY-MM-DD').add(time[1],'hh:mm').format('YYYY-MM-DD HH:mm')
+
       const lecture = {datetime:date1, datetime_end:date2, course_id:course[0].id,room_id:sd.Room} 
       lectures.push(lecture);     
       startDate.add(7, 'days');
@@ -133,11 +134,13 @@ const setupInsert = async function(dictionary) {
     
     let teacher_id =[], student_id=[],course_id=[];
 
-    teacher_id = await insertTeachers(teachers_dict) ; /* console.log('teachers') */
-    student_id = await insertStudents(students_dict); /* console.log('students')  */
-    course_id = await insertCourses(courses_dict,teacher_id); /* console.log('courses') */
-    await insertEnrollments(enrollment_dict,course_id,student_id); /* console.log('enroll') */
-    await insertSchedule(schedule_dict,course_id); /* console.log('end') */
+    teacher_id = await insertTeachers(teachers_dict) ; console.log('teachers')
+    student_id = await insertStudents(students_dict); console.log('students') 
+    course_id = await insertCourses(courses_dict,teacher_id); console.log('courses')
+    await insertEnrollments(enrollment_dict,course_id,student_id); console.log('enroll')
+    await insertSchedule(schedule_dict,course_id); console.log('schedule')
+    await dbUtils.bookLectures(); console.log("bookings and deletions")
+    
     
 
   

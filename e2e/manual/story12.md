@@ -2,10 +2,6 @@
 
 As a support officer I want to upload the list of students, courses, teachers, lectures, and classes to setup the system
 
-/////////////////////////<br>
-////THIS IS A STUB////<br>
-/////////////////////////<br>
-
 
 | Test ID | S12_0 |  |
 | --- | --- | --- |
