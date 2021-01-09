@@ -29,7 +29,6 @@ async function insertStudents(students_dict){
 
 async function insertCourses(courses_dict,teacher_id){
   let t_id=teacher_id.map((el)=>el.university_id)
-  let course_id = [];
   for(let c of courses_dict){
     if(!t_id.includes(c.Teacher)){
       await dbUtils.reset();
