@@ -74,7 +74,7 @@ class CalendarPage extends React.Component {
     let filteredLectures = this.state.lectures.filter((lec) => {
       let rightCourse = true;
       if (this.state.courseFilters.length > 0) {
-        rightCourse = this.state.courseFilters.some((filter) => filter !== lec.course_id);
+        rightCourse = !this.state.courseFilters.some((filter) => filter === lec.course_id);
       }
 
       let rightStatus = true;
