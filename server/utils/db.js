@@ -102,7 +102,7 @@ const managerObj = {
  */
 const support_officerObj = {
     university_id: '201',
-    email: 'officer@host.com',
+    email: 'officer@email.com',
     password: 'passw0rd',
     name: 'Micheal',
     surname: 'Jordan',
@@ -189,4 +189,64 @@ const populate = async ({n_students, datetime} = def_options) => {
     return data;
 };
 
-module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate, support_officerObj, isEmpty, addStaff }
+
+
+const bookLectures = async() =>{
+    let ripartition=3; //1 student over 3 is type A, 1 is type B, the other does nothing
+    let factor_bookA= 4; //the student of type A books 1 lecture over 4 (only this type can cancel)
+    let factor_bookB= 3; //the student of type B books 1 lecture over 3
+    let factor_canc= 3; //1 deletion every 3 bookings
+    let factor_stud= 5; //only 1 student over 5 (of type A) is cancelling some of his bookings
+    try{
+        const courses_students = await course_studentDao.retrieveAllStudentsCourses(); 
+        const datetime= moment().format('YYYY-MM-DD HH:mm');
+        let index=-1;
+        let bookings=[];
+        let deletions=[];
+        let booking;
+        let factor_book;
+        let flag;
+        let to_be_book, to_be_canc;
+
+        for (let cs of courses_students){
+            index++; 
+            if(index%ripartition===0 || index%ripartition===1){
+                if(index%ripartition===0)
+                    factor_book=factor_bookA;
+                else 
+                    factor_book=factor_bookB;
+
+                let lectures = await lectureDao.getLectures(cs.course_id) 
+
+                for(let count=0;count<lectures.length;count++){
+                    to_be_book=0;
+                    to_be_canc=0;
+                    flag=0;
+                    if(count%factor_book===0){
+                        to_be_book=1;
+                        if(count%(factor_book*factor_canc)===0) {
+                            to_be_canc=1; 
+                            flag=1;
+                        }
+                        if(count%factor_bookA===0 && count%factor_bookB===0 && !(count%(factor_bookA*factor_canc)===0 && count%(factor_bookB*factor_canc)===0)){
+                            to_be_canc=2;
+                        }
+                        booking=({lecture_id:lectures[count].id,student_id:cs.student_id, to_be_canc:to_be_canc})
+                        bookings.push(booking);
+                    }
+
+                    if(to_be_book===1 && flag===1 && ((factor_book===factor_bookA && (index%(ripartition*factor_stud)===0)) ||(factor_book===factor_bookB && (index%(ripartition*factor_stud)===1)))){
+                        deletions.push({datetime:datetime,lecture_id:booking.lecture_id,student_id:booking.student_id})  
+                    }
+                }
+            }
+        }
+        await bookingDao.bulkBookings(bookings);
+        await bookingDao.bulkDeletions(deletions);
+    }
+    catch(err){
+        console.log(err)
+    }
+
+}
+module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate, support_officerObj, isEmpty, addStaff, bookLectures }

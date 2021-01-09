@@ -142,17 +142,15 @@ exports.retrieveListOfBookedStudents = function(lecture_id) {
 //it allows you to delete a booking
 exports.deleteBooking = function ({ datetime, lecture_id, student_id }) {
     return new Promise((resolve, reject) => {
-
         const sql = 'UPDATE Bookings SET deleted_at= ? WHERE lecture_id= ? AND student_id= ? AND deleted_at IS NULL'
         db.run(sql, [datetime, lecture_id, student_id], function (err) {
             if (err) {
                 console.log(err)
                 reject(err);
-            }
-            else
+            }else
                 resolve(this.changes);
-
-        });
+            }
+        );
     })
 }
 
@@ -170,3 +168,48 @@ exports.isEmpty = function(){
         });
     });
 }
+
+
+exports.bulkBookings = function(array){
+    let factor_stud= 5; //only 1 student over 5 (of type A) is cancelling some of his bookings
+    let factor;
+    return new Promise ((resolve,reject) =>{
+        let sql=''; 
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].to_be_canc===1){
+                factor= factor_stud/(factor_stud-1)
+            }
+            else if(array[i].to_be_canc===2){
+                factor=(2*factor_stud)/(2*factor_stud-1)
+            }
+            else factor=1;
+
+            sql += `INSERT INTO Bookings(lecture_id,student_id,waiting) 
+                    SELECT'${array[i].lecture_id}','${array[i].student_id}', (COUNT(*) >= R.seats is not null and COUNT(*) >= (${factor}*R.seats))
+                    FROM Bookings B, Lectures L, Rooms R
+                    WHERE B.lecture_id = L.id AND L.room_id = R.id AND B.lecture_id =  '${array[i].lecture_id}'
+                    AND B.deleted_at IS NULL AND B.waiting = 0; `
+        }
+        db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
+            if(err)
+                reject(err);
+            else resolve (this.changes)
+        })    
+    });
+}
+
+exports.bulkDeletions = function(array){
+    return new Promise ((resolve,reject) =>{
+        let sql='';
+        for (let i = 0; i < array.length; i++) {
+            sql += `UPDATE Bookings SET deleted_at='${array[i].datetime}'
+            WHERE lecture_id='${array[i].lecture_id}' AND student_id='${array[i].student_id}'; `
+        }
+        db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
+            if(err)
+                reject(err);
+            else
+                resolve(this.changes)
+        })    
+    });
+} 
