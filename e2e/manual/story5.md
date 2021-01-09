@@ -9,33 +9,22 @@ As a student I want to cancel my booking so that I am free
 /////////////////////////<br>
 
 
+| Test ID | S5_0 |  |
+| --- | --- | --- |
+| **Test description** <td colspan=2> Setup for story 5 |
+| **Steps** | Operator actions | Expected results |
+| 1 | Visit login page at http://localhost:3000 | redirecting to http://localhost:3000/login page displaying "email" and "password" inputs |
+| 2 | Fill "E-mail" and "Password" with "s900003@students.politu.it" and "passw0rd" respectively| redirecting to http://localhost:3000/calendar page displaying weekly schedulue of the student |
+
+
 | Test ID | S5_1 |  |
 | --- | --- | --- |
-| **Test description** <td colspan=2> Login with correct credentials |
+| **Test description** <td colspan=2> Cancelling booked lecture |
 | **Steps** | Operator actions | Expected results |
-| 1 | Visit login page at http://localhost:3000 | redirecting to login page displaying "email" and "password" inputs |
+| 1 | Following S5_0, click on a lecture marked as "booked"  | Small pop-up appears, indicating "You have booked a seat for this lecture"|
+| 2 | Click on "Cancel booking" | Selected lecture is now marked as "FREE" of "FULL"  |
 
-| Test ID | S5_2 |  |
-| --- | --- | --- |
-| **Test description** <td colspan=2> Login with wrong credentials |
-| **Steps** | Operator actions | Expected results |
-| 1 | Visit login page at http://localhost:3000 | The login page is displayed with no errors |
-| 2 | Insert not valid email "email.email.it" | A red border should appear around the email box |
-| 3 | Correct the previously inserted email to match "email@email.it" | The red border should disappear |
-| ... | ... | ... |
 
 <br>
 
 
-| Test ID | S5_3 |  |
-| --- | --- | --- |
-| **Test description** <td colspan=2> Logout |
-| **Steps** | Operator actions | Expected results |
-| 1 | Visit login page at http://localhost:3000 | redirecting to login page displaying "email" and "password" inputs |
-
-
-| Test ID | S5_4 |  |
-| --- | --- | --- |
-| **Test description** <td colspan=2> Book a seat |
-| **Steps** | Operator actions | Expected results |
-| 1 | Visit login page at http://localhost:3000 | redirecting to login page displaying "email" and "password" inputs |
