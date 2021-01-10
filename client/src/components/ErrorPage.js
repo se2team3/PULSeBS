@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Button, Col, Container, Jumbotron, Row, Table } from 'react-bootstrap';
+import { Button, Col, Container, Jumbotron, Row } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 
 function ErrorPage(props) {

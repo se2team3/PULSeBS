@@ -1,8 +1,6 @@
 import React from 'react';
 import './App.css';
 import Header from './components/Header';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import LoginPage from './components/LoginPage';
 import LecturePage from './components/LecturePage';
 import SetupPage from './components/SetupPage';
