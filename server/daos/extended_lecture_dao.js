@@ -46,20 +46,18 @@ exports.getAllLectures = function(start_date,end_date) {
         // id, datetime,datetime_end,course_id,room_id,virtual,deleted_at,course_name,teacher_name,teacher_surname,room_name,max_seats,booking_counter
         const sql = `
         SELECT L.id,L.datetime,L.datetime_end,L.course_id,L.room_id,L.virtual, L.deleted_at, C.name as course_name,
-        T.name as teacher_name, T.surname as teacher_surname, R.name as room_name, R.seats as max_seats, (COUNT(B.lecture_id )-SUM(B.waiting)-t.cancellation_counter) as booking_counter,t.cancellation_counter         
-        FROM 
-			(SELECT lecture_id , COUNT(B1.deleted_at) as cancellation_counter FROM Lectures L1, Users T1, Users U1, Courses C1,Rooms R1, Bookings B1
-                WHERE L1.course_id=C1.id AND L1.room_id=R1.id AND C1.teacher_id=T1.id AND
-                L1.id=B1.lecture_id AND B1.student_id=U1.id AND T1.role="teacher" AND U1.role="student" AND B1.waiting=0
-                GROUP BY L1.id
-            ) as t, 
-		Lectures L, Users T, Users U, Courses C,Rooms R, Bookings B
-        WHERE L.course_id=C.id AND L.room_id=R.id AND C.teacher_id=T.id  AND  L.id =t.lecture_id AND
-         L.id=B.lecture_id AND B.student_id=U.id AND T.role="teacher" AND U.role="student"
+        T.name as teacher_name, T.surname as teacher_surname, R.name as room_name, R.seats as max_seats,
+		(COUNT(case when B.waiting<>1 AND B.deleted_at IS NULL then 1 else null end)) as booking_counter,
+		(COUNT(case when B.waiting<>1 AND B.deleted_at IS NOT NULL then 1 else null end)) as cancellation_counter,
+		(COUNT(case when B.waiting=1 AND B.deleted_at IS NULL then 1 else null end)) as waiting_counter 
+		
+		FROM Lectures L, Users T, Users U, Courses C,Rooms R
+		LEFT JOIN Bookings B ON L.id=B.lecture_id AND U.id=B.student_id
+        WHERE L.course_id=C.id AND L.room_id=R.id AND C.teacher_id=T.id  AND T.role="teacher" AND U.role="student"
          AND (?1 IS NULL OR date(L.datetime) >= ?1)
          AND (?2 IS NULL OR date(L.datetime) <= ?2)
 		
-        GROUP BY B.lecture_id
+        GROUP BY L.id
         ORDER BY L.datetime`;
         db.all(sql, [start_date, end_date], (err, rows) => {
             if (err) {
