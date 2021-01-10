@@ -47,7 +47,7 @@ describe('Statistics tests', () => {
         describe(`${role} statistics`, () => {
 
             before('intercept routes', function () {
-                setupInterceptTeacher();
+                //setupInterceptTeacher();
                 if(role==='teacher')setupInterceptTeacher()
                 else setupInterceptBookingManager();
                 settings();
@@ -93,6 +93,8 @@ describe('Statistics tests', () => {
                 cy.contains('Bookings statistics').should('exist')
                 cy.contains('Free seats(avg)').should('exist')
                 cy.contains('Bookings(avg)').should('exist')
+                if(role==='booking manager') cy.contains('Cancellations(avg)').should('exist') // BM only
+                if(role==='booking manager') cy.contains('In waiting(avg)').should('exist') // BM only
                 cy.get('button').contains('Bar chart').should('exist')
         
                 // Switch view to scatter chart
@@ -102,6 +104,7 @@ describe('Statistics tests', () => {
                 cy.contains('Bookings(avg)').should('not.exist')
         
                 if(role==='booking manager') cy.contains('Cancellations(avg)').should('not.exist') // BM only
+                if(role==='booking manager') cy.contains('In waiting(avg)').should('not.exist') // BM only
                 cy.contains('% bookings/total number of seats').should('exist')
         
             })

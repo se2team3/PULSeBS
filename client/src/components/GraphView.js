@@ -13,15 +13,16 @@ const GraphView = (props) => {
         for (let el of lectures) {
             let index = list.map(element => { return element.course_id }).indexOf(el.course_id)
             if (index === -1) {
-                list.push({ course_id: el.course_id, course: el.course_name, tot_seats: 0, tot_bookings: 0, num_lectures: 0, lectures: [], color: '' ,tot_cancellations:0,})
+                list.push({ course_id: el.course_id, course: el.course_name, tot_seats: 0, tot_bookings: 0, tot_waiting:0, num_lectures: 0, lectures: [], color: '' ,tot_cancellations:0,})
                 index = list.length - 1;
             }
                 list[index].tot_seats+= (el.max_seats-el.booking_counter)
                 list[index].tot_bookings+=el.booking_counter
                 //if (AuthUser!=='teacher') list[index].tot_bookings-=el.cancellation_counter
                 list[index].tot_cancellations+=el.cancellation_counter
+                list[index].tot_waiting+=el.waiting_counter
                 list[index].num_lectures++;
-                list[index].lectures.push({date:el.datetime,booking_counter:el.booking_counter,students:el.max_seats,cancellation_counter:el.cancellation_counter})
+                list[index].lectures.push({date:el.datetime,booking_counter:el.booking_counter,students:el.max_seats,cancellation_counter:el.cancellation_counter,waiting_counter:el.waiting_counter})
                 let coursex=courses.filter((c)=>{return c.course_id===el.course_id })
                 list[index].color = coursex[0].color
                
@@ -54,6 +55,7 @@ const GraphView = (props) => {
                                             
                                                 retrieveBarElement(list,aggregationLevel,'tot_bookings','Bookings'),
                                                 AuthUser!=='teacher'?retrieveBarElement(list,aggregationLevel,'tot_cancellations','Cancellations'):{},
+                                                AuthUser!=='teacher'?retrieveBarElement(list,aggregationLevel,'tot_waiting','In waiting'):{},
                                                 retrieveBarElement(list,aggregationLevel,'tot_seats','Free seats')
                                             
 
@@ -98,6 +100,9 @@ const GraphView = (props) => {
                                                 return retrieveScatterElement(el,'booking_counter','rgb(49,168,49)','name')})
                                                 .concat(list.map((el)=>{
                                                     return retrieveScatterElement(el,'cancellation_counter','black','name')
+                                                }))
+                                                .concat(list.map((el)=>{
+                                                    return retrieveScatterElement(el,'waiting_counter','#fcba03','name')
                                                 }))
                                             
                                         }
@@ -160,7 +165,7 @@ function retrieveBarElement(list,aggregationLevel,param,type){
             let rxp=new RegExp('.{1,10} ','g')
             return text.replace(rxp, "$&<br>")}),
         name:aggregationLevel==='Lecture'?type:(type+'(avg)'),
-        marker: {color: param==='tot_bookings'?'rgb(49,168,49)': param==='tot_cancellations'?'black':'#007BFF'},
+        marker: {color: param==='tot_bookings'?'rgb(49,168,49)': param==='tot_cancellations'?'black': param==='tot_waiting'?'#fcba03':'#007BFF'},
         width:list.length===1?0.25:0.7,
         type: 'bar',
         hoverinfo:'y+text+name',
