@@ -10,11 +10,11 @@ class LoginPage extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { username: '', password: '', submitted: false };
+        this.state = { email: '', password: '', submitted: false };
     }
 
-    onChangeUsername = (event) => {
-        this.setState({ username: event.target.value });
+    onChangeEmail = (event) => {
+        this.setState({ email: event.target.value });
     };
 
     onChangePassword = (event) => {
@@ -23,7 +23,7 @@ class LoginPage extends React.Component {
 
     handleSubmit = async (event, onLogin) => {
         event.preventDefault();
-        await onLogin(this.state.username, this.state.password);
+        await onLogin(this.state.email, this.state.password);
         this.setState({ submitted: true });
     }
 
@@ -54,7 +54,7 @@ class LoginPage extends React.Component {
                                 }
                                 <Form.Group controlId="email">
                                     <Form.Label>Email</Form.Label>
-                                    <Form.Control type="email" name="email" placeholder="Email" value={this.state.email} onChange={this.onChangeUsername} required autoFocus />
+                                    <Form.Control type="email" name="email" placeholder="Email" value={this.state.email} onChange={this.onChangeEmail} required autoFocus />
                                 </Form.Group>
                                 <Form.Group controlId="password">
                                     <Form.Label>Password</Form.Label>

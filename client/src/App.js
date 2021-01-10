@@ -117,9 +117,9 @@ class App extends React.Component {
         <Header showSidebar={this.showSidebar} />
 
         <Switch>
-          <Route path="/login">
+          {value.authUser===null&&<Route path="/login">
             <LoginPage />
-          </Route>
+          </Route>}
 
           {(value.authUser && (value.authUser.role === "student" || value.authUser.role === "teacher")) &&<Route path="/calendar">
             <CalendarPage goToLecturePage={this.goToLecturePage} authUser={value.authUser} />
