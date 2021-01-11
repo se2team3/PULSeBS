@@ -12,9 +12,8 @@ const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 
 const login = async function (newUser){
-    let id;
     try {
-        id = await userDao.insertUser(newUser);
+        await userDao.insertUser(newUser);
     }   catch(err) {}
     let credentials = { email: newUser.email, password: newUser.password };
     return  await chai.request(server).post(`/api/login`).send(credentials);
