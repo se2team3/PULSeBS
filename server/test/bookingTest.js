@@ -6,7 +6,6 @@ const chai = require('chai');
 const server = require('../index');
 const should = chai.should();
 const chaiHttp = require("chai-http");
-const populateDb = require('../utils/populate')
 const moment = require('moment');
 let data;
 const agent = chai.request.agent(server);
@@ -148,11 +147,11 @@ describe('Assert bookings', function () {
 
     before('create tables and clear db', async function () {
         await dbUtils.reset();
-
+        data = await dbUtils.populate();
     });
 
     it('should verify that the student is already booked for a specific lecture', async function () {
-        data = await populateDb.populate();
+        
         const lecture_id = 1;
         let credentials = { email: data.students[0].email, password: data.students[0].password };
         const agent2 = chai.request.agent(server);
@@ -168,7 +167,6 @@ describe('Assert bookings', function () {
     });
 
     it('should verify that a student can book a specific lecture', async function () {
-        data = await populateDb.populate();
         const lecture_id = 8;
         const tmp = `/api/students/${lecture_id}`;
 

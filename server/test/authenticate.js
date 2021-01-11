@@ -28,7 +28,7 @@ describe('Authentication routes', function () {
         try {
             id = await insertUser(newUser);
         }   catch(err) {}
-        const credentials = (({email, password}) => ({email, password}))(newUser);
+        let credentials = { email: newUser.email, password: newUser.password };
         const res = await chai.request(server).post(`/api/login`).send(credentials);
         should.exist(res);
         res.should.have.status(200);
@@ -38,6 +38,7 @@ describe('Authentication routes', function () {
         res.body.should.include(response);
         res.should.have.cookie('token');
     });
+    
     it('should allow an existing officer to login', async function() {
         await dbUtils.addStaff();
         const newUser = dbUtils.support_officerObj;
@@ -45,7 +46,7 @@ describe('Authentication routes', function () {
         try {
             id = await insertUser(newUser);
         }   catch(err) {}
-        const credentials = (({email, password}) => ({email, password}))(newUser);
+        let credentials = { email: newUser.email, password: newUser.password };
         const res = await chai.request(server).post(`/api/login`).send(credentials);
         should.exist(res);
         res.should.have.status(200);
@@ -57,11 +58,12 @@ describe('Authentication routes', function () {
     });
 
     it('should allow an existing manager to login', async function() {
+        
         await dbUtils.addStaff()
         await userDao.clearUserTable()
         const newUser = dbUtils.managerObj;
         const id = await insertUser(newUser);
-        const credentials = (({email, password}) => ({email, password}))(newUser);
+        let credentials = { email: newUser.email, password: newUser.password };
         const res = await chai.request(server).post(`/api/login`).send(credentials);
         should.exist(res);
         res.should.have.status(200);
@@ -71,7 +73,7 @@ describe('Authentication routes', function () {
         res.body.should.include(response);
         res.should.have.cookie('token');
     });
-
+    
     it('should allow logged user to logout', async function() {
         const newUser = dbUtils.studentObj('S123456');
         await insertUser(newUser);
