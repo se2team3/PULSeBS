@@ -41,11 +41,13 @@ class StatisticsPage extends React.Component {
             let startDate = this.state.startDate && moment(this.state.startDate).format('YYYY-MM-DD')
             let endDate = this.state.endDate && moment(this.state.endDate).format('YYYY-MM-DD')
             let lectures = await API.getLectures(startDate, endDate, this.props.authUser.role, this.props.authUser.id)
+            for (let l of lectures) {if (l.course_id===8) console.log(l)}
             const courses = lectures
                 .map(l => l.course_id)
                 .filter(this.onlyUnique)
                 .map(id => lectures.find(l => l.course_id === id))
                 .map(c => ({ ...c, selected: true }));
+            console.log(courses)
             this.setState({ lectures, courses });
         } catch (err) {
             throw err;
@@ -89,7 +91,7 @@ class StatisticsPage extends React.Component {
     handleCheckboxChange = (course, status) => {
         const courses = this.state.courses;
         for (let c of courses)
-            if (c.course_name === course.course_name)
+            if (c.course_id === course.course_id)
                 c.selected = status !== undefined ? status : !c.selected;
 
         // TODO find a better way, to avoid nested `setState`s
@@ -133,7 +135,7 @@ class StatisticsPage extends React.Component {
         this.setState({ focusedInput });
     }
 
-    isCourseSelected = (lecture) => this.state.courses.filter(c => c.selected).map(c => c.course_name).includes(lecture.course_name);
+    isCourseSelected = (lecture) => this.state.courses.filter(c => c.selected).map(c => c.course_id).includes(lecture.course_id);
 
     toggleSelected = () => {
         const status = !this.state.toggleIsActive;
@@ -155,7 +157,7 @@ class StatisticsPage extends React.Component {
                         return (
                             <Container fluid style={{flexGrow: 1, display: "flex", flexDirection: "column", minHeight: 0}}>
                                 <Row className="flex-nowrap" style={{height: "100%", overflowX: "auto"}}>
-                                    <Col lg={2} md={3} style={{ backgroundColor: 'rgb(240, 240, 240)', flex: "1 1 auto", overflowY: "auto", overflowX: "hidden", minHeight: 0, maxHeight: "100%" }}>
+                                    <Col lg={2} md={3} style={{ backgroundColor: 'rgb(240, 240, 240)'}}>
                                         <StatisticsSidebar
                                             startDate={this.state.startDate}
                                             endDate={this.state.endDate}

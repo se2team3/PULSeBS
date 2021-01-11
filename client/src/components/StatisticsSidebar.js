@@ -14,7 +14,7 @@ const{  startDate, endDate, focusedInput, courses,
     return (
         <Nav style={{ height: "100%" }}>
             <Form style={{ display: "flex", flexDirection: "column", maxHeight: "100%" }}>
-                <Form.Group >
+                <Form.Group style={{zIndex: '3'}}>
                     <Form.Label as="legend">
                         Time frame
                     </Form.Label>

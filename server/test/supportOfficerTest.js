@@ -112,11 +112,12 @@ describe('Support Officer', function () {
   });
 
   it('should properly login as a support officer', async () => {
-    const { email, password } = supportOfficer;
-    const res = await agent.post(`/api/login`).send({ email, password });
+   const { email, password } = supportOfficer;
+    const res = await agent.post(`/api/login`).send({ email, password});
     res.should.have.status(200);
     res.body.should.be.an('object');
     const { password: __unused, ...user } = supportOfficer;
+    console.log("not used ",__unused)
     res.body.should.deep.include(user);
   });
 
