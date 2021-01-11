@@ -168,7 +168,7 @@ function retrieveBarElement(list,aggregationLevel,param,type){
         marker: {color: param==='tot_bookings'?'rgb(49,168,49)': param==='tot_cancellations'?'black': param==='tot_waiting'?'#fcba03':'#007BFF'},
         width:list.length===1?0.25:0.7,
         type: 'bar',
-        hoverinfo:'y+text+name',
+        hoverinfo: list.map((el=>(el[param]/el.num_lectures)!==0 ? 'y+text+name':'skip'))
         }
     )
 }
@@ -186,7 +186,7 @@ function retrieveScatterElement(el,param,color,textChoose){
         marker:{color:color},
         text:el.lectures.map((lecture)=>{return (lecture[param]+' Booked <br>'+(lecture[param]*100/lecture.students).toFixed(0)+'% of seats')}),
         name: el.course,
-        hoverinfo:textChoose
+        hoverinfo:textChoose 
         }
     )
 }
