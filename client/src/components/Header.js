@@ -29,7 +29,7 @@ const Header = (props) => {
               </>}
             </Nav>
             <Nav>
-              <Container fluid className="pl-0 mt-md-0 mt-3">
+              <Container fluid className="px-0 mt-md-0 mt-3">
                 <Row className="w-100">
                   {context.authUser &&
                   <>
@@ -38,7 +38,7 @@ const Header = (props) => {
                         Welcome {context.authUser.name}!
                       </Navbar.Brand>
                     </Col>
-                    <Col md={3} xs='auto'>
+                    <Col md={3} xs='auto' className="ml-auto pr-0">
                       <Nav.Link onClick={() => {
                         context.logoutUser()
                       }}>Logout</Nav.Link>
