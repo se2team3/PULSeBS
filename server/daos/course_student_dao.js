@@ -1,7 +1,4 @@
-// import database
-// import modules
-
-const db = require('../db/db.js');
+const db = require('../db/db.js')
 
 // it creates the course_student table
 exports.createCourse_StudentTable = function() {
@@ -11,23 +8,23 @@ exports.createCourse_StudentTable = function() {
                      FOREIGN KEY(course_id) REFERENCES Courses(id), FOREIGN KEY(student_id) REFERENCES Users(id))`
         db.run(sql,[],(err) =>{
             if(err)
-                reject(err);
+                reject(err)
             else
-                resolve(null);
-        });
+                resolve(null)
+        })
     })
 }
 
 //clears the lecture table
 exports.clearCourse_StudentTable = function () {
     return new Promise ((resolve,reject) =>{
-        const sql = 'DELETE FROM Course_Student';
+        const sql = 'DELETE FROM Course_Student'
         db.run(sql,[],(err) =>{
             if(err)
-                reject(err);
+                reject(err)
             else
-                resolve();
-        });
+                resolve()
+        })
     })
 }
 
@@ -37,10 +34,10 @@ exports.assingCourseToStudent = function({course_id,student_id}) {
         const sql = 'INSERT INTO Course_Student(course_id,student_id) VALUES(?,?)'
         db.run(sql,[course_id,student_id],function(err){
             if(err)
-                reject(err);
+                reject(err)
             else
-                resolve(null);   
-        });
+                resolve(null)  
+        })
     })
 }
 
@@ -50,60 +47,34 @@ exports.retrieveStudentCourses = function({student_id}) {
         const sql = 'SELECT course_id FROM Course_Student WHERE student_id = ?'
         db.all(sql, [student_id], (err, rows) => {
             if(err)
-                return reject(err);
+                return reject(err)
             if (!rows)
-                resolve(null);
+                resolve(null)
             else{
-                resolve(rows);
+                resolve(rows)
             }               
-        });
+        })
     })
 }
-/*
-//gets the students given the course_id
-exports.retrieveEnrolledStudents = function({course_id}) {
-    return new Promise ((resolve,reject) =>{
-        const sql = 'SELECT student_id FROM Course_Student WHERE course_id = ?'
-        db.all(sql, [lecture_id], (err, rows) => {
-            if(err)
-                return reject(err);
-            if (!rows)
-                resolve(null);
-            else{
-                resolve(rows);
-            }               
-        });
-    })
-}
-exports.deleteCourse_StudentTable = function() {
-    return new Promise ((resolve,reject) =>{
-        const sql = 'DROP TABLE Course_Student '
-        db.run(sql, (err, row) => {
-            if(err)
-                return reject(err);
-            else resolve(null);
-        });
-    })
-}*/
 
 exports.retrieveAllStudentsCourses = function(){
     return new Promise ((resolve,reject) =>{
         const sql = 'SELECT course_id, student_id FROM Course_Student'
         db.all(sql, [], (err, rows) => {
             if(err)
-                return reject(err);
+                return reject(err)
             if (!rows)
-                resolve(null);
+                resolve(null)
             else{
-                resolve(rows);
+                resolve(rows)
             }
-        });
-    });
+        })
+    })
 }
 
 exports.bulkInsertionEnrollments = function(array){
     return new Promise ((resolve,reject) =>{
-        let sql='';
+        let sql=''
     for (let i = 0; i < array.length; i++) {
         //INSERT INTO Course_Student(course_id,student_id) VALUES(?,?)
              
@@ -112,11 +83,11 @@ exports.bulkInsertionEnrollments = function(array){
     }
     db.exec("BEGIN TRANSACTION; "+ sql + " COMMIT;",(err) => {
         if(err)
-            reject(err);
+            reject(err)
         else
-            resolve();
+            resolve()
     })    
-    });
+    })
 }
 
 exports.isEmpty = function(){
@@ -124,12 +95,12 @@ exports.isEmpty = function(){
         const sql = 'SELECT COUNT(*) as n FROM Course_Student'
         db.get(sql, [], (err, row) => {
             if(err)
-                return reject(err);
+                return reject(err)
             if (!row)
-                resolve(null);
+                resolve(null)
             else{
-                resolve(row.n === 0);
+                resolve(row.n === 0)
             }
-        });
-    });
+        })
+    })
 }
