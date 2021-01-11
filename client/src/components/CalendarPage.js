@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Container, Col, Nav, Badge, Form, Navbar } from 'react-bootstrap';
+import { Row, Container, Col, Nav, Badge, Form } from 'react-bootstrap';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
