@@ -72,13 +72,20 @@ describe('Calendar tests', ()=>{
             whiteList=['Chemistry']
         }
 
-        //apply filters
-        for (let l of list){
-            if(l==='Physics'||l==='Analysis I')
-                cy.get('.sidebar').contains(l).parent().parent().parent().find('[type="checkbox"]').should('exist').uncheck();
-            else 
-                 cy.contains(l).parent().find('[type="checkbox"]').should('exist').check();
-        }
+        // Apply courses filters
+        cy.get('.sidebar').contains('Physics').parent().parent().parent().find('[type="checkbox"]').should('exist').uncheck(); // uncheck Physics
+        cy.get('.calendar').contains('Physics').should('not.exist'); // Assert that Physics doesn't exist
+        ['Chemistry','Analysis I'].forEach((l)=>cy.get('.calendar').contains(l).should('exist')); // Assert that other subjects exist
+
+        cy.get('.sidebar').contains('Analysis I').parent().parent().parent().find('[type="checkbox"]').should('exist').uncheck(); // uncheck Analysis
+
+        // Check that Physics and Analysis I lecutres are not present inside the calendar
+        ['Physics','Analysis I'].forEach((l)=>cy.get('.calendar').contains(l).should('not.exist'));
+        cy.get('.calendar').contains('Chemistry').should('exist') // chemistry lecture should still be present
+
+
+
+        if(role === 'st')
         for (let l of blackList)
             cy.get('.calendar').contains(l).should('not.exist');
         for (let l of whiteList)
