@@ -12,7 +12,7 @@ Commit hash: 'eb69ca3ada4b015bf517911764dd0a98fed9a49e'
 
 | Screenshot| Notes OR error |
 | --- | --- |--- |
-| ![login view](./images/S1_1/step1.png) | Success |
+| ![login view](./images/S1_1/step1.png) | Entering to login page |
 | ![login view](./images/S1_1/step2.png) | Entering creditnals and clicking login |
 
 
@@ -61,8 +61,8 @@ Commit hash: 'eb69ca3ada4b015bf517911764dd0a98fed9a49e'
 
 | Screenshot | Notes OR error |
 | --- | --- |--- |
-| ![login view](./images/S1_3/Step2_1.png) | Insert wrong format |
-| ![login view](./images/S1_3/Step2_2.png) | Insert another wrong format|
+| ![login view](./images/S1_3/Step2_1.png) | Insert wrong format causes warning |
+| ![login view](./images/S1_3/Step2_2.png) | Insert another wrong format causes warning|
 
 
 ### Step 3
