@@ -44,7 +44,7 @@ const Header = (props) => {
                       }}>Logout</Nav.Link>
                     </Col>
                   </>}
-                  {!context.authUser && <Col md={10} xs='auto'><Nav.Link as={NavLink} to="/login">Login</Nav.Link></Col>}
+                  {!context.authUser && <Col md='auto' xs='auto'><Nav.Link as={NavLink} to="/login">Login</Nav.Link></Col>}
                   <Col md={{ span: 2, order: 'last'}} xs={{ span: 'auto', order: 'first' }}>
                     <Nav.Link href="#">
                       <svg className="bi bi-people-circle" width="30" height="30" viewBox="0 0 16 16"
