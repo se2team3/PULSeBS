@@ -17,7 +17,7 @@ As a student I want to book a seat for one of my lectures so that I can attend i
 | --- | --- | --- |
 | **Test description** <td colspan=2> Booking a free lecture |
 | **Steps** | Operator actions | Expected results |
-| 1 | Following S1_1, find any lecture that is marked as "Free"(e.g. Ingeneria della qualita), and click on it | Small pop-up appears, indicating number of seats available |
+| 1 | Following S1_1, find any lecture that is marked as "Free"(e.g. Ingeneria della qualita, on March 8, 2021), and click on it | Small pop-up appears, indicating number of seats available |
 | 2 | Click on "Book a seat" button on newly opened pop-up| Selected lecture has changed from "Free" to "Booked" |
 
 
@@ -31,7 +31,8 @@ As a student I want to book a seat for one of my lectures so that I can attend i
 | **Test description** <td colspan=2> Inputting in wrong format |
 | **Steps** | Operator actions | Expected results |
 | 1 | Visit page at http://localhost:3000 | Redirecting to http://localhost:3000/login page displaying "email" and "password" inputs |
-| 2 | Fill "E-mail" field with "s900003pulsebs.it","s900003@.pulsebs.it","s900003@pulsebs.it."  | E-mail field should be padded with red color|
+| 2 | Fill "E-mail" field with "s900003pulsebs.it","s900003@.pulsebs.it"  | E-mail field should be padded with red color and when hovered, tip for correcting error appears|
+| 3 | Correct the errors in previous step  |Red paddings disappear|
 
 <br>
 
@@ -40,7 +41,7 @@ As a student I want to book a seat for one of my lectures so that I can attend i
 | **Test description** <td colspan=2> Login with wrong credentials |
 | **Steps** | Operator actions | Expected results |
 | 1 | Visit page at http://localhost:3000/ | redirecting to http://localhost:3000/login page displaying "E-mail" and "Password" inputs | |
-| 2 | Fill "E-mail" and "Passwprd" fields with "s900003@students.politu.it" and "incorrect_password" respectively | Login page should issue "Username or password is incorrect" statement |
+| 2 | Fill "E-mail" and "Password" fields with "s900003@students.politu.it" and "incorrect_password" respectively | Login page should issue "Username or password is incorrect" statement |
 
 
 <br>
