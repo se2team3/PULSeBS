@@ -36,22 +36,18 @@ class StatisticsPage extends React.Component {
     getLecturesAndBookings = async () => {
         if (!this.props.authUser)
             throw { status: 401, errorObj: "no authUser specified" }
-        try {
-            // TODO consider renaming the API (since we ask for lectures)
-            let startDate = this.state.startDate && moment(this.state.startDate).format('YYYY-MM-DD')
-            let endDate = this.state.endDate && moment(this.state.endDate).format('YYYY-MM-DD')
-            let lectures = await API.getLectures(startDate, endDate, this.props.authUser.role, this.props.authUser.id)
-            for (let l of lectures) {if (l.course_id===8) console.log(l)}
-            const courses = lectures
-                .map(l => l.course_id)
-                .filter(this.onlyUnique)
-                .map(id => lectures.find(l => l.course_id === id))
-                .map(c => ({ ...c, selected: true }));
-            console.log(courses)
-            this.setState({ lectures, courses });
-        } catch (err) {
-            throw err;
-        }
+        // TODO consider renaming the API (since we ask for lectures)
+        let startDate = this.state.startDate && moment(this.state.startDate).format('YYYY-MM-DD')
+        let endDate = this.state.endDate && moment(this.state.endDate).format('YYYY-MM-DD')
+        let lectures = await API.getLectures(startDate, endDate, this.props.authUser.role, this.props.authUser.id)
+        for (let l of lectures) {if (l.course_id===8) console.log(l)}
+        const courses = lectures
+            .map(l => l.course_id)
+            .filter(this.onlyUnique)
+            .map(id => lectures.find(l => l.course_id === id))
+            .map(c => ({ ...c, selected: true }));
+        console.log(courses)
+        this.setState({ lectures, courses });
     };
 
 

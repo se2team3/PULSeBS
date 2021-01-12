@@ -23,9 +23,9 @@ const{  startDate, endDate, focusedInput, courses,
                         startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
                         endDate={endDate} // momentPropTypes.momentObj or null,
                         endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                        onDatesChange={({ startDate, endDate }) => props.onDatesChange({ startDate, endDate })} // PropTypes.func.isRequired,
+                        onDatesChange={({ start, end }) => props.onDatesChange({ start, end })} // PropTypes.func.isRequired,
                         focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                        onFocusChange={focusedInput => props.onFocusChange(focusedInput)} // PropTypes.func.isRequired,
+                        onFocusChange={focusedIn => props.onFocusChange(focusedIn)} // PropTypes.func.isRequired,
                         // isOutsideRange={(date)=>moment(date).isAfter(moment())} to disable future dates
                         isOutsideRange={(date) => false}
                         displayFormat='DD/MM/YYYY'
