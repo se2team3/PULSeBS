@@ -56,6 +56,13 @@ describe('Wrong credentials feedback', function () {
     });
 });
 
+function checkCannotAccess(path){
+    it(`should not be able to access ${path}`, () => {
+        cy.visit(path);
+        cy.contains('Something went wrong');
+    })
+}
+
 describe('Login into the system as a student', function () {
 
     before('alias form input fields', () => {
@@ -79,18 +86,10 @@ describe('Login into the system as a student', function () {
     it('should show the proper first name in the header', function () {
         cy.contains("Mario")
     });
-    it('should not be able to access statistics', () => {
-        cy.visit('/statistics');
-        cy.contains('Something went wrong');
-    })
-    it('should not be able to access setup', () => {
-        cy.visit('/setup');
-        cy.contains('Something went wrong');
-    })
-    it('should not be able to access lecture', () => {
-        cy.visit('/lectures/1');
-        cy.contains('Something went wrong');
-    })
+
+    checkCannotAccess('/statistics');
+    checkCannotAccess('/setup');
+    checkCannotAccess('/lectures/1');
 });
 
 describe('Logout from the system', function () {
@@ -129,10 +128,7 @@ describe('Login a teacher', function () {
         cy.visit('/statistics');
         cy.contains('Time frame');
     })
-    it('should not be able to access setup', () => {
-        cy.visit('/setup');
-        cy.contains('Something went wrong');
-    })
+    checkCannotAccess('/setup');
     it('should be able to access lecture page', () => {
         cy.intercept('GET', '/api/lectures/1/bookings', { fixture: 'lecture1bookings.json' })
         cy.intercept('GET', '/api/lectures/1', { fixture: 'lecture1.json' })
@@ -179,8 +175,5 @@ describe('Login an officer', function () {
     it('should show the proper first name in the header', function () {
         cy.contains("Matteo").should('exist');
     });
-    it('should not be able to access statistics', () => {
-        cy.visit('/statistics');
-        cy.contains('Something went wrong');
-    })
+    checkCannotAccess('/statistics');
 });
