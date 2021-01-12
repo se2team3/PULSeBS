@@ -108,7 +108,6 @@ describe('Calendar tests', () => {
             cy.get('.calendar').contains(l);
         for (let l of whiteList)
             cy.get('.calendar').contains(l);
-
     }
 
 
@@ -188,7 +187,3 @@ describe('Calendar tests', () => {
     testCalendar('teacher');
 
 });
-
-
-
-

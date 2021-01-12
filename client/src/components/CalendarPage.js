@@ -245,11 +245,7 @@ class CalendarPage extends React.Component {
             return (
               <Container fluid>
                 <Row>
-                  <Col sm={9} className="below-nav calendar" >
-                    {this.renderCalendar(this.props.authUser?.role)}
-                  </Col>
-
-                  <Col sm={3} className="sidebar">
+                  <Col md={{ span: 3, order: 'last'}} className="sidebar">
                     {(this.props.authUser?.role === 'student') ?
                       <Badge className='ml-2'>
                         <Form.Check type="checkbox"
@@ -292,10 +288,10 @@ class CalendarPage extends React.Component {
                       : <></>}
                     <br />
                     <br />
-                    <Nav className="px-4 py-4 col-md-12 d-none d-md-block bg-light sidebar">
-                      <h2 className="mb-3">Courses</h2>
+                    <Nav className="px-4 py-4 col-md-12 d-md-block bg-light sidebar">
+                      <h2 className="mb-3 w-100">Courses</h2>
 
-                      <Form>
+                      <Form className="w-100">
                         {
                           this.state.lectures.map(this.transformIntoEvents)
                             .map((e) => {
@@ -312,6 +308,9 @@ class CalendarPage extends React.Component {
                         }
                       </Form>
                     </Nav>
+                  </Col>
+                  <Col md={{ span: 9, order: 'first'}} className="below-nav calendar">
+                    {this.renderCalendar(this.props.authUser?.role)}
                   </Col>
                 </Row>
                 <CalendarModal show={this.state.modal} closeModal={this.closeModal}

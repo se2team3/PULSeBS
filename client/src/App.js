@@ -91,10 +91,6 @@ class App extends React.Component {
     })
   }
 
-  showSidebar = () => {
-    this.setState((state) => ({ openMobileMenu: !state.openMobileMenu }));
-  }
-
   goToLecturePage = (event) => {
     this.setState({ lecture: event })
     let id = event.extendedProps.lectureId;
@@ -112,7 +108,7 @@ class App extends React.Component {
     return (
       <AuthContext.Provider value={value}>
 
-        <Header showSidebar={this.showSidebar} />
+        <Header />
 
         <Switch>
           {value.authUser===null&&<Route path="/login">

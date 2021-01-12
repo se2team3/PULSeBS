@@ -52,3 +52,18 @@ code {
   outline: none !important;
   box-shadow: none !important;
 }
+
+@media only screen and (max-width: 768px) {
+  .fc .fc-toolbar {
+    display: flex !important;
+    flex-flow: column wrap;
+    align-content: center;
+    justify-content: space-around;
+  }
+  .fc .fc-toolbar .fc-toolbar-chunk {
+    margin: 1ex auto !important;
+  }
+  .fc .fc-toolbar div:nth-child(2) {
+    order: 3 !important;
+  }
+}
