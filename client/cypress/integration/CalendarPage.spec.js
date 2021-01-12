@@ -74,40 +74,40 @@ describe('Calendar tests', () => {
 
         //apply filters - uncheck Physics and Analysis 1 lectures
         // Apply courses filters
-        cy.get('.sidebar').contains('Physics').parent().parent().parent().find('[type="checkbox"]').should('exist').uncheck(); // uncheck Physics
+        cy.get('.sidebar').contains('Physics').parent().parent().parent().find('[type="checkbox"]').uncheck(); // uncheck Physics
         cy.get('.calendar').contains('Physics').should('not.exist'); // Assert that Physics doesn't exist
-        ['Chemistry', 'Analysis I'].forEach((l) => cy.get('.calendar').contains(l).should('exist')); // Assert that other subjects exist
+        ['Chemistry', 'Analysis I'].forEach((l) => cy.get('.calendar').contains(l)); // Assert that other subjects exist
 
-        cy.get('.sidebar').contains('Analysis I').parent().parent().parent().find('[type="checkbox"]').should('exist').uncheck(); // uncheck Analysis
+        cy.get('.sidebar').contains('Analysis I').parent().parent().parent().find('[type="checkbox"]').uncheck(); // uncheck Analysis
 
         // Check that Physics and Analysis I lecutres are not present inside the calendar
         ['Physics', 'Analysis I'].forEach((l) => cy.get('.calendar').contains(l).should('not.exist'));
-        cy.get('.calendar').contains('Chemistry').should('exist') // chemistry lecture should still be present
+        cy.get('.calendar').contains('Chemistry') // chemistry lecture should still be present
 
-        list.filter(l => l!== 'Physics' && l !== 'Analysis I').forEach(l => cy.contains(l).parent().find('[type="checkbox"]').should('exist').check())
+        list.filter(l => l!== 'Physics' && l !== 'Analysis I').forEach(l => cy.contains(l).parent().find('[type="checkbox"]').check())
         /* for (let l of list) {
             if (l === 'Physics' || l === 'Analysis I')
-                cy.get('.sidebar').contains(l).parent().parent().parent().find('[type="checkbox"]').should('exist').uncheck();
+                cy.get('.sidebar').contains(l).parent().parent().parent().find('[type="checkbox"]').uncheck();
             else
                 //
-                cy.contains(l).parent().find('[type="checkbox"]').should('exist').check();
+                cy.contains(l).parent().find('[type="checkbox"]').check();
         } */
         for (let l of blackList)
             cy.get('.calendar').contains(l).should('not.exist');
         for (let l of whiteList)
-            cy.get('.calendar').contains(l).should('exist');
+            cy.get('.calendar').contains(l);
 
         //restoring
         for (let l of list) {
             if (l === 'Physics' || l === 'Analysis I')
-                cy.get('.sidebar').contains(l).parent().parent().parent().find('[type="checkbox"]').should('exist').check();
+                cy.get('.sidebar').contains(l).parent().parent().parent().find('[type="checkbox"]').check();
             else
-                cy.contains(l).parent().find('[type="checkbox"]').should('exist').uncheck();
+                cy.contains(l).parent().find('[type="checkbox"]').uncheck();
         }
         for (let l of blackList)
-            cy.get('.calendar').contains(l).should('exist');
+            cy.get('.calendar').contains(l);
         for (let l of whiteList)
-            cy.get('.calendar').contains(l).should('exist');
+            cy.get('.calendar').contains(l);
 
     }
 
@@ -130,13 +130,13 @@ describe('Calendar tests', () => {
 
 
             it('has this week view working', function () {
-                cy.contains("Nov 16 – 22, 2020").should('exist');
+                cy.contains("Nov 16 – 22, 2020");
                 seeCheckedLectures(role, 'normal');
             })
 
             it('has backward view working', () => {
                 cy.get(".fc-prev-button").click();
-                cy.contains("Nov 9 – 15, 2020").should('exist');
+                cy.contains("Nov 9 – 15, 2020");
                 seeCheckedLectures(role, 'past')
                 cy.get(".fc-today-button").click();
             })
@@ -144,7 +144,7 @@ describe('Calendar tests', () => {
             it('has forward view working', () => {
 
                 cy.get(".fc-next-button").click();
-                cy.contains("Nov 23 – 29, 2020").should('exist');
+                cy.contains("Nov 23 – 29, 2020");
                 seeCheckedLectures(role, 'future');
                 cy.get(".fc-today-button").click();
             })
@@ -161,7 +161,7 @@ describe('Calendar tests', () => {
             it('has list view working', () => {
 
                 cy.get(".fc-listWeek-button").click();
-                cy.contains("November 17, 2020").should('exist')
+                cy.contains("November 17, 2020")
                 seeCheckedLectures(role, 'list');
                 cy.get(".fc-timeGridWeek-button").click();
 
