@@ -20,7 +20,7 @@ Commit hash: 'eb69ca3ada4b015bf517911764dd0a98fed9a49e'
 
 | Screenshot | Notes OR error |
 | --- | --- |
-| ![login view](./images/S1_1/Step2_error.png) | **ERROR** For a brief moment between clicking login button and redirecting to actual calendar, site displays "not found", then it proceeds |
+| ![login view](./images/S1_1/Step2_Error.png) | **ERROR** For a brief moment between clicking login button and redirecting to actual calendar, site displays "not found", then it proceeds |
 | ![login view](./images/S1_1/Step2_error_console.png) | Console log for the error |
 | ![login view](./images/S1_1/Step2_server_terminal.png) | Server terminal |
 
