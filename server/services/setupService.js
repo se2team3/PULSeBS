@@ -99,8 +99,8 @@ async function replicateSchedule(schedules,courses){
       startDate =  moment('2021-03-01','YYYY-MM-DD');    
       endDate =  moment('2021-06-30','YYYY-MM-DD');
     }
-    
-    //let tmp = startDate.clone().day(days[sd.Day]); //takes the first day_of_week (ex the first Monday)
+
+    startDate = startDate.day(sd.Day) //takes the first day_of_week (e.g. the first Friday)
     
     while(startDate.isBefore(endDate)){ 
       let time = sd.Time.split('-') 
