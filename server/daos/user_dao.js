@@ -1,6 +1,3 @@
-// import database
-// import modules
-
 const bcrypt = require('bcrypt');
 const { saltRounds } = require('../config/bcrypt.json');
 const db = require('../db/db.js');
@@ -88,19 +85,7 @@ exports.retrieveUserByEmail = function(email) {
         });
     })
 }
-/*
-exports.deleteUsersTable = function() {
-    return new Promise ((resolve,reject) =>{
-        const sql = 'DROP TABLE Users '
-        db.run(sql, (err, row) => {
-            if(err)
-                return reject(err);
-            else resolve(null);
-        });
-    })
-}
 
-*/
 exports.bulkInsertionUsers = async function(array){
     return new Promise ((resolve,reject) =>{
         let sql='';

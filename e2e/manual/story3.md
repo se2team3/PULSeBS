@@ -6,9 +6,6 @@ As a teacher I want to access the list of students booked for my lectures so tha
 
 <br>
 
-///////////////////////////////<br>
-////Might be extended////<br>
-///////////////////////////////<br>
 
 | Test ID | S3_0 |  |
 | --- | --- | --- |
@@ -30,5 +27,3 @@ As a teacher I want to access the list of students booked for my lectures so tha
 
 
 <br>
-
-*These fields fill be edited/extended after having proper access to the Pulsebs (No proper DB yet)

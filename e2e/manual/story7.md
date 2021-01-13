@@ -2,9 +2,7 @@
 
 As a teacher I want to cancel a lecture up to 1h before its scheduled time
 
-///////////////////////////////////////////////////<br>
-////This contains actions leading to error ////<br>
-///////////////////////////////////////////////////<br>
+
 
 | Test ID | S7_0 |  |
 | --- | --- | --- |
@@ -18,18 +16,14 @@ As a teacher I want to cancel a lecture up to 1h before its scheduled time
 | **Test description** <td colspan=2> Cancel before 1 hour left to lecture |
 | **Steps** | Operator actions | Expected results |
 | 1 | Following S7_0, click on lecture that is scheduled more than 1 hour later than current time (e.g. "Metodi Finanzamento delle imprese" on Monday, March 1, 2021)| Redirected to http://localhost:3000/lectures/1 and list of students have book shown on the right side, and details and button "Cancel Lecture" is displayed on the left side |
-| 2 | Click on "Cancel Lecture" | Success message displays **|
+| 2 | Click on "Cancel Lecture" | "This lecture has been cancelled!"
+ message displayed|
 
 
 | Test ID | S7_2 |  |
 | --- | --- | --- |
 | **Test description** <td colspan=2> Cancel lecture that is in less than 1 hour |
 | **Steps** | Operator actions | Expected results |
-| 1 | Following S7_0, click on lecture that is scheduled less than 1 hour than current time | Selected lecture is highlighted |
-| 2 | Click on "Cancel Lecture"  | Failure message displays**|
+| 1 | Following S7_0, click on lecture that is scheduled less than 1 hour than current time | "Cancel Lecture" button is unavailable |
 
 
-
-*These fields fill be edited/extended after having proper access to the Pulsebs (No proper DB yet)
-
-**These fields fill be edited/extended after having stable working code
