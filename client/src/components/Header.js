@@ -24,7 +24,7 @@ const Header = (props) => {
                 <Nav.Link as={NavLink} to="/calendar">Calendar</Nav.Link>}
                 {(context.authUser.role === "teacher" || context.authUser.role === "manager") &&
                 <Nav.Link as={NavLink} to="/statistics">Statistics</Nav.Link>}
-                {(context.authUser.role === "officer" || context.authUser.role === "manager") &&
+                {(context.authUser.role === "officer") &&
                 <Nav.Link as={NavLink} to="/setup">Setup</Nav.Link>}
               </>}
             </Nav>
