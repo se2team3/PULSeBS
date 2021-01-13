@@ -1,8 +1,7 @@
 
 # Test Story 7: 11/01/2021
 
-Git branch: `master` (Make sure you checked out exactly the branch reported)
-
+Git branch: `master`
 Commit hash: 'cca13aea725182cb361242fc3206abc7192a9a2c'
 <br>
 
