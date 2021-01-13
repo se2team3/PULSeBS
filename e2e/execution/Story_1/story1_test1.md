@@ -1,4 +1,4 @@
-# Test story1 10/01/2021
+# Test Story 1 10/01/2021
 
 Git branch: `master` 
 Commit hash: 'eb69ca3ada4b015bf517911764dd0a98fed9a49e'
@@ -32,7 +32,7 @@ Commit hash: 'eb69ca3ada4b015bf517911764dd0a98fed9a49e'
 ### Step 1
 | Screenshot | Notes OR error |
 | --- | --- |
-| ![login view](./images/S1_2/step1.png) | Selecting a "FREE" lecture |
+| ![login view](./images/S1_2/Step1.png) | Selecting a "FREE" lecture |
 
 ### Step 2
 
