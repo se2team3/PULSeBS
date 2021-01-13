@@ -2,9 +2,7 @@
 
 As a teacher I want to cancel a lecture up to 1h before its scheduled time
 
-///////////////////////////////////////////////////<br>
-////This contains actions leading to error ////<br>
-///////////////////////////////////////////////////<br>
+
 
 | Test ID | S7_0 |  |
 | --- | --- | --- |

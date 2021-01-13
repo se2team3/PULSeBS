@@ -12,8 +12,8 @@ Commit hash: 'cde3480c5026a17116211becd904752a473ee163'
 
 | Screenshot| Notes OR error |
 | --- | --- |--- |
-| ![login view](./images/S12_0/step1.png) | Visiting login page and inserting officer creditnals, which is "officer@email.com" and "passw0rd" |
-| ![login view](./images/S12_0/step2_1.png) | Setup page is visible |
+| ![login view](./images/S12_0/Step1.png) | Visiting login page and inserting officer creditnals, which is "officer@email.com" and "passw0rd" |
+| ![login view](./images/S12_0/Step2_1.png) | Setup page is visible |
 
 ## Test ID: S12_1
 
@@ -93,7 +93,7 @@ Commit hash: 'cde3480c5026a17116211becd904752a473ee163'
 
 | Screenshot| Notes OR error |
 | --- | --- |--- |
-| ![login view](./images/S12_2/step1.png) |Drag&dropping csv files |
+| ![login view](./images/S12_2/Step1.png) |Drag&dropping csv files |
 
 ### Step 2
 
@@ -107,7 +107,7 @@ Commit hash: 'cde3480c5026a17116211becd904752a473ee163'
 
 | Screenshot| Notes OR error |
 | --- | --- |--- |
-| ![login view](./images/S12_3/step1.png) |After uploading only one table, system does not allow user to submit the data("Submit all" button is grayed) |
+| ![login view](./images/S12_3/Step1.png) |After uploading only one table, system does not allow user to submit the data("Submit all" button is grayed) |
 
 
 ## Test ID: S12_4
@@ -116,15 +116,15 @@ Commit hash: 'cde3480c5026a17116211becd904752a473ee163'
 
 | Screenshot| Notes OR error |
 | --- | --- |--- |
-| ![login view](./images/S12_4/step1.png) |Manually add fake data to DB but don`t write changes to DB yet|
+| ![login view](./images/S12_4/Step1.png) |Manually add fake data to DB but don`t write changes to DB yet|
 
 ### Step 2
 
 | Screenshot| Notes OR error |
 | --- | --- |--- |
-| ![login view](./images/S12_4/step2_1.png) |In a meantime, uploading all 5 csv files|
-| ![login view](./images/S12_4/step2_2.png) |Server processes...|
-| ![login view](./images/S12_4/step2_3.png) |**ERROR** User is not informed about cause of error|
-| ![login view](./images/S12_4/step2_error_console.png) |**ERROR** Console|
-| ![login view](./images/S12_4/step2_error_server_terminal.png) |**ERROR** Server terminal|
-| ![login view](./images/S12_4/step2_error_client_terminal.png) |**ERROR** Client terminal|
+| ![login view](./images/S12_4/Step2_1.png) |In a meantime, uploading all 5 csv files|
+| ![login view](./images/S12_4/Step2_2.png) |Server processes...|
+| ![login view](./images/S12_4/Step2_3.png) |**ERROR** User is not informed about cause of error|
+| ![login view](./images/S12_4/Step2_error_console.png) |**ERROR** Console|
+| ![login view](./images/S12_4/Step2_error_server_terminal.png) |**ERROR** Server terminal|
+| ![login view](./images/S12_4/Step2_error_client_terminal.png) |**ERROR** Client terminal|
