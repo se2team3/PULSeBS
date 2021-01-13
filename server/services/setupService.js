@@ -99,8 +99,8 @@ async function replicateSchedule(schedules,courses){
       startDate =  moment('2021-03-01','YYYY-MM-DD');    
       endDate =  moment('2021-06-30','YYYY-MM-DD');
     }
-    
-    //let tmp = startDate.clone().day(days[sd.Day]); //takes the first day_of_week (ex the first Monday)
+
+    startDate = startDate.day(sd.Day) //takes the first day_of_week (e.g. the first Friday)
     
     while(startDate.isBefore(endDate)){ 
       let time = sd.Time.split('-') 
@@ -138,20 +138,7 @@ const setupInsert = async function(dictionary) {
     course_id = await insertCourses(courses_dict,teacher_id); console.log('courses')
     await insertEnrollments(enrollment_dict,course_id,student_id); console.log('enroll')
     await insertSchedule(schedule_dict,course_id); console.log('schedule')
-    await dbUtils.bookLectures(); console.log("bookings and deletions")
-    
-    
-
-  
+    //await dbUtils.bookLectures(); console.log("bookings and deletions")
 }
 
-
-
-
-
-
-
 module.exports = {setupInsert};
-
-
-

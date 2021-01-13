@@ -12,7 +12,8 @@
         "room_name": "Aula 49",
         "max_seats": 255,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 33,
@@ -27,7 +28,8 @@
         "room_name": "Aula 37",
         "max_seats": 269,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 14,
@@ -42,7 +44,8 @@
         "room_name": "Aula 20",
         "max_seats": 298,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 39,
@@ -57,7 +60,8 @@
         "room_name": "Aula 37",
         "max_seats": 269,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 36,
@@ -72,7 +76,8 @@
         "room_name": "Aula 16",
         "max_seats": 233,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 40,
@@ -87,7 +92,8 @@
         "room_name": "Aula 33",
         "max_seats": 160,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 49,
@@ -102,7 +108,8 @@
         "room_name": "Aula 48",
         "max_seats": 111,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 11,
@@ -117,7 +124,8 @@
         "room_name": "Aula 45",
         "max_seats": 216,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 12,
@@ -132,7 +140,8 @@
         "room_name": "Aula 20",
         "max_seats": 298,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 9,
@@ -147,7 +156,8 @@
         "room_name": "Aula 33",
         "max_seats": 160,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 47,
@@ -162,7 +172,8 @@
         "room_name": "Aula 37",
         "max_seats": 269,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 16,
@@ -177,7 +188,8 @@
         "room_name": "Aula 20",
         "max_seats": 298,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 41,
@@ -192,7 +204,8 @@
         "room_name": "Aula 25",
         "max_seats": 241,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 17,
@@ -207,7 +220,8 @@
         "room_name": "Aula 49",
         "max_seats": 255,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 24,
@@ -222,7 +236,8 @@
         "room_name": "Aula 20",
         "max_seats": 298,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 46,
@@ -237,7 +252,8 @@
         "room_name": "Aula 25",
         "max_seats": 241,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 23,
@@ -252,7 +268,8 @@
         "room_name": "Aula 30",
         "max_seats": 183,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 37,
@@ -267,7 +284,8 @@
         "room_name": "Aula 16",
         "max_seats": 233,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 30,
@@ -282,7 +300,8 @@
         "room_name": "Aula 37",
         "max_seats": 269,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 26,
@@ -297,7 +316,8 @@
         "room_name": "Aula 33",
         "max_seats": 160,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 1,
@@ -312,7 +332,8 @@
         "room_name": "Aula 20",
         "max_seats": 298,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 32,
@@ -327,7 +348,8 @@
         "room_name": "Aula 49",
         "max_seats": 255,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 19,
@@ -342,7 +364,8 @@
         "room_name": "Aula 16",
         "max_seats": 233,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 38,
@@ -357,7 +380,8 @@
         "room_name": "Aula 37",
         "max_seats": 269,
         "booking_counter": 11,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 8,
@@ -372,7 +396,8 @@
         "room_name": "Aula 30",
         "max_seats": 183,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 45,
@@ -387,7 +412,8 @@
         "room_name": "Aula 16",
         "max_seats": 233,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 44,
@@ -402,7 +428,8 @@
         "room_name": "Aula 20",
         "max_seats": 298,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 22,
@@ -417,7 +444,8 @@
         "room_name": "Aula 30",
         "max_seats": 183,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 27,
@@ -432,7 +460,8 @@
         "room_name": "Aula 45",
         "max_seats": 216,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 34,
@@ -447,7 +476,8 @@
         "room_name": "Aula 16",
         "max_seats": 233,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 35,
@@ -462,7 +492,8 @@
         "room_name": "Aula 33",
         "max_seats": 160,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 42,
@@ -477,7 +508,8 @@
         "room_name": "Aula 49",
         "max_seats": 255,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 31,
@@ -492,7 +524,8 @@
         "room_name": "Aula 25",
         "max_seats": 241,
         "booking_counter": 10,
-        "cancellation_counter": 1
+        "cancellation_counter": 1,
+        "waiting_counter": 5
     },
     {
         "id": 21,
@@ -507,7 +540,8 @@
         "room_name": "Aula 37",
         "max_seats": 269,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 3,
@@ -522,7 +556,8 @@
         "room_name": "Aula 30",
         "max_seats": 183,
         "booking_counter": 11,
-        "cancellation_counter": 1
+        "cancellation_counter": 1,
+        "waiting_counter": 5
     },
     {
         "id": 7,
@@ -537,7 +572,8 @@
         "room_name": "Aula 30",
         "max_seats": 183,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 28,
@@ -552,7 +588,8 @@
         "room_name": "Aula 30",
         "max_seats": 183,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 48,
@@ -568,7 +605,8 @@
         "room_name": "Aula 37",
         "max_seats": 269,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 2,
@@ -583,7 +621,8 @@
         "room_name": "Aula 20",
         "max_seats": 298,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 10,
@@ -598,7 +637,8 @@
         "room_name": "Aula 16",
         "max_seats": 233,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 4,
@@ -613,7 +653,8 @@
         "room_name": "Aula 25",
         "max_seats": 241,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 13,
@@ -628,7 +669,8 @@
         "room_name": "Aula 20",
         "max_seats": 298,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 6,
@@ -643,7 +685,8 @@
         "room_name": "Aula 25",
         "max_seats": 241,
         "booking_counter": 11,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 25,
@@ -658,7 +701,8 @@
         "room_name": "Aula 48",
         "max_seats": 111,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 50,
@@ -673,7 +717,8 @@
         "room_name": "Aula 49",
         "max_seats": 255,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 43,
@@ -688,7 +733,8 @@
         "room_name": "Aula 20",
         "max_seats": 298,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 15,
@@ -703,7 +749,8 @@
         "room_name": "Aula 30",
         "max_seats": 183,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 20,
@@ -718,7 +765,8 @@
         "room_name": "Aula 20",
         "max_seats": 298,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 29,
@@ -733,7 +781,8 @@
         "room_name": "Aula 49",
         "max_seats": 255,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     },
     {
         "id": 5,
@@ -748,6 +797,7 @@
         "room_name": "Aula 30",
         "max_seats": 183,
         "booking_counter": 10,
-        "cancellation_counter": 0
+        "cancellation_counter": 0,
+        "waiting_counter": 5
     }
 ]
