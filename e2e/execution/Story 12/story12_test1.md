@@ -1,6 +1,6 @@
-# Test story12 11/01/2021
+# Test Story 12 11/01/2021
 
-Git branch: `master` (Make sure you checked out exactly the branch reported)
+Git branch: `master`
 
 Commit hash: 'cde3480c5026a17116211becd904752a473ee163'
 <br>
