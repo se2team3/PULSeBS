@@ -138,20 +138,7 @@ const setupInsert = async function(dictionary) {
     course_id = await insertCourses(courses_dict,teacher_id); console.log('courses')
     await insertEnrollments(enrollment_dict,course_id,student_id); console.log('enroll')
     await insertSchedule(schedule_dict,course_id); console.log('schedule')
-    await dbUtils.bookLectures(); console.log("bookings and deletions")
-    
-    
-
-  
+    //await dbUtils.bookLectures(); console.log("bookings and deletions")
 }
 
-
-
-
-
-
-
 module.exports = {setupInsert};
-
-
-
