@@ -220,7 +220,7 @@ exports.isEmpty = function(){
 }
 
 
-exports.bulkBookings = function(array){
+/*exports.bulkBookings = function(array){
     let factor_stud= 5; //only 1 student over 5 (of type A) is cancelling some of his bookings
     let factor;
     return new Promise ((resolve,reject) =>{
@@ -262,4 +262,4 @@ exports.bulkDeletions = function(array){
                 resolve(this.changes)
         })    
     });
-} 
+} */

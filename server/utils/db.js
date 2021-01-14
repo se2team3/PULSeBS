@@ -195,7 +195,7 @@ const populate = async ({n_students, datetime} = def_options) => {
 
 
 
-const bookLectures = async() =>{
+/*const bookLectures = async() =>{
     let ripartition=3; //1 student over 3 is type A, 1 is type B, the other does nothing
     let factor_bookA= 4; //the student of type A books 1 lecture over 4 (only this type can cancel)
     let factor_bookB= 3; //the student of type B books 1 lecture over 3
@@ -252,5 +252,6 @@ const bookLectures = async() =>{
         console.log(err)
     }
 
-}
-module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate, support_officerObj, isEmpty, addStaff, bookLectures }
+}*/
+//module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate, support_officerObj, isEmpty, addStaff, bookLectures }
+module.exports = { reset, createTables, teacherObj, studentObj, managerObj, populate, support_officerObj, isEmpty, addStaff }

@@ -137,7 +137,6 @@ exports.deleteLecture = function ({ datetime, lecture_id,teacher}) {
                                WHERE  L2.course_id=C.id AND C.teacher_id=U.id AND U.role='teacher' AND U.id=? )`
         db.run(sql, [datetime,lecture_id,datetime,teacher], function(err) {
             if (err) {
-                console.log(err)
                 reject(err);
             }
             else{
@@ -156,7 +155,6 @@ exports.setLectureVirtual = function ({ datetime, lecture_id,teacher}) {
                                 WHERE  L2.course_id=C.id AND C.teacher_id=U.id AND U.role='teacher' AND U.id=? )`
         db.run(sql, [lecture_id,datetime,teacher], function(err) {
             if (err) {
-                console.log(err)
                 reject(err);
             }
             else{

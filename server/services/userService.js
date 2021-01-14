@@ -30,7 +30,6 @@ const insertUser = async function(user) {
         let id = await userDao.insertUser({...user});
         return id;
     } catch (error) {
-        console.log(error)
         return errHandler(error);
     }
 }

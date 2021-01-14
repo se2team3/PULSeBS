@@ -4,14 +4,10 @@ const sqlite = require('sqlite3').verbose();
 const path = require('path');
 
 let filename;
-switch (process.env.NODE_ENV) {
-    case 'test':
+if (process.env.NODE_ENV==='test') {
         filename = 'PULSeBS.test';
-        break;
-    case 'populate':
-        filename = 'PULSeBS.populate';
-        break;
-    default:
+}
+else {
         filename = 'PULSeBS';
 }
 const db_name = path.join(__dirname, "database", filename);
