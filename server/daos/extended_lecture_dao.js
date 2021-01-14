@@ -81,7 +81,7 @@ exports.getAllLectures = function(start_date,end_date) {
 }
 
 //gets the lecture related to the selected teacher id
-exports.getLecturesByTeacherId = function(id, from_opt, to_opt) {
+/*exports.getLecturesByTeacherId = function(id, from_opt, to_opt) {
     return new Promise ((resolve,reject) =>{
         const sql = `
             SELECT  L.id, L.datetime, L.datetime_end, L.course_id, L.room_id, L.virtual, L.deleted_at,
@@ -105,4 +105,4 @@ exports.getLecturesByTeacherId = function(id, from_opt, to_opt) {
             resolve(rows.map(createExtendedLecture));
         });
     })
-}
+}*/
