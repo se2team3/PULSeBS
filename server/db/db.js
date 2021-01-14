@@ -8,9 +8,6 @@ switch (process.env.NODE_ENV) {
     case 'test':
         filename = 'PULSeBS.test';
         break;
-    case 'populate':
-        filename = 'PULSeBS.populate';
-        break;
     default:
         filename = 'PULSeBS';
 }
